@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { theme } from './src/color';
 
 import Map from "./src/components/map/Map";
 import Profile from "./src/components/profile/Profile";
@@ -37,6 +38,9 @@ const screenOptions = ({ route }) => {
       }
       return <Ionicons name={iconName} size={24} color="black" />;
     },
+    headerStyle: {
+      backgroundColor: theme.headerBg,
+    }
   };
 };
 
