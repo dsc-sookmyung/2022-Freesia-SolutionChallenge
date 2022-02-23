@@ -16,7 +16,7 @@ export default function Map() {
     <MapView style={{ height }} provider={PROVIDER_GOOGLE}>
       <Marker
         coordinate={{ latitude: 37.5, longitude: 127 }}
-        image={require("../assets/pin_s.png")}
+        image={require("../../../assets/pin_s.png")}
         title={"Seoul"}
       />
     </MapView>
