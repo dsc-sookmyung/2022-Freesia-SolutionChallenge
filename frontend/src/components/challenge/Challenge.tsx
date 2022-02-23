@@ -7,51 +7,42 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { useState } from "react";
+import { Divider } from "../../CommonComponent";
+import { ProfileIcon } from "../../CommonComponent";
 
 export default function Map() {
-  const [height, setHeight] = useState(0);
-  const { width } = Dimensions.get("window");
-
-  const ProfileIcon = () => {
-    /* 
-    Image.getSize(require("../../../assets/tori.jpg"), (w, h) => {
-      setHeight(h * (width / w));
-    }); */
-    return (
-      <View
-        style={{
-          width: 50,
-          height: 50,
-          borderRadius: 25,
-          backgroundColor: "grey",
-        }}
-      ></View>
-    );
-  };
-
-  // 공통 divider
-  const Divider = () => (
-    <View
-      style={{
-        width: "100%",
-        height: 1,
-        marginVertical: 10,
-        backgroundColor: "#dddddd",
-      }}
-    ></View>
-  );
+  const rank: string[] = [
+    "1st",
+    "2nd",
+    "3rd",
+    "4th",
+    "5th",
+    "6th",
+    "7th",
+    "8th",
+    "9th",
+    "10th",
+  ];
 
   return (
     <View style={styles.mainView}>
       <Text style={styles.subTItle}>Ranking</Text>
       <Divider />
-      <ScrollView horizontal style={styles.rankings}>
-        <ProfileIcon />
-        <ProfileIcon />
-        <ProfileIcon />
-        <ProfileIcon />
-        <ProfileIcon />
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        style={styles.rankings}
+      >
+        <View style={styles.ranking}>
+          <ProfileIcon imagePath={null} />
+          <Text>me</Text>
+        </View>
+        {rank.map((r) => (
+          <View style={styles.ranking}>
+            <ProfileIcon imagePath={require("../../../assets/tori.jpg")} />
+            <Text>{r}</Text>
+          </View>
+        ))}
       </ScrollView>
       <Divider />
     </View>
@@ -69,5 +60,9 @@ const styles = StyleSheet.create({
     color: "black",
     paddingTop: 10,
   },
-  rankings: {},
+  rankings: { flexGrow: 0 },
+  ranking: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
