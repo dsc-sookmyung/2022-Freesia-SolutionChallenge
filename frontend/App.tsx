@@ -6,11 +6,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-import Map from "./screens/Map";
-import Profile from "./screens/Profile";
-import Challenge from "./screens/Challenge";
-import Recommend from "./screens/Recommend";
-import Community from "./screens/Community";
+import Map from "./src/components/map/Map";
+import Profile from "./src/components/profile/Profile";
+import Challenge from "./src/components/challenge/Challenge";
+import Recommend from "./src/components/recommend/Recommend";
+import Community from "./src/components/community/Community";
 
 type TabBarIconProps = { focused: boolean; color: string; size: number };
 
