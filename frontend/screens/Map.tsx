@@ -13,14 +13,7 @@ export default function Map() {
   const { colors } = useTheme();
 
   return (
-    <MapView
-      style={{ height }}
-      provider={PROVIDER_GOOGLE}
-      initialRegion={{
-        latitude: 37.5,
-        longitude: 127,
-      }}
-    >
+    <MapView style={{ height }} provider={PROVIDER_GOOGLE}>
       <Marker
         coordinate={{ latitude: 37.5, longitude: 127 }}
         image={require("../assets/pin_s.png")}
