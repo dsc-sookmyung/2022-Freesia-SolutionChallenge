@@ -11,7 +11,7 @@ import Map from "./src/components/map/Map";
 import Profile from "./src/components/profile/Profile";
 import Challenge from "./src/components/challenge/Challenge";
 import Recommend from "./src/components/recommend/Recommend";
-import Community from "./src/components/community/Community";
+import CommunityStack from "./src/navigations/CommunityStack";
 
 type TabBarIconProps = { focused: boolean; color: string; size: number };
 
@@ -51,7 +51,7 @@ export default function App() {
         <Tab.Screen name="Map" component={Map} />
         <Tab.Screen name="Recommend" component={Recommend} />
         <Tab.Screen name="Challenge" component={Challenge} />
-        <Tab.Screen name="Community" component={Community} />
+        <Tab.Screen name="Community" component={CommunityStack} />
         <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
       <StatusBar style="auto" />
