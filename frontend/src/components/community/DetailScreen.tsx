@@ -1,34 +1,61 @@
 import React, { useState } from "react";
-import { Dimensions, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Divider, ProfileIcon } from "../../CommonComponent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export default function Detail({ route }: any) {
+export default function DetailScreen({ navigation, route }: any) {
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [likes, setLikes] = useState(route.params.likes);
+  const [focused, setFocused] = useState(false);
+  const iconName: string = focused ? "flower" : "flower-outline";
+  const likeEvent = () => {
+    if (focused == false) {
+      setFocused(!focused);
+      setLikes((prevCount: number) => prevCount + 1);
+    }
+    else {
+      setFocused(!focused);
+      setLikes((prevCount: number) => prevCount - 1);
+    }
+  };
+  const gotoEdit = () => {
+    setModalVisible(!modalVisible);
+    navigation.navigate('Edit', {
+      id: route.params.id,
+      nickname: route.params.nickname,
+      title: route.params.title,
+      content: route.params.content,
+      likes: route.params.likes,
+      comments: route.params.comments,
+      date: route.params.date
+    });
+  };
 
   return (
     <ScrollView>
-
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
+        statusBarTranslucent={true}
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.modalView}>
-          <TouchableOpacity>
-            <Text>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text>Delete</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity activeOpacity={0} onPress={() => setModalVisible(!modalVisible)} style={styles.overlay}>
+          <View style={styles.modalView}>
+            <TouchableOpacity onPress={gotoEdit}>
+              <Text style={styles.modalText}>Edit</Text>
+            </TouchableOpacity>
+            <View style={{ width: "100%", height: 1, backgroundColor: "#eeeeee" }}></View>
+            <TouchableOpacity>
+              <Text style={styles.modalText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </Modal>
 
       <View style={styles.header}>
@@ -50,9 +77,10 @@ export default function Detail({ route }: any) {
         <Text>{route.params.content}</Text>
         <View style={styles.status}>
           <View style={styles.likes}>
-            <Ionicons name="flower" size={30} color="black" />
-            <Ionicons name="flower-outline" size={30} color="black" style={{ marginRight: 5 }} />
-            <Text>{route.params.likes} Likes</Text>
+            <TouchableOpacity onPress={() => likeEvent()}>
+              <Ionicons name={iconName} size={30} color="black" style={{ marginRight: 5 }} />
+            </TouchableOpacity>
+            <Text>{likes} Likes</Text>
           </View>
           <View style={styles.comments}>
             <Ionicons name="chatbubble-ellipses-outline" size={30} color="black" style={{ marginRight: 5 }} />
@@ -108,6 +136,11 @@ const styles = StyleSheet.create({
   date: {
     color: "grey",
   },
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
   modalView: {
     width: SCREEN_WIDTH,
     position: "absolute",
@@ -115,15 +148,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    padding: 20,
+    // padding: 20,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 13,
-    elevation: 20,
+  },
+  modalText: {
+    fontSize: 20,
+    width: SCREEN_WIDTH,
+    textAlign: "center",
+    paddingVertical: 15,
   },
 });

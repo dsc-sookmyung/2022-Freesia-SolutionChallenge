@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { TextInput } from "react-native-gesture-handler";
-import { theme } from "../../color";
 
-export default function Create() {
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+export default function CreateScreen() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const onChangeTitle = (e: string) => setTitle(e);
@@ -39,8 +40,8 @@ export default function Create() {
 
 const styles = StyleSheet.create({
   container: {
+    height: SCREEN_HEIGHT * 0.7,
     padding: 20,
-    marginBottom: 170,
   },
   titleInput: {
     marginVertical: 10,
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
   },
   createBtn: {
     position: "absolute",
-    top: 545,
+    top: SCREEN_HEIGHT - 180,
     right: 20,
     zIndex: 1,
   },

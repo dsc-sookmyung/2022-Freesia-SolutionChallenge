@@ -38,9 +38,7 @@ const screenOptions = ({ route }) => {
       }
       return <Ionicons name={iconName} size={24} color="black" />;
     },
-    headerStyle: {
-      backgroundColor: theme.headerBg,
-    }
+    headerShown: false,
   };
 };
 

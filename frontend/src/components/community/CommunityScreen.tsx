@@ -1,14 +1,16 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import { useState } from "react";
 import { Ionicons, AntDesign, EvilIcons } from '@expo/vector-icons';
 import { theme } from '../../color';
 
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+
 // 테스트용 데이터
-const items = [
+const posts = [
   { id: 1, category: 'worries', nickname: 'alice', title: 'title', content: 'main text1', likes: 1, comments: 1, date: "2022.02.22" },
-  { id: 2, category: 'worries', nickname: 'bear', title: 'title', content: 'main text2', likes: 2, comments: 1, date: "2022.02.22" },
-  { id: 3, category: 'worries', nickname: 'cake', title: 'title', content: 'main text3', likes: 3, comments: 1, date: "2022.02.22" },
+  { id: 2, category: 'review', nickname: 'bear', title: 'title', content: 'main text2', likes: 2, comments: 1, date: "2022.02.22" },
+  { id: 3, category: 'review', nickname: 'cake', title: 'title', content: 'main text3', likes: 3, comments: 1, date: "2022.02.22" },
   { id: 4, category: 'review', nickname: 'diana', title: 'title', content: 'main text4', likes: 4, comments: 1, date: "2022.02.22" },
   { id: 5, category: 'review', nickname: 'egg', title: 'title', content: 'main text5', likes: 5, comments: 1, date: "2022.02.22" },
   { id: 6, category: 'review', nickname: 'love', title: 'title', content: 'main text6', likes: 6, comments: 1, date: "2022.02.22" },
@@ -18,7 +20,9 @@ const items = [
   { id: 10, category: 'gathering', nickname: 'famous', title: 'title', content: 'main text10', likes: 6, comments: 1, date: "2022.02.22" },
 ]
 
-export default function Community({ navigation }: any) {
+type postType = { id: number; category?: string; nickname: string; title: string; content: string; likes: number; comments: number; date: any; };
+
+export default function CommunityScreen({ navigation }: any) {
 
   const [category, setCategory] = useState<string>("worries");
   const worries = () => setCategory("worries");
@@ -29,7 +33,7 @@ export default function Community({ navigation }: any) {
     navigation.navigate('Create');
   };
 
-  const gotoDetail = item => {
+  const gotoDetail = (item: postType) => {
     navigation.navigate('Detail', {
       id: item.id,
       nickname: item.nickname,
@@ -59,28 +63,31 @@ export default function Community({ navigation }: any) {
 
       {/* list */}
       <ScrollView>
-        {items.map(item =>
-          item.category === category ?
+        {posts.map((post, index) =>
+          post.category === category ?
             (
-              <TouchableOpacity key={item.id} onPress={() => gotoDetail(item)} style={styles.list}>
-                <View style={styles.nicknameArea}>
-                  <EvilIcons name="user" size={30} color="black" />
-                  <Text style={styles.nickname}>{item.nickname}</Text>
-                </View>
-                <View style={styles.contentArea}>
-                  <Text>{item.content}</Text>
-                </View>
-                <View style={styles.statusArea}>
-                  <View style={styles.likes}>
-                    <AntDesign name="like2" size={20} color="black" style={{ marginRight: 5 }} />
-                    <Text>{item.likes} likes</Text>
+              <View key={index}>
+                <TouchableOpacity onPress={() => gotoDetail(post)} style={styles.list}>
+                  <View style={styles.nicknameArea}>
+                    <EvilIcons name="user" size={30} color="black" />
+                    <Text style={styles.nickname}>{post.nickname}</Text>
                   </View>
-                  <View style={styles.comments}>
-                    <Ionicons name="chatbubble-ellipses-outline" size={20} color="black" style={{ marginRight: 5 }} />
-                    <Text>{item.comments} comments</Text>
+                  <View style={styles.contentArea}>
+                    <Text>{post.content}</Text>
                   </View>
-                </View>
-              </TouchableOpacity>
+                  <View style={styles.statusArea}>
+                    <View style={styles.likes}>
+                      <AntDesign name="like2" size={20} color="black" style={{ marginRight: 5 }} />
+                      <Text>{post.likes} likes</Text>
+                    </View>
+                    <View style={styles.comments}>
+                      <Ionicons name="chatbubble-ellipses-outline" size={20} color="black" style={{ marginRight: 5 }} />
+                      <Text>{post.comments} comments</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <View style={{ width: "100%", height: 5, backgroundColor: theme.devideBg }}></View>
+              </View>
             ) : null
         )}
       </ScrollView>
@@ -95,11 +102,9 @@ export default function Community({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.devideBg,
-    marginBottom: 40,
+    height: SCREEN_HEIGHT - 100,
   },
   header: {
-    backgroundColor: "white",
     justifyContent: "space-between",
     flexDirection: "row",
     paddingVertical: 7,
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
   },
   add: {
     position: "absolute",
-    top: 545,
+    top: SCREEN_HEIGHT - 180,
     right: 20,
     zIndex: 1,
   },
