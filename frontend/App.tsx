@@ -9,7 +9,7 @@ import { theme } from "./src/color";
 
 import Map from "./src/components/map/Map";
 import Profile from "./src/components/profile/Profile";
-import Challenge from "./src/components/challenge/Challenge";
+import ChallengStackScreen from "./src/navigations/ChallengeStack";
 import Recommend from "./src/components/recommend/Recommend";
 import Community from "./src/components/community/Community";
 import Login from "./src/components/Login";
@@ -51,7 +51,11 @@ export default function App() {
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen name="Map" component={Map} />
         <Tab.Screen name="Recommend" component={Recommend} />
-        <Tab.Screen name="Challenge" component={Challenge} />
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name="Challenge"
+          component={ChallengStackScreen}
+        />
         <Tab.Screen name="Community" component={Community} />
         <Tab.Screen name="Profile" component={Login} />
       </Tab.Navigator>

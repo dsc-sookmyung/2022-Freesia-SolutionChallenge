@@ -8,6 +8,7 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import { Divider } from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
@@ -83,7 +84,7 @@ const rank: string[] = [
   "10th",
 ];
 
-export default function Map() {
+export default function ChallengScreen({ navigation }) {
   const ProfileIcon = ({ imagePath, isUser }) => {
     if (imagePath == null)
       imagePath = require("../../../assets/profile_default.jpg");
@@ -122,7 +123,6 @@ export default function Map() {
   const Ranking = ({ rank, numberOfStickers, isUser, imagePath }) => (
     <TouchableOpacity activeOpacity={0.8} style={styles.ranking}>
       <ProfileIcon imagePath={imagePath} isUser={isUser} />
-
       <View style={styles.numberOfStickers}>
         <Text>{numberOfStickers}</Text>
       </View>
@@ -168,7 +168,11 @@ export default function Map() {
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
       />
-      <TouchableOpacity activeOpacity={0.8} style={styles.writePost}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("PostChallengeScreen")}
+        activeOpacity={0.8}
+        style={styles.writePost}
+      >
         <Ionicons
           style={styles.writePostIcon}
           name="add-circle"
