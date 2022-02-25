@@ -5,13 +5,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import { theme } from './src/color';
+import { theme } from "./src/color";
 
 import Map from "./src/components/map/Map";
 import Profile from "./src/components/profile/Profile";
 import Challenge from "./src/components/challenge/Challenge";
 import Recommend from "./src/components/recommend/Recommend";
 import Community from "./src/components/community/Community";
+import Login from "./src/components/Login";
 
 type TabBarIconProps = { focused: boolean; color: string; size: number };
 
@@ -40,7 +41,7 @@ const screenOptions = ({ route }) => {
     },
     headerStyle: {
       backgroundColor: theme.headerBg,
-    }
+    },
   };
 };
 
@@ -52,7 +53,7 @@ export default function App() {
         <Tab.Screen name="Recommend" component={Recommend} />
         <Tab.Screen name="Challenge" component={Challenge} />
         <Tab.Screen name="Community" component={Community} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Profile" component={Login} />
       </Tab.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
