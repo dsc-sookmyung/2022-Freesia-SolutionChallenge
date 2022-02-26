@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions } from "react-native";
-import { useState } from "react";
 import { Ionicons, AntDesign, EvilIcons } from '@expo/vector-icons';
 import { theme } from '../../color';
+// import { defaultFont as Text } from "../../CommonComponent";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -49,15 +49,15 @@ export default function CommunityScreen({ navigation }: any) {
     <View style={styles.container}>
 
       {/* category */}
-      <View style={styles.header}>
+      <View style={styles.category}>
         <TouchableOpacity onPress={worries}>
-          <Text style={{ ...styles.category, color: category === "worries" ? "black" : theme.grey, borderBottomWidth: category === "worries" ? 3 : null }}>worries</Text>
+          <Text style={{ ...styles.categoryItem, color: category === "worries" ? "black" : theme.grey, borderBottomWidth: category === "worries" ? 3 : null }}>worries</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={review}>
-          <Text style={{ ...styles.category, color: category === "review" ? "black" : theme.grey, borderBottomWidth: category === "review" ? 3 : null }}>review</Text>
+          <Text style={{ ...styles.categoryItem, color: category === "review" ? "black" : theme.grey, borderBottomWidth: category === "review" ? 3 : null }}>review</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={gathering}>
-          <Text style={{ ...styles.category, color: category === "gathering" ? "black" : theme.grey, borderBottomWidth: category === "gathering" ? 3 : null }}>gathering</Text>
+          <Text style={{ ...styles.categoryItem, color: category === "gathering" ? "black" : theme.grey, borderBottomWidth: category === "gathering" ? 3 : null }}>gathering</Text>
         </TouchableOpacity>
       </View>
 
@@ -102,18 +102,19 @@ export default function CommunityScreen({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     height: SCREEN_HEIGHT - 100,
   },
-  header: {
+  category: {
     justifyContent: "space-between",
     flexDirection: "row",
-    paddingVertical: 7,
     paddingHorizontal: 20,
     borderBottomColor: theme.devideBg,
     borderBottomWidth: 3,
   },
-  category: {
+  categoryItem: {
     fontSize: 20,
+    paddingVertical: 5,
   },
   add: {
     position: "absolute",
@@ -122,8 +123,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   list: {
-    backgroundColor: "white",
-    marginBottom: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },

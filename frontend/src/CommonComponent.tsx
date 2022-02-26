@@ -1,4 +1,7 @@
-import { View, Image } from "react-native";
+import { useState } from "react";
+import { View, Image, Text, StyleSheet } from "react-native";
+import AppLoading from "expo-app-loading";
+import getFonts from "./getFonts";
 
 export const Divider = () => (
   <View
@@ -29,3 +32,27 @@ export const ProfileIcon = ({ imagePath }) => {
     </View>
   );
 };
+
+export function defaultFont(props) {
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const LoadFonts = async () => {
+    await getFonts();
+  };
+
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={LoadFonts}
+        onFinish={() => setIsReady(true)}
+        onError={() => { }}
+      />
+    );
+  }
+  return <Text style={{ ...styles.defaultFont, ...props.style }}>{props.children}</Text>
+}
+
+const styles = StyleSheet.create({
+  defaultFont: {
+    fontFamily: "SpoqaBold",
+  }
+})

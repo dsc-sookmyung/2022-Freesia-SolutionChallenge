@@ -6,15 +6,15 @@ import { TextInput } from "react-native-gesture-handler";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function CreateScreen() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
   const onChangeTitle = (e: string) => setTitle(e);
   const onChangeContent = (e: string) => setContent(e);
 
   return (
     <View style={styles.container}>
       {/* selector로 선택 옵션 구현? */}
-      <Text>Category: worries</Text>
+      <Text>테스트Category: worries</Text>
 
       <TextInput
         placeholder="Title"

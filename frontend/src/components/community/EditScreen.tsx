@@ -6,8 +6,8 @@ import { TextInput } from "react-native-gesture-handler";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function EditScreen({ route }: any) {
-  const [title, setTitle] = useState(route.params.title);
-  const [content, setContent] = useState(route.params.content);
+  const [title, setTitle] = useState<string>(route.params.title);
+  const [content, setContent] = useState<string>(route.params.content);
   const onChangeTitle = (e: string) => setTitle(e);
   const onChangeContent = (e: string) => setContent(e);
 
