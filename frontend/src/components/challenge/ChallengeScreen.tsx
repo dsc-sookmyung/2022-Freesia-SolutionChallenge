@@ -6,15 +6,12 @@ import {
   ScrollView,
   Image,
   FlatList,
-  Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Divider } from "../../CommonComponent";
+import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
 
 const numColumns = 3;
-const screenWidth = Dimensions.get("window").width;
-const screenPadding = 20;
 
 const recentPostData = [
   {
@@ -113,7 +110,11 @@ export default function ChallengScreen({ navigation }) {
 
   const PostItem = ({ item }) => {
     return (
-      <TouchableOpacity activeOpacity={0.8} style={styles.postView}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.postView}
+        onPress={() => navigation.navigate("ChallengeDetailScreen")}
+      >
         <Text>{item.title}</Text>
       </TouchableOpacity>
     );
@@ -136,7 +137,7 @@ export default function ChallengScreen({ navigation }) {
   );
 
   return (
-    <View style={styles.mainView}>
+    <View style={mainStyle.mainView}>
       <Text style={styles.subTItle}>Ranking</Text>
       <Divider />
       <ScrollView
@@ -184,12 +185,6 @@ export default function ChallengScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  mainView: {
-    position: "relative",
-    flex: 1,
-    backgroundColor: "white",
-    paddingHorizontal: screenPadding,
-  },
   subTItle: {
     color: "black",
     paddingTop: 10,
@@ -202,9 +197,9 @@ const styles = StyleSheet.create({
   },
   postView: {
     backgroundColor: "#eeeeee",
-    width: ((screenWidth - screenPadding * 2) * 0.96) / numColumns,
-    height: ((screenWidth - screenPadding * 2) * 0.96) / numColumns,
-    margin: ((screenWidth - screenPadding * 2) * 0.04) / (numColumns * 2),
+    width: (screenWidth * 0.96) / numColumns,
+    height: (screenWidth * 0.96) / numColumns,
+    margin: (screenWidth * 0.04) / (numColumns * 2),
   },
   writePost: {
     position: "absolute",

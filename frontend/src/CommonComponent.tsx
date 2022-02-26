@@ -1,4 +1,16 @@
-import { View, Image } from "react-native";
+import { View, Image, Dimensions, StyleSheet } from "react-native";
+
+export const screenPadding = 20;
+export const screenWidth = Dimensions.get("window").width - screenPadding * 2;
+
+export const mainStyle = StyleSheet.create({
+  mainView: {
+    position: "relative",
+    flex: 1,
+    backgroundColor: "white",
+    paddingHorizontal: screenPadding,
+  },
+});
 
 export const Divider = () => (
   <View

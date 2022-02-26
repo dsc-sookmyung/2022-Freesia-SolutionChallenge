@@ -13,10 +13,11 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
 
-export default function PostChallengeScreen({ navigation }) {
+export default function EditChallengeScreen({ navigation, route }) {
+  //const [image, setImage] = useState(route.params.postInfo.Image);
   const [image, setImage] = useState(null);
-  const [title, setTitle] = useState("");
-  const [contents, setContents] = useState("");
+  const [title, setTitle] = useState(route.params.postInfo.title);
+  const [contents, setContents] = useState(route.params.postInfo.contents);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -30,7 +31,6 @@ export default function PostChallengeScreen({ navigation }) {
 
     if (!result.cancelled) {
       setImage(result.uri);
-      console.log(result.uri);
     }
   };
 
@@ -40,8 +40,6 @@ export default function PostChallengeScreen({ navigation }) {
       title,
       contents,
     };
-
-    console.log(challengePostInfo);
 
     image == null
       ? Alert.alert("Write Post", "Please select an image", [{ text: "Okay" }])
