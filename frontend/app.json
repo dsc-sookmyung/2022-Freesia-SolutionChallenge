@@ -6,14 +6,16 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/landing.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFEF5E"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -24,7 +26,9 @@
       },
       "package": "com.frontend.frontend",
       "config": {
-        "googleMaps": { "apiKey": "AIzaSyBzEx0-Xlye_acfH40AXOG-LKFVMtRXKCc" }
+        "googleMaps": {
+          "apiKey": "AIzaSyBzEx0-Xlye_acfH40AXOG-LKFVMtRXKCc"
+        }
       }
     },
     "web": {
