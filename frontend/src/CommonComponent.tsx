@@ -1,7 +1,19 @@
 import { useState } from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, Dimensions, StyleSheet } from "react-native";
 import AppLoading from "expo-app-loading";
 import getFonts from "./getFonts";
+
+export const screenPadding = 20;
+export const screenWidth = Dimensions.get("window").width - screenPadding * 2;
+
+export const mainStyle = StyleSheet.create({
+  mainView: {
+    position: "relative",
+    flex: 1,
+    backgroundColor: "white",
+    paddingHorizontal: screenPadding,
+  },
+});
 
 export const Divider = () => (
   <View
