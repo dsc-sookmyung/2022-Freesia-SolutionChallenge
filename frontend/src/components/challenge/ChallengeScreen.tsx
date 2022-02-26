@@ -8,7 +8,6 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import { Divider } from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
@@ -122,16 +121,16 @@ export default function ChallengScreen({ navigation }) {
 
   const Ranking = ({ rank, numberOfStickers, isUser, imagePath }) => (
     <TouchableOpacity activeOpacity={0.8} style={styles.ranking}>
-      <ProfileIcon imagePath={imagePath} isUser={isUser} />
-      <View style={styles.numberOfStickers}>
-        <Text>{numberOfStickers}</Text>
-      </View>
       {rank == "1st" ? (
         <Image
           style={styles.crownImg}
           source={require("../../../assets/crown.png")}
         ></Image>
       ) : null}
+      <ProfileIcon imagePath={imagePath} isUser={isUser} />
+      <View style={styles.numberOfStickers}>
+        <Text>{numberOfStickers}</Text>
+      </View>
       <Text>{rank}</Text>
     </TouchableOpacity>
   );
@@ -229,8 +228,8 @@ const styles = StyleSheet.create({
   },
   crownImg: {
     position: "absolute",
-    top: -10,
-    width: 50,
-    height: 50,
+    top: -8,
+    width: 30,
+    height: 30,
   },
 });

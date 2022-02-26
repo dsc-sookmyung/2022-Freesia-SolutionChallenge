@@ -1,14 +1,11 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "./src/color";
 
 import Map from "./src/components/map/Map";
-import Profile from "./src/components/profile/Profile";
 import ChallengStackScreen from "./src/navigations/ChallengeStack";
 import Recommend from "./src/components/recommend/Recommend";
 import Community from "./src/components/community/Community";
@@ -16,7 +13,6 @@ import Login from "./src/components/Login";
 
 type TabBarIconProps = { focused: boolean; color: string; size: number };
 
-const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const icons: Record<string, string[]> = {

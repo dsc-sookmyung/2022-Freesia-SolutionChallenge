@@ -18,6 +18,7 @@ export default function ChallengeStackScreen() {
       <ChallengeStack.Screen
         name="ChallengeScreen"
         component={ChallengeScreen}
+        options={{ title: "Challenge" }}
       />
       <ChallengeStack.Screen
         name="PostChallengeScreen"
