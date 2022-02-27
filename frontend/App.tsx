@@ -1,20 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-<<<<<<< HEAD
-import { theme } from "./src/color";
-
-import Map from "./src/components/map/Map";
-=======
 import * as SplashScreen from "expo-splash-screen";
+import Profile from "./src/components/profile/Profile";
 import MapStack from "./src/navigations/MapStack";
->>>>>>> 9b8d1f9 ([front] Add bottom sheet in map screen)
 import ChallengStackScreen from "./src/navigations/ChallengeStack";
 import Recommend from "./src/components/recommend/Recommend";
-import Community from "./src/components/community/Community";
-import Login from "./src/components/Login";
+import CommunityStack from "./src/navigations/CommunityStack";
 
 type TabBarIconProps = { focused: boolean; color: string; size: number };
 
@@ -40,25 +34,34 @@ const screenOptions = ({ route }) => {
       }
       return <Ionicons name={iconName} size={24} color="black" />;
     },
-    headerStyle: {
-      backgroundColor: theme.headerBg,
-    },
+    headerShown: false,
   };
 };
 
 export default function App() {
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        await SplashScreen.hideAsync();
+      }
+    }
+
+    prepare();
+  }, []);
+
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen name="Map" component={MapStack} />
         <Tab.Screen name="Recommend" component={Recommend} />
-        <Tab.Screen
-          options={{ headerShown: false }}
-          name="Challenge"
-          component={ChallengStackScreen}
-        />
-        <Tab.Screen name="Community" component={Community} />
-        <Tab.Screen name="Profile" component={Login} />
+        <Tab.Screen name="Challenge" component={ChallengStackScreen} />
+        <Tab.Screen name="Community" component={CommunityStack} />
+        <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
