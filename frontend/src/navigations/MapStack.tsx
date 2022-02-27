@@ -6,6 +6,7 @@ import { theme } from "../color";
 
 export default function MapStackScreen() {
   const MapStack = createStackNavigator();
+
   return (
     <MapStack.Navigator
       screenOptions={{

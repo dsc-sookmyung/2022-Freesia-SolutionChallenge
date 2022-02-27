@@ -1,17 +1,104 @@
-import React from "react";
-import { Text, View, Button, Dimensions, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import Geocoder from "react-native-geocoding";
 
 import BottomSheet from "reanimated-bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import { Divider } from "../../CommonComponent";
+
+Geocoder.init("AIzaSyAPEIGEf12unqTi_6if8i_okJEdgCPIeFY");
 const height = Dimensions.get("window").height;
 
 export default function Map() {
+  const [latLon, setLatLon] = useState({ lat: 0, lon: 0 });
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [locationName, setLocationName] = useState("");
+
+  const centerInfo = [
+    {
+      centerName: "용산새일센터",
+      centerAddress: "서울특별시 용산구 청파로 139-21",
+      centerCall: "02-714-9763",
+      websiteAddress: "www.naver.com",
+    },
+    {
+      centerName: "용산새일센터",
+      centerAddress: "서울특별시 용산구 청파로 139-21",
+      centerCall: "02-714-9763",
+      websiteAddress: "www.naver.com",
+    },
+    {
+      centerName: "용산새일센터",
+      centerAddress: "서울특별시 용산구 청파로 139-21",
+      centerCall: "02-714-9763",
+      websiteAddress: "www.naver.com",
+    },
+    {
+      centerName: "용산새일센터",
+      centerAddress: "서울특별시 용산구 청파로 139-21",
+      centerCall: "02-714-9763",
+      websiteAddress: "www.naver.com",
+    },
+  ];
+
+  const getLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    let {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({});
+    setLatLon({ lat: latitude, lon: longitude });
+
+    Geocoder.from(latitude, longitude)
+      .then((json) => {
+        var addressComponent = json.results[0].address_components;
+        setLocationName(
+          addressComponent[4].long_name +
+            " " +
+            addressComponent[3].long_name +
+            " " +
+            addressComponent[2].long_name
+        );
+      })
+      .catch((error) => console.warn(error));
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
   const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.panelHandle} />
+    </View>
+  );
+
+  const CenterInfo = () => (
+    <View>
+      {centerInfo.map((c) => (
+        <View>
+          <Text style={styles.centerName}>{c.centerName}</Text>
+          <Text>{c.centerAddress}</Text>
+          <Text>{c.centerCall}</Text>
+          <Text>{c.websiteAddress}</Text>
+          <Divider />
+        </View>
+      ))}
     </View>
   );
 
@@ -23,33 +110,52 @@ export default function Map() {
         height: height * 0.8,
       }}
     >
-      <Text>Swipe down to close!!</Text>
+      <CenterInfo />
     </View>
   );
 
   const sheetRef = React.useRef(null);
   return (
     <GestureHandlerRootView style={{ position: "relative" }}>
-      <MapView style={{ height }} provider={PROVIDER_GOOGLE}>
+      <MapView
+        style={{ height }}
+        provider={PROVIDER_GOOGLE}
+        region={{
+          latitude: latLon.lat,
+          longitude: latLon.lon,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }}
+      >
+        <Marker
+          coordinate={{ latitude: latLon.lat, longitude: latLon.lon }}
+          image={require("../../../assets/user_pin.png")}
+          title={"Seoul"}
+        />
         <Marker
           coordinate={{ latitude: 37.5, longitude: 127 }}
           image={require("../../../assets/pin_s.png")}
           title={"Seoul"}
         />
       </MapView>
-      <View
-        style={{
-          width: "100%",
-          justifyContent: "center",
-          position: "absolute",
-          bottom: "25%",
-          zIndex: 0,
-        }}
-      >
-        <Button
-          title="Open Bottom Sheet"
-          onPress={() => sheetRef.current.snapTo(0)}
-        />
+      <View style={styles.buttonContainer}>
+        <View style={styles.buttonSubContainer}>
+          <TouchableOpacity onPress={() => sheetRef.current.snapTo(0)}>
+            <View
+              style={{
+                backgroundColor: "white",
+                width: 150,
+                height: 40,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 20,
+                elevation: 5,
+              }}
+            >
+              <Text>Open Center List</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
       <BottomSheet
         ref={sheetRef}
@@ -75,6 +181,22 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 4,
     backgroundColor: "#00000040",
+  },
+  centerName: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginVertical: 5,
+  },
+  buttonContainer: {
+    width: "100%",
+    justifyContent: "center",
+    position: "absolute",
+    bottom: "25%",
+    zIndex: 0,
+  },
+  buttonSubContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
