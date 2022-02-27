@@ -3,9 +3,14 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+<<<<<<< HEAD
 import { theme } from "./src/color";
 
 import Map from "./src/components/map/Map";
+=======
+import * as SplashScreen from "expo-splash-screen";
+import MapStack from "./src/navigations/MapStack";
+>>>>>>> 9b8d1f9 ([front] Add bottom sheet in map screen)
 import ChallengStackScreen from "./src/navigations/ChallengeStack";
 import Recommend from "./src/components/recommend/Recommend";
 import Community from "./src/components/community/Community";
@@ -45,7 +50,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={screenOptions}>
-        <Tab.Screen name="Map" component={Map} />
+        <Tab.Screen name="Map" component={MapStack} />
         <Tab.Screen name="Recommend" component={Recommend} />
         <Tab.Screen
           options={{ headerShown: false }}
