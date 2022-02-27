@@ -5,11 +5,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import * as SplashScreen from "expo-splash-screen";
 
-import Profile from "./src/components/profile/Profile";
 import MapStack from "./src/navigations/MapStack";
 import ChallengeStack from "./src/navigations/ChallengeStack";
 import RecommendStack from "./src/navigations/RecommendStack";
 import CommunityStack from "./src/navigations/CommunityStack";
+import ProfileStack from "./src/navigations/ProfileStack";
 
 type TabBarIconProps = { focused: boolean; color: string; size: number };
 
@@ -62,7 +62,7 @@ export default function App() {
         <Tab.Screen name="Recommend" component={RecommendStack} />
         <Tab.Screen name="Challenge" component={ChallengeStack} />
         <Tab.Screen name="Community" component={CommunityStack} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Profile" component={ProfileStack} />
       </Tab.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

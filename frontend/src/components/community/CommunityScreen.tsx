@@ -8,19 +8,19 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // 테스트용 데이터
 const posts = [
-  { id: 1, category: 'worries', nickname: 'alice', title: 'title', content: 'main text1', likes: 1, comments: 1, date: "2022.02.22" },
-  { id: 2, category: 'review', nickname: 'bear', title: 'title', content: 'main text2', likes: 2, comments: 1, date: "2022.02.22" },
-  { id: 3, category: 'review', nickname: 'cake', title: 'title', content: 'main text3', likes: 3, comments: 1, date: "2022.02.22" },
-  { id: 4, category: 'review', nickname: 'diana', title: 'title', content: 'main text4', likes: 4, comments: 1, date: "2022.02.22" },
-  { id: 5, category: 'review', nickname: 'egg', title: 'title', content: 'main text5', likes: 5, comments: 1, date: "2022.02.22" },
-  { id: 6, category: 'review', nickname: 'love', title: 'title', content: 'main text6', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 7, category: 'review', nickname: 'famous', title: 'title', content: 'main text7', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 8, category: 'gathering', nickname: 'famous', title: 'title', content: 'main text8', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 9, category: 'gathering', nickname: 'famous', title: 'title', content: 'main text9', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 10, category: 'gathering', nickname: 'famous', title: 'title', content: 'main text10', likes: 6, comments: 1, date: "2022.02.22" },
+  { id: 1, category: 'worries', nickname: 'alice', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text1', likes: 1, comments: 1, date: "2022.02.22" },
+  { id: 2, category: 'review', nickname: 'bear', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text2', likes: 2, comments: 1, date: "2022.02.22" },
+  { id: 3, category: 'review', nickname: 'cake', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text3', likes: 3, comments: 1, date: "2022.02.22" },
+  { id: 4, category: 'review', nickname: 'diana', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text4', likes: 4, comments: 1, date: "2022.02.22" },
+  { id: 5, category: 'review', nickname: 'egg', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text5', likes: 5, comments: 1, date: "2022.02.22" },
+  { id: 6, category: 'review', nickname: 'love', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text6', likes: 6, comments: 1, date: "2022.02.22" },
+  { id: 7, category: 'review', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text7', likes: 6, comments: 1, date: "2022.02.22" },
+  { id: 8, category: 'gathering', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text8', likes: 6, comments: 1, date: "2022.02.22" },
+  { id: 9, category: 'gathering', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text9', likes: 6, comments: 1, date: "2022.02.22" },
+  { id: 10, category: 'gathering', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text10', likes: 6, comments: 1, date: "2022.02.22" },
 ]
 
-type postType = { id: number; category?: string; nickname: string; title: string; content: string; likes: number; comments: number; date: any; };
+type postType = { id: number; category?: string; nickname: string; image: string, title: string; content: string; likes: number; comments: number; date: any; };
 
 export default function CommunityScreen({ navigation }: any) {
 
@@ -30,13 +30,17 @@ export default function CommunityScreen({ navigation }: any) {
   const gathering = () => setCategory("gathering");
 
   const gotoCreate = () => {
-    navigation.navigate('Create');
+    navigation.navigate('Create', {
+      category: category,
+    });
   };
 
   const gotoDetail = (item: postType) => {
     navigation.navigate('Detail', {
       id: item.id,
+      category: category,
       nickname: item.nickname,
+      image: item.image,
       title: item.title,
       content: item.content,
       likes: item.likes,
@@ -93,8 +97,8 @@ export default function CommunityScreen({ navigation }: any) {
       </ScrollView>
 
       {/* add button */}
-      <TouchableOpacity onPress={gotoCreate} style={styles.add}>
-        <Ionicons name="add-circle" size={60} color="black" />
+      <TouchableOpacity onPress={gotoCreate} style={styles.addBtn}>
+        <Ionicons name="add-circle" size={65} color="#ffd25E" />
       </TouchableOpacity>
     </View>
   );
@@ -103,7 +107,6 @@ export default function CommunityScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: SCREEN_HEIGHT - 100,
   },
   category: {
     justifyContent: "space-between",
@@ -116,9 +119,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingVertical: 5,
   },
-  add: {
+  addBtn: {
     position: "absolute",
-    top: SCREEN_HEIGHT - 180,
+    bottom: 20,
     right: 20,
     zIndex: 1,
   },

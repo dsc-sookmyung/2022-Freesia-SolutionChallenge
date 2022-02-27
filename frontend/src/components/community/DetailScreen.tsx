@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { Divider, ProfileIcon } from "../../CommonComponent";
 
@@ -25,7 +25,9 @@ export default function DetailScreen({ navigation, route }: any) {
     setModalVisible(!modalVisible);
     navigation.navigate('Edit', {
       id: route.params.id,
+      category: route.params.category,
       nickname: route.params.nickname,
+      image: route.params.image,
       title: route.params.title,
       content: route.params.content,
       likes: route.params.likes,
@@ -61,15 +63,14 @@ export default function DetailScreen({ navigation, route }: any) {
       <View style={styles.header}>
         <View style={styles.nicknameArea}>
           <ProfileIcon imagePath={null} />
-          <Text style={styles.nickname}>{route.params.nickname}</Text>
+          <Text style={styles.nicknameText}>{route.params.nickname}</Text>
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Ionicons name="menu-outline" size={40} color="black" />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.image}>
-      </View>
+      <Image source={{ uri: route.params.image }} style={styles.image} />
 
       <View style={styles.container}>
         <Text style={styles.title}>{route.params.title}</Text>
@@ -95,7 +96,7 @@ export default function DetailScreen({ navigation, route }: any) {
 
 const styles = StyleSheet.create({
   header: {
-    padding: 10,
+    padding: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
@@ -104,18 +105,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  nickname: {
-    fontSize: 20,
+  nicknameText: {
+    fontSize: 18,
     fontWeight: "bold",
+    marginLeft: 10,
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
   },
   image: {
-    backgroundColor: "grey",
     width: SCREEN_WIDTH,
     height: SCREEN_WIDTH,
+    // objectFit: "cover",
   },
   container: {
     padding: 10,
