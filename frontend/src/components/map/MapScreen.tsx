@@ -1,17 +1,72 @@
-import React from "react";
-import { Text, View, Button, Dimensions, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 import BottomSheet from "reanimated-bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import { Divider } from "../../CommonComponent";
+
 const height = Dimensions.get("window").height;
 
-export default function Map() {
+export default function MapScreen({
+  navigation,
+  latitude,
+  longitude,
+  location,
+}) {
+  const centerInfo = [
+    {
+      centerName: "용산새일센터",
+      centerAddress: "서울특별시 용산구 청파로 139-21",
+      centerCall: "02-714-9763",
+      websiteAddress: "www.naver.com",
+    },
+    {
+      centerName: "용산새일센터",
+      centerAddress: "서울특별시 용산구 청파로 139-21",
+      centerCall: "02-714-9763",
+      websiteAddress: "www.naver.com",
+    },
+    {
+      centerName: "용산새일센터",
+      centerAddress: "서울특별시 용산구 청파로 139-21",
+      centerCall: "02-714-9763",
+      websiteAddress: "www.naver.com",
+    },
+    {
+      centerName: "용산새일센터",
+      centerAddress: "서울특별시 용산구 청파로 139-21",
+      centerCall: "02-714-9763",
+      websiteAddress: "www.naver.com",
+    },
+  ];
+
   const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.panelHandle} />
+    </View>
+  );
+
+  const CenterInfo = () => (
+    <View>
+      {centerInfo.map((c, idx) => (
+        <View key={idx}>
+          <Text style={styles.centerName}>{c.centerName}</Text>
+          <Text>{c.centerAddress}</Text>
+          <Text>{c.centerCall}</Text>
+          <Text>{c.websiteAddress}</Text>
+          <Divider />
+        </View>
+      ))}
     </View>
   );
 
@@ -23,33 +78,92 @@ export default function Map() {
         height: height * 0.8,
       }}
     >
-      <Text>Swipe down to close!!</Text>
+      <CenterInfo />
     </View>
   );
 
   const sheetRef = React.useRef(null);
   return (
     <GestureHandlerRootView style={{ position: "relative" }}>
-      <MapView style={{ height }} provider={PROVIDER_GOOGLE}>
+      <MapView
+        style={{ height }}
+        provider={PROVIDER_GOOGLE}
+        region={{
+          latitude: latitude - 0.02,
+          longitude: longitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }}
+      >
+        <Marker
+          coordinate={{ latitude: latitude, longitude: longitude }}
+          image={require("../../../assets/flower_pin_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude - 0.01,
+            longitude: longitude + 0.01,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude - 0.02,
+            longitude: longitude - 0.01,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude + 0.01,
+            longitude: longitude + 0.02,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude + 0.005,
+            longitude: longitude + 0.01,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude - 0.005,
+            longitude: longitude - 0.01,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
         <Marker
           coordinate={{ latitude: 37.5, longitude: 127 }}
-          image={require("../../../assets/pin_s.png")}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
           title={"Seoul"}
         />
       </MapView>
-      <View
-        style={{
-          width: "100%",
-          justifyContent: "center",
-          position: "absolute",
-          bottom: "25%",
-          zIndex: 0,
-        }}
-      >
-        <Button
-          title="Open Bottom Sheet"
-          onPress={() => sheetRef.current.snapTo(0)}
-        />
+      <View style={styles.buttonContainer}>
+        <View style={styles.buttonSubContainer}>
+          <TouchableOpacity onPress={() => sheetRef.current.snapTo(0)}>
+            <View
+              style={{
+                backgroundColor: "white",
+                width: 150,
+                height: 40,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 20,
+                elevation: 5,
+              }}
+            >
+              <Text>Open Center List</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
       <BottomSheet
         ref={sheetRef}
@@ -76,63 +190,20 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: "#00000040",
   },
+  centerName: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginVertical: 5,
+  },
+  buttonContainer: {
+    width: "100%",
+    justifyContent: "center",
+    position: "absolute",
+    bottom: "25%",
+    zIndex: 0,
+  },
+  buttonSubContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
-
-{
-  /* <GestureHandlerRootView style={{ position: "relative" }}>
-  <MapView style={{ height }} provider={PROVIDER_GOOGLE}>
-    <Marker
-      coordinate={{ latitude: 37.5, longitude: 127 }}
-      image={require("../../../assets/pin_s.png")}
-      title={"Seoul"}
-    />
-  </MapView>
-  <View
-    style={{
-      position: "absolute",
-      top: 50,
-      right: (screenWidth + screenPadding * 2) / 2,
-    }}
-  >
-    <Button
-      title="Open Bottom Sheet"
-      onPress={() => sheetRef.current.snapTo(0)}
-    />
-  </View>
-  <BottomSheet
-    ref={sheetRef}
-    snapPoints={["0%", "50%", "100%"]}
-    initialSnap={0}
-    callbackNode={fall}
-    renderContent={renderContent}
-    renderHeader={renderHeader}
-  />
-  <Animated.View
-    style={{
-      margin: 20,
-      opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
-    }}
-  ></Animated.View>
-</GestureHandlerRootView>; */
-}
-
-/*
-  <Drawer.Navigator initialRouteName="MapScreen">
-      <Drawer.Screen name="MapScreen" component={MapScreen} />
-      <Drawer.Screen name="CenterListScreen" component={CenterListScreen} />
-    </Drawer.Navigator>
-   */
-/* <MapView
-        style={{ height }}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 37.5,
-          longitude: 127,
-        }}
-      >
-        <Marker
-          coordinate={{ latitude: 37.5, longitude: 127 }}
-          image={require("../assets/pin_s.png")}
-          title={"Seoul"}
-        />
-      </MapView> */
