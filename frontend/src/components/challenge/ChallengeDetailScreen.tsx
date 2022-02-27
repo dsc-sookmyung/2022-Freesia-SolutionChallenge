@@ -20,7 +20,7 @@ const postInfo = {
   image: require("../../../assets/tori.jpg"),
   title: "titleeeeeeeeeee",
   contents: "contentssssssssss",
-  date: "2022.02.24",
+  postDate: "2022.2.27",
 };
 
 export default function ChallengeDetail({ navigation }: any) {
@@ -67,8 +67,8 @@ export default function ChallengeDetail({ navigation }: any) {
         <Text style={styles.postTitle}>{postInfo.title}</Text>
         <Divider />
         <Text>{postInfo.contents}</Text>
-        <Text style={styles.date}>{postInfo.date}</Text>
       </View>
+      <Text style={styles.postDate}>{postInfo.postDate}</Text>
     </ScrollView>
   );
 }
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     height: screenWidth,
   },
   postTexts: {
-    padding: 10,
+    margin: 10,
   },
   postTitle: {
     fontSize: 18,
@@ -137,5 +137,10 @@ const styles = StyleSheet.create({
     width: screenWidth,
     textAlign: "center",
     paddingVertical: 15,
+  },
+  postDate: {
+    margin: 10,
+    color: "grey",
+    fontSize: 12,
   },
 });

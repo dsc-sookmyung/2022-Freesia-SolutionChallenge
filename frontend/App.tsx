@@ -4,9 +4,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import * as SplashScreen from "expo-splash-screen";
-import Map from "./src/components/map/Map";
-import ChallengStackScreen from "./src/navigations/ChallengeStack";
-import Recommend from "./src/components/recommend/Recommend";
+
+import MapStack from "./src/navigations/MapStack";
+import ChallengeStack from "./src/navigations/ChallengeStack";
+import RecommendStack from "./src/navigations/RecommendStack";
 import CommunityStack from "./src/navigations/CommunityStack";
 import ProfileStack from "./src/navigations/ProfileStack";
 
@@ -57,9 +58,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={screenOptions}>
-        <Tab.Screen name="Map" component={Map} />
-        <Tab.Screen name="Recommend" component={Recommend} />
-        <Tab.Screen name="Challenge" component={ChallengStackScreen} />
+        <Tab.Screen name="Map" component={MapStack} />
+        <Tab.Screen name="Recommend" component={RecommendStack} />
+        <Tab.Screen name="Challenge" component={ChallengeStack} />
         <Tab.Screen name="Community" component={CommunityStack} />
         <Tab.Screen name="Profile" component={ProfileStack} />
       </Tab.Navigator>
