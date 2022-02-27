@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { TextInput } from "react-native-gesture-handler";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 

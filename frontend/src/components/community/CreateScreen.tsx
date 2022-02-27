@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { TextInput } from "react-native-gesture-handler";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -14,7 +13,7 @@ export default function CreateScreen() {
   return (
     <View style={styles.container}>
       {/* selector로 선택 옵션 구현? */}
-      <Text>테스트Category: worries</Text>
+      <Text>Category: worries</Text>
 
       <TextInput
         placeholder="Title"
