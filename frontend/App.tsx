@@ -7,8 +7,8 @@ import * as SplashScreen from "expo-splash-screen";
 import MapStack from "./src/navigations/MapStack";
 import ChallengStackScreen from "./src/navigations/ChallengeStack";
 import Recommend from "./src/components/recommend/Recommend";
-import Profile from "./src/components/profile/Profile";
 import CommunityStack from "./src/navigations/CommunityStack";
+import ProfileStack from "./src/navigations/ProfileStack";
 
 type TabBarIconProps = { focused: boolean; color: string; size: number };
 
@@ -61,7 +61,7 @@ export default function App() {
         <Tab.Screen name="Recommend" component={Recommend} />
         <Tab.Screen name="Challenge" component={ChallengStackScreen} />
         <Tab.Screen name="Community" component={CommunityStack} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Profile" component={ProfileStack} />
       </Tab.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
