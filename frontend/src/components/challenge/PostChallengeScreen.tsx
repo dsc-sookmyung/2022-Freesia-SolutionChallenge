@@ -64,14 +64,18 @@ export default function PostChallengeScreen({ navigation }) {
         )}
       </TouchableOpacity>
       <View style={styles.titleInputView}>
-        <Text style={styles.inputTitle}>Title</Text>
-        <TextInput value={title} onChangeText={handleTitleChange} />
+        <TextInput
+          placeholder="Title"
+          value={title}
+          onChangeText={handleTitleChange}
+          style={styles.inputTitle}
+        />
       </View>
       <Divider />
       <View>
-        <Text style={{ ...styles.inputTitle, marginBottom: 10 }}>Contents</Text>
         <TextInput
           multiline
+          placeholder="Contents"
           value={contents}
           onChangeText={handleContentsChange}
         />

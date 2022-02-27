@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   Modal,
+  ScrollView,
 } from "react-native";
 import { Divider, ProfileIcon, mainStyle } from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,6 +20,7 @@ const postInfo = {
   image: require("../../../assets/tori.jpg"),
   title: "titleeeeeeeeeee",
   contents: "contentssssssssss",
+  date: "2022.02.24",
 };
 
 export default function ChallengeDetail({ navigation }: any) {
@@ -31,30 +33,33 @@ export default function ChallengeDetail({ navigation }: any) {
   };
 
   return (
-    <View style={{ ...mainStyle.mainView, paddingHorizontal: 0 }}>
+    <ScrollView style={{ ...mainStyle.mainView, paddingHorizontal: 0 }}>
       <View style={styles.topBar}>
         <View style={styles.topProfile}>
           <ProfileIcon imagePath={postInfo.profileImage} />
           <Text style={styles.nicknameText}>{postInfo.nickname}</Text>
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Ionicons name="menu" size={24} color="black" />
+          <Ionicons name="menu-outline" size={40} color="black" />
         </TouchableOpacity>
         <Modal
           animationType="fade"
           transparent={true}
+          statusBarTranslucent={true}
           visible={modalVisible}
           onRequestClose={() => setModalVisible(!modalVisible)}
         >
-          <View style={styles.modalView}>
-            <TouchableOpacity onPress={handleEdit}>
-              <Text>Edit</Text>
-            </TouchableOpacity>
-            <Divider />
-            <TouchableOpacity onPress={handleDelete}>
-              <Text>Delete</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity activeOpacity={0} onPress={() => setModalVisible(!modalVisible)} style={styles.overlay}>
+            <View style={styles.modalView}>
+              <TouchableOpacity onPress={handleEdit}>
+                <Text style={styles.modalText}>Edit</Text>
+              </TouchableOpacity>
+              <View style={{ width: "100%", height: 1, backgroundColor: "#eeeeee" }}></View>
+              <TouchableOpacity onPress={handleDelete}>
+                <Text style={styles.modalText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         </Modal>
       </View>
       <Image style={styles.detailImage} source={postInfo.image} />
@@ -62,8 +67,9 @@ export default function ChallengeDetail({ navigation }: any) {
         <Text style={styles.postTitle}>{postInfo.title}</Text>
         <Divider />
         <Text>{postInfo.contents}</Text>
+        <Text style={styles.date}>{postInfo.date}</Text>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -92,15 +98,44 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   postTitle: {
+    fontSize: 18,
     fontWeight: "700",
   },
+  status: {
+    flexDirection: "row",
+    marginVertical: 15,
+  },
+  likes: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
+  },
+  comments: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  date: {
+    color: "grey",
+    marginTop: 20,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
   modalView: {
-    padding: 10,
-    width: "25%",
-    backgroundColor: "white",
+    width: screenWidth,
     position: "absolute",
-    top: 110,
-    right: 10,
-    elevation: 10,
+    bottom: 0,
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 20,
+    width: screenWidth,
+    textAlign: "center",
+    paddingVertical: 15,
   },
 });
