@@ -17,14 +17,14 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { Divider } from "../../CommonComponent";
 
-Geocoder.init("AIzaSyAPEIGEf12unqTi_6if8i_okJEdgCPIeFY");
 const height = Dimensions.get("window").height;
 
-export default function Map() {
-  const [latLon, setLatLon] = useState({ lat: 0, lon: 0 });
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [locationName, setLocationName] = useState("");
-
+export default function MapScreen({
+  navigation,
+  latitude,
+  longitude,
+  location,
+}) {
   const centerInfo = [
     {
       centerName: "용산새일센터",
@@ -51,36 +51,6 @@ export default function Map() {
       websiteAddress: "www.naver.com",
     },
   ];
-
-  const getLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
-      return;
-    }
-
-    let {
-      coords: { latitude, longitude },
-    } = await Location.getCurrentPositionAsync({});
-    setLatLon({ lat: latitude, lon: longitude });
-
-    Geocoder.from(latitude, longitude)
-      .then((json) => {
-        var addressComponent = json.results[0].address_components;
-        setLocationName(
-          addressComponent[4].long_name +
-            " " +
-            addressComponent[3].long_name +
-            " " +
-            addressComponent[2].long_name
-        );
-      })
-      .catch((error) => console.warn(error));
-  };
-
-  useEffect(() => {
-    getLocation();
-  }, []);
 
   const renderHeader = () => (
     <View style={styles.header}>
@@ -121,16 +91,16 @@ export default function Map() {
         style={{ height }}
         provider={PROVIDER_GOOGLE}
         region={{
-          latitude: latLon.lat - 0.02,
-          longitude: latLon.lon,
+          latitude: latitude - 0.02,
+          longitude: longitude,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         }}
       >
         <Marker
-          coordinate={{ latitude: latLon.lat, longitude: latLon.lon }}
+          coordinate={{ latitude: latitude, longitude: longitude }}
           image={require("../../../assets/flower_pin.png")}
-          title={"Seoul"}
+          title={location.city_gu}
         />
         <Marker
           coordinate={{ latitude: 37.5, longitude: 127 }}
@@ -199,62 +169,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-{
-  /* <GestureHandlerRootView style={{ position: "relative" }}>
-  <MapView style={{ height }} provider={PROVIDER_GOOGLE}>
-    <Marker
-      coordinate={{ latitude: 37.5, longitude: 127 }}
-      image={require("../../../assets/pin_s.png")}
-      title={"Seoul"}
-    />
-  </MapView>
-  <View
-    style={{
-      position: "absolute",
-      top: 50,
-      right: (screenWidth + screenPadding * 2) / 2,
-    }}
-  >
-    <Button
-      title="Open Bottom Sheet"
-      onPress={() => sheetRef.current.snapTo(0)}
-    />
-  </View>
-  <BottomSheet
-    ref={sheetRef}
-    snapPoints={["0%", "50%", "100%"]}
-    initialSnap={0}
-    callbackNode={fall}
-    renderContent={renderContent}
-    renderHeader={renderHeader}
-  />
-  <Animated.View
-    style={{
-      margin: 20,
-      opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
-    }}
-  ></Animated.View>
-</GestureHandlerRootView>; */
-}
-
-/*
-  <Drawer.Navigator initialRouteName="MapScreen">
-      <Drawer.Screen name="MapScreen" component={MapScreen} />
-      <Drawer.Screen name="CenterListScreen" component={CenterListScreen} />
-    </Drawer.Navigator>
-   */
-/* <MapView
-        style={{ height }}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 37.5,
-          longitude: 127,
-        }}
-      >
-        <Marker
-          coordinate={{ latitude: 37.5, longitude: 127 }}
-          image={require("../assets/pin_s.png")}
-          title={"Seoul"}
-        />
-      </MapView> */
