@@ -99,12 +99,52 @@ export default function MapScreen({
       >
         <Marker
           coordinate={{ latitude: latitude, longitude: longitude }}
-          image={require("../../../assets/flower_pin.png")}
+          image={require("../../../assets/flower_pin_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude - 0.01,
+            longitude: longitude + 0.01,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude - 0.02,
+            longitude: longitude - 0.01,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude + 0.01,
+            longitude: longitude + 0.02,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude + 0.005,
+            longitude: longitude + 0.01,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
+          title={location.city_gu}
+        />
+        <Marker
+          coordinate={{
+            latitude: latitude - 0.005,
+            longitude: longitude - 0.01,
+          }}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
           title={location.city_gu}
         />
         <Marker
           coordinate={{ latitude: 37.5, longitude: 127 }}
-          image={require("../../../assets/pin_s.png")}
+          image={require("../../../assets/custom_pin_shadow_s.png")}
           title={"Seoul"}
         />
       </MapView>

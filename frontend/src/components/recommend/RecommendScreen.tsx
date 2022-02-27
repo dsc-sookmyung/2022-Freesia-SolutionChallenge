@@ -10,6 +10,7 @@ import {
 
 export default function RecommendScreen({ navigation }: any) {
   const screenFullWidth = Dimensions.get("window").width;
+  const height = Dimensions.get("window").height;
 
   const videoData = [
     {
@@ -47,7 +48,9 @@ export default function RecommendScreen({ navigation }: any) {
         }}
         source={require("../../../assets/youtube_image.png")}
       ></Image>
-      <Text style={{ height: 50, padding: 6 }}>{item.title}</Text>
+      <Text style={{ height: height * 0.08, padding: 6, fontSize: 12 }}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 
