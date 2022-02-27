@@ -90,8 +90,8 @@ export default function Map() {
 
   const CenterInfo = () => (
     <View>
-      {centerInfo.map((c) => (
-        <View>
+      {centerInfo.map((c, idx) => (
+        <View key={idx}>
           <Text style={styles.centerName}>{c.centerName}</Text>
           <Text>{c.centerAddress}</Text>
           <Text>{c.centerCall}</Text>
@@ -121,7 +121,7 @@ export default function Map() {
         style={{ height }}
         provider={PROVIDER_GOOGLE}
         region={{
-          latitude: latLon.lat,
+          latitude: latLon.lat - 0.02,
           longitude: latLon.lon,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
@@ -129,7 +129,7 @@ export default function Map() {
       >
         <Marker
           coordinate={{ latitude: latLon.lat, longitude: latLon.lon }}
-          image={require("../../../assets/user_pin.png")}
+          image={require("../../../assets/flower_pin.png")}
           title={"Seoul"}
         />
         <Marker
