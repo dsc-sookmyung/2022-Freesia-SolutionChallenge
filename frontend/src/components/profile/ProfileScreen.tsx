@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons, EvilIcons } from '@expo/vector-icons';
 import MyChallengeList from "./MyChallengeList";
 import MyCommunityList from "./MyCommunityList";
@@ -49,9 +49,7 @@ export default function ProfileScreen({ navigation }: any) {
             </TouchableOpacity>
           ))}
         </View>
-        <ScrollView style={styles.tabContent}>
-          <Text>{tabList[activeTab].content}</Text>
-        </ScrollView>
+        {tabList[activeTab].content}
       </View>
 
     </View>
@@ -108,7 +106,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 7,
   },
-  tabContent: {
-    marginTop: 10,
-  }
 })
