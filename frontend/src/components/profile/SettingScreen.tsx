@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { theme } from "../../color";
 import { EvilIcons } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axiosInstance from "../../axiosInstance";
 
 export default function SettingScreen({ navigation }: any) {
   const [nickname, setNickname] = useState<string>("nickname");
@@ -9,6 +11,18 @@ export default function SettingScreen({ navigation }: any) {
   const save = () => {
     ToastAndroid.show("Saved", ToastAndroid.SHORT);
     // 서버에 전송
+  };
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem('token'); // 토큰 제거
+      ToastAndroid.show("Logged Out Successfully!", ToastAndroid.SHORT);
+      navigation.navigate('ProfileScreen');
+      return true;
+    }
+    catch (err) {
+      console.log(err);
+      return false;
+    }
   };
   const deleteAccount = () => {
     Alert.alert('Delete Account', 'Do you want to delete account?', [
@@ -41,7 +55,7 @@ export default function SettingScreen({ navigation }: any) {
         <TouchableOpacity>
           <Text style={styles.menuItem}>고객센터</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={logout}>
           <Text style={styles.menuItem}>로그아웃</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={deleteAccount}>
