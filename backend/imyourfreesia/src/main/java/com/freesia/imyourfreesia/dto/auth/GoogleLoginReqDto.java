@@ -1,4 +1,4 @@
-package com.freesia.imyourfreesia.dto;
+package com.freesia.imyourfreesia.dto.auth;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class KakaoLoginReqDto {
+public class GoogleLoginReqDto {
 
     private String accessToken;
 
     @Builder
-    public KakaoLoginReqDto(String accessToken) {
+    public GoogleLoginReqDto(String accessToken) {
         this.accessToken = accessToken;
     }
 }

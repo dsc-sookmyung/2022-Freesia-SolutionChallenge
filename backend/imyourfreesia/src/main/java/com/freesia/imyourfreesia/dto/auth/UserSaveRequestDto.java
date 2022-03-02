@@ -1,4 +1,4 @@
-package com.freesia.imyourfreesia.dto;
+package com.freesia.imyourfreesia.dto.auth;
 
 import com.freesia.imyourfreesia.domain.user.User;
 import io.swagger.annotations.ApiModelProperty;

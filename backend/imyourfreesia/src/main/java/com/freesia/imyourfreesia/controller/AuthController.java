@@ -1,7 +1,10 @@
 package com.freesia.imyourfreesia.controller;
 
-import com.freesia.imyourfreesia.dto.*;
-import com.freesia.imyourfreesia.service.AuthService;
+import com.freesia.imyourfreesia.dto.auth.GoogleLoginReqDto;
+import com.freesia.imyourfreesia.dto.auth.KakaoLoginReqDto;
+import com.freesia.imyourfreesia.dto.auth.NaverLoginReqDto;
+import com.freesia.imyourfreesia.dto.auth.TokenDto;
+import com.freesia.imyourfreesia.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

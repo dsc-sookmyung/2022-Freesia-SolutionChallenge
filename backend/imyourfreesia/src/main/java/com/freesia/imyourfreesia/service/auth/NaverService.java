@@ -1,9 +1,9 @@
-package com.freesia.imyourfreesia.service;
+package com.freesia.imyourfreesia.service.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.freesia.imyourfreesia.dto.auth.NaverOAuth2UserInfoDto;
 import com.freesia.imyourfreesia.exception.AccessTokenException;
-import com.freesia.imyourfreesia.dto.GoogleOAuth2UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -19,28 +19,28 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GoogleService {
+public class NaverService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
 
-    public GoogleOAuth2UserInfoDto getUserInfoByAccessToken(String accessToken) {
-        final String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
+    public NaverOAuth2UserInfoDto getUserInfoByAccessToken(String accessToken) {
+        final String tokenInfoUri = "https://openapi.naver.com/v1/nid/me";
 
         HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("access_token", accessToken);
+        LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(tokenInfoUri, request, String.class);
 
-            GoogleOAuth2UserInfoDto googleOAuth2UserInfoDto = objectMapper.readValue(response.getBody(), GoogleOAuth2UserInfoDto.class);
+            NaverOAuth2UserInfoDto naverOAuth2UserInfoDto = objectMapper.readValue(response.getBody(), NaverOAuth2UserInfoDto.class);
 
-            return googleOAuth2UserInfoDto;
+            return naverOAuth2UserInfoDto;
 
         } catch (RestClientException | JsonProcessingException e) {
             log.error(e.getMessage());

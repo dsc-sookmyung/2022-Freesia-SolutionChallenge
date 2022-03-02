@@ -1,4 +1,4 @@
-package com.freesia.imyourfreesia.dto;
+package com.freesia.imyourfreesia.dto.auth;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

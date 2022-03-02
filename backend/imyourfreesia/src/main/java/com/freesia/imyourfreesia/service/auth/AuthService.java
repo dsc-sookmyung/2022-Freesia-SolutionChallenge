@@ -1,9 +1,9 @@
-package com.freesia.imyourfreesia.service;
+package com.freesia.imyourfreesia.service.auth;
 
 import com.freesia.imyourfreesia.config.JwtTokenUtil;
 import com.freesia.imyourfreesia.domain.user.User;
 import com.freesia.imyourfreesia.domain.user.UserRepository;
-import com.freesia.imyourfreesia.dto.*;
+import com.freesia.imyourfreesia.dto.auth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,8 @@
-package com.freesia.imyourfreesia.service;
+package com.freesia.imyourfreesia.service.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.freesia.imyourfreesia.dto.KakaoOAuth2UserInfoDto;
+import com.freesia.imyourfreesia.dto.auth.KakaoOAuth2UserInfoDto;
 import com.freesia.imyourfreesia.exception.AccessTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
