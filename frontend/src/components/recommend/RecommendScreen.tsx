@@ -12,6 +12,20 @@ export default function RecommendScreen({ navigation }: any) {
   const screenFullWidth = Dimensions.get("window").width;
   const height = Dimensions.get("window").height;
 
+  /* const youtubeData = async () => {
+    try {
+      const response = await fetch(
+        `http://172.30.1.3:8080/api/center?address=${cityKr}`,
+        {
+          method: "GET",
+        }
+      );
+      const json = await response.json();
+    } catch (error) {
+      console.error(error);
+    }
+  }; */
+
   const videoData = [
     {
       id: "0",
