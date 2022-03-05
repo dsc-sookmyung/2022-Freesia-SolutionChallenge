@@ -2,12 +2,14 @@ package com.freesia.imyourfreesia.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.freesia.imyourfreesia.domain.BaseTimeEntity;
+import com.freesia.imyourfreesia.domain.community.Community;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "user")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,25 +17,25 @@ import javax.persistence.*;
 public class User extends BaseTimeEntity {
 
     @JsonIgnore
-    @Id // PK
-    @Column(name = "id")
+    @Id
+    @Column(name = "userId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 50, unique = true)
     private String name;
 
-    @Column(name = "email", length = 100)
+    @Column(unique = true)
     private String email;
 
-    @Column(name = "nickName", length = 100)
     private String nickName;
 
-    @Column(name = "profileImg", length = 100)
     private String profileImg;
 
-    @Column(name = "goalMsg", length = 100)
+    @Column(length = 100)
     private String goalMsg;
+
+    @OneToMany (mappedBy = "uid")
+    private List<Community> community = new ArrayList<Community>();
 
     @Builder
     public User(String name, String email, String nickname, String profileImg, String goalMsg) {

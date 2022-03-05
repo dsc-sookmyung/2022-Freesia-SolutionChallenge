@@ -5,10 +5,10 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Entity
 @ToString
 @Getter
 @NoArgsConstructor
-@Entity
 public class Centers extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
