@@ -42,10 +42,15 @@ public class Community extends BaseTimeEntity {
         this.category = category;
     }
 
-    public void update(String title, String content, String image, String category) {
+    public Community update(String title, String content, String image, String category) {
         this.title = title;
         this.content = content;
         this.image = image;
         this.category = category;
+        return this;
+    }
+
+    public void setUser(User user) {
+        this.uid = user;
     }
 }
