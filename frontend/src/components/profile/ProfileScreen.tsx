@@ -1,12 +1,26 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons, EvilIcons } from '@expo/vector-icons';
 import MyChallengeList from "./MyChallengeList";
 import MyCommunityList from "./MyCommunityList";
 import MyBookmarkList from "./MyBookmarkList";
 import { theme } from "../../color";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ProfileScreen({ navigation }: any) {
+
+  // const isLogin = AsyncStorage.getItem('token');
+  const isLogin: boolean = false;
+
+  if (!isLogin) {
+    Alert.alert('Warning', 'You can use it after login.', [
+      {
+        onPress: () => {
+          navigation.navigate('Login');
+        }
+      },
+    ]);
+  }
 
   const gotoSetting = () => {
     navigation.navigate('SettingScreen');
