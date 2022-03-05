@@ -5,16 +5,18 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  Linking,
 } from "react-native";
 
 import Geocoder from "react-native-geocoding";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-
-import BottomSheet from "reanimated-bottom-sheet";
 import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
+
+import BottomSheet from "reanimated-bottom-sheet";
+import { Feather } from "@expo/vector-icons";
 
 import { Divider } from "../../CommonComponent";
 
@@ -32,7 +34,7 @@ export default function MapScreen({
   const getCenterInfo = async () => {
     try {
       const response = await fetch(
-        `http://172.30.1.55:8080/api/center?address=${cityKr}`,
+        `http://172.30.1.3:8080/api/center?address=${cityKr}`,
         {
           method: "GET",
         }
@@ -75,7 +77,13 @@ export default function MapScreen({
           <Text style={styles.centerName}>{c.name}</Text>
           <Text>{c.address}</Text>
           <Text>{c.contact}</Text>
-          <Text>{c.websiteUrl}</Text>
+          <TouchableOpacity
+            style={styles.linkView}
+            onPress={() => Linking.openURL(c.websiteUrl)}
+          >
+            <Text style={styles.linkText}>홈페이지</Text>
+            <Feather name="external-link" size={15} color="black" />
+          </TouchableOpacity>
           <Divider />
         </View>
       ))}
@@ -183,5 +191,14 @@ const styles = StyleSheet.create({
   buttonSubContainer: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  linkView: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  linkText: {
+    fontWeight: "700",
+    marginRight: 4,
   },
 });

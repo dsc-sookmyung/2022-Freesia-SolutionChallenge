@@ -63,7 +63,6 @@ export default function MapStackScreen() {
   }, []);
 
   const CustomHeader = () => {
-    console.log();
     return (
       <View
         style={{
