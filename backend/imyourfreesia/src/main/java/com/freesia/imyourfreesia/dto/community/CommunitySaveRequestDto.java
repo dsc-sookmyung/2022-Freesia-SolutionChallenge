@@ -23,18 +23,14 @@ public class CommunitySaveRequestDto {
     @ApiModelProperty(example = "게시글 내용")
     private String content;
 
-    @ApiModelProperty(example = "게시글 이미지")
-    private String image;
-
     @ApiModelProperty(example = "카테고리")
     private String category;
 
     @Builder
-    public CommunitySaveRequestDto(String email, String title, String content, String image, String category){
+    public CommunitySaveRequestDto(String email, String title, String content, String category){
         this.email = email;
         this.title = title;
         this.content = content;
-        this.image = image;
         this.category = category;
     }
 
@@ -43,7 +39,6 @@ public class CommunitySaveRequestDto {
                 .uid(uid)
                 .title(title)
                 .content(content)
-                .image(image)
                 .category(category)
                 .build();
     }

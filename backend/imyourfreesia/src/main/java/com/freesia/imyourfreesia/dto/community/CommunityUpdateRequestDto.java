@@ -15,17 +15,13 @@ public class CommunityUpdateRequestDto {
     @ApiModelProperty(example = "게시글 내용")
     private String content;
 
-    @ApiModelProperty(example = "게시글 이미지")
-    private String image;
-
     @ApiModelProperty(example = "카테고리")
     private String category;
 
     @Builder
-    public CommunityUpdateRequestDto(String title, String content, String image, String category){
+    public CommunityUpdateRequestDto(String title, String content, String category){
         this.title = title;
         this.content = content;
-        this.image = image;
         this.category = category;
     }
 }

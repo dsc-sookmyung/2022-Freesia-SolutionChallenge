@@ -5,6 +5,8 @@ import com.freesia.imyourfreesia.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,29 +30,35 @@ public class Community extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    private String image;
+    @OneToMany(mappedBy = "community", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<Photo> image = new ArrayList<>();
 
     @Column(nullable = false)
     private String category;
 
     @Builder
-    public Community(User uid, String title, String content, String image, String category){
+    public Community(User uid, String title, String content, String category){
         this.uid = uid;
         this.title = title;
         this.content = content;
-        this.image = image;
         this.category = category;
     }
 
-    public Community update(String title, String content, String image, String category) {
+    public Community update(String title, String content, String category) {
         this.title = title;
         this.content = content;
-        this.image = image;
         this.category = category;
         return this;
     }
 
     public void setUser(User user) {
         this.uid = user;
+    }
+
+    public void addImage(Photo photo) {
+        this.image.add(photo);
+
+        if(photo.getCommunity() != this)
+            photo.setCommunity(this);
     }
 }
