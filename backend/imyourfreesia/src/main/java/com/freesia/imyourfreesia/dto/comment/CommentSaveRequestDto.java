@@ -1,4 +1,4 @@
-package com.freesia.imyourfreesia.dto.auth.comment;
+package com.freesia.imyourfreesia.dto.comment;
 
 import com.freesia.imyourfreesia.domain.comment.Comment;
 import com.freesia.imyourfreesia.domain.community.Community;

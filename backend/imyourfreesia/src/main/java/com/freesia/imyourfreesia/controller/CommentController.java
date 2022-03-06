@@ -1,8 +1,8 @@
 package com.freesia.imyourfreesia.controller;
 
 import com.freesia.imyourfreesia.domain.comment.Comment;
-import com.freesia.imyourfreesia.dto.auth.comment.CommentSaveRequestDto;
-import com.freesia.imyourfreesia.dto.auth.comment.CommentUpdateRequestDto;
+import com.freesia.imyourfreesia.dto.comment.CommentSaveRequestDto;
+import com.freesia.imyourfreesia.dto.comment.CommentUpdateRequestDto;
 import com.freesia.imyourfreesia.service.CommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

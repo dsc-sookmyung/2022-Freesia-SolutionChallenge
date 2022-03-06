@@ -1,4 +1,4 @@
-package com.freesia.imyourfreesia.dto.auth.comment;
+package com.freesia.imyourfreesia.dto.comment;
 
 import lombok.Builder;
 import lombok.Getter;
