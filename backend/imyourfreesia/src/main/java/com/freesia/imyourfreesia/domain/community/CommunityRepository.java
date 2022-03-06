@@ -1,7 +1,11 @@
 package com.freesia.imyourfreesia.domain.community;
 
-import com.freesia.imyourfreesia.domain.centers.Centers;
+import com.freesia.imyourfreesia.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CommunityRepository extends JpaRepository<Centers, Long> {
+import java.util.List;
+
+public interface CommunityRepository extends JpaRepository<Community, Long> {
+    List<Community> findByCategory(String category);
+    List<Community> findByUidAndCategory(User user, String category);
 }
