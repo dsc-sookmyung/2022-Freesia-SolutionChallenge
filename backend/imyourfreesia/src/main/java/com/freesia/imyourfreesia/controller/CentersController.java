@@ -35,5 +35,5 @@ public class CentersController {
         return ResponseEntity.ok().body(centersRepository.findAll());
 
     }
-    
+
 }
