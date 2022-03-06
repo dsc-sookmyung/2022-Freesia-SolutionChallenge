@@ -16,6 +16,7 @@ export default function MapStackScreen() {
   const [latLon, setLatLon] = useState({ lat: 0, lon: 0 });
   const [location, setLocation] = useState({});
   const [locationName, setLocationName] = useState("");
+  const [cityKr, setCityKr] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
   const MapStack = createStackNavigator();
 
@@ -30,6 +31,13 @@ export default function MapStackScreen() {
       coords: { latitude, longitude },
     } = await Location.getCurrentPositionAsync({});
     setLatLon({ lat: latitude, lon: longitude });
+
+    const locationKr = await Location.reverseGeocodeAsync(
+      { latitude, longitude },
+      { useGoogleMaps: false }
+    );
+
+    setCityKr(locationKr[0].city);
 
     Geocoder.from(latitude, longitude)
       .then((json) => {
@@ -55,7 +63,6 @@ export default function MapStackScreen() {
   }, []);
 
   const CustomHeader = () => {
-    console.log();
     return (
       <View
         style={{
@@ -87,6 +94,7 @@ export default function MapStackScreen() {
       latitude={latLon.lat}
       longitude={latLon.lon}
       location={location}
+      cityKr={cityKr}
     />
   );
 
