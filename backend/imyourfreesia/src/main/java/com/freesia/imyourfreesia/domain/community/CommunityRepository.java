@@ -8,4 +8,5 @@ import java.util.List;
 public interface CommunityRepository extends JpaRepository<Community, Long> {
     List<Community> findByCategory(String category);
     List<Community> findByUidAndCategory(User user, String category);
+
 }
