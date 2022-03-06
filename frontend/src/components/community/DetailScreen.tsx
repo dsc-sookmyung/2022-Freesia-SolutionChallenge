@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
   image: {
     width: SCREEN_WIDTH,
     height: SCREEN_WIDTH,
-    // objectFit: "cover",
   },
   container: {
     padding: 10,

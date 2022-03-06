@@ -1,8 +1,6 @@
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { theme } from "../../color";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 // 테스트용 데이터
 const posts = [
@@ -21,7 +19,7 @@ const posts = [
 export default function MyCommunityList({ navigation }: any) {
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {posts.map((post, index) =>
         <View key={index}>
           <TouchableOpacity style={styles.list}>
@@ -45,14 +43,13 @@ export default function MyCommunityList({ navigation }: any) {
           <View style={{ width: "100%", height: 2, backgroundColor: theme.devideBg }}></View>
         </View>
       )}
-    </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: SCREEN_WIDTH,
   },
   list: {
     padding: 10,
