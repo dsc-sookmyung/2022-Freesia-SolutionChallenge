@@ -2,16 +2,21 @@ import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
-  Button,
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  Linking,
 } from "react-native";
 
+import Geocoder from "react-native-geocoding";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from "react-native-gesture-handler";
 
 import BottomSheet from "reanimated-bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
 
 import { Divider } from "../../CommonComponent";
 
@@ -22,33 +27,42 @@ export default function MapScreen({
   latitude,
   longitude,
   location,
+  cityKr,
 }) {
-  const centerInfo = [
-    {
-      centerName: "용산새일센터",
-      centerAddress: "서울특별시 용산구 청파로 139-21",
-      centerCall: "02-714-9763",
-      websiteAddress: "www.naver.com",
-    },
-    {
-      centerName: "용산새일센터",
-      centerAddress: "서울특별시 용산구 청파로 139-21",
-      centerCall: "02-714-9763",
-      websiteAddress: "www.naver.com",
-    },
-    {
-      centerName: "용산새일센터",
-      centerAddress: "서울특별시 용산구 청파로 139-21",
-      centerCall: "02-714-9763",
-      websiteAddress: "www.naver.com",
-    },
-    {
-      centerName: "용산새일센터",
-      centerAddress: "서울특별시 용산구 청파로 139-21",
-      centerCall: "02-714-9763",
-      websiteAddress: "www.naver.com",
-    },
-  ];
+  const [centerInfo, setCenterInfo] = useState([]);
+  const [geocoding, setGeocoding] = useState(false);
+  const getCenterInfo = async () => {
+    try {
+      const response = await fetch(
+        `http://172.30.1.28:8080/api/center?address=${cityKr}`,
+        {
+          method: "GET",
+        }
+      );
+      const json = await response.json();
+      const messages = await Promise.all(
+        json.map(async (c) => {
+          try {
+            const centerAddress = await Geocoder.from(c.address);
+            const { lat, lng } = centerAddress.results[0].geometry.location;
+            c.lat = lat;
+            c.lng = lng;
+          } catch (error) {
+            console.warn(error);
+          }
+          return true;
+        })
+      );
+      setCenterInfo(json);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getCenterInfo();
+    return () => setGeocoding(true);
+  }, []);
 
   const renderHeader = () => (
     <View style={styles.header}>
@@ -57,17 +71,23 @@ export default function MapScreen({
   );
 
   const CenterInfo = () => (
-    <View>
+    <ScrollView>
       {centerInfo.map((c, idx) => (
         <View key={idx}>
-          <Text style={styles.centerName}>{c.centerName}</Text>
-          <Text>{c.centerAddress}</Text>
-          <Text>{c.centerCall}</Text>
-          <Text>{c.websiteAddress}</Text>
+          <Text style={styles.centerName}>{c.name}</Text>
+          <Text>{c.address}</Text>
+          <Text>{c.contact}</Text>
+          <TouchableOpacity
+            style={styles.linkView}
+            onPress={() => Linking.openURL(c.websiteUrl)}
+          >
+            <Text style={styles.linkText}>홈페이지</Text>
+            <Feather name="external-link" size={15} color="black" />
+          </TouchableOpacity>
           <Divider />
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 
   const renderContent = () => (
@@ -75,7 +95,7 @@ export default function MapScreen({
       style={{
         backgroundColor: "white",
         paddingHorizontal: 15,
-        height: height * 0.8,
+        height: height * 0.7,
       }}
     >
       <CenterInfo />
@@ -100,51 +120,17 @@ export default function MapScreen({
           image={require("../../../assets/flower_pin_s.png")}
           title={location.city_gu}
         />
-        <Marker
-          coordinate={{
-            latitude: latitude - 0.01,
-            longitude: longitude + 0.01,
-          }}
-          image={require("../../../assets/custom_pin_shadow_s.png")}
-          title={location.city_gu}
-        />
-        <Marker
-          coordinate={{
-            latitude: latitude - 0.02,
-            longitude: longitude - 0.01,
-          }}
-          image={require("../../../assets/custom_pin_shadow_s.png")}
-          title={location.city_gu}
-        />
-        <Marker
-          coordinate={{
-            latitude: latitude + 0.01,
-            longitude: longitude + 0.02,
-          }}
-          image={require("../../../assets/custom_pin_shadow_s.png")}
-          title={location.city_gu}
-        />
-        <Marker
-          coordinate={{
-            latitude: latitude + 0.005,
-            longitude: longitude + 0.01,
-          }}
-          image={require("../../../assets/custom_pin_shadow_s.png")}
-          title={location.city_gu}
-        />
-        <Marker
-          coordinate={{
-            latitude: latitude - 0.005,
-            longitude: longitude - 0.01,
-          }}
-          image={require("../../../assets/custom_pin_shadow_s.png")}
-          title={location.city_gu}
-        />
-        <Marker
-          coordinate={{ latitude: 37.5, longitude: 127 }}
-          image={require("../../../assets/custom_pin_shadow_s.png")}
-          title={"Seoul"}
-        />
+        {centerInfo.map((c, idx) => (
+          <Marker
+            key={idx}
+            coordinate={{
+              latitude: c.lat,
+              longitude: c.lng,
+            }}
+            image={require("../../../assets/custom_pin_shadow_s.png")}
+            title={c.name}
+          />
+        ))}
       </MapView>
       <View style={styles.buttonContainer}>
         <View style={styles.buttonSubContainer}>
@@ -205,5 +191,14 @@ const styles = StyleSheet.create({
   buttonSubContainer: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  linkView: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  linkText: {
+    fontWeight: "700",
+    marginRight: 4,
   },
 });
