@@ -34,7 +34,7 @@ export default function MapScreen({
   const getCenterInfo = async () => {
     try {
       const response = await fetch(
-        `http://172.30.1.3:8080/api/center?address=${cityKr}`,
+        `http://172.30.1.28:8080/api/center?address=${cityKr}`,
         {
           method: "GET",
         }
