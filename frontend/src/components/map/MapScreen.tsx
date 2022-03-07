@@ -18,7 +18,7 @@ import {
 import BottomSheet from "reanimated-bottom-sheet";
 import { Feather } from "@expo/vector-icons";
 
-import { Divider } from "../../CommonComponent";
+import { Divider, ipAddress } from "../../CommonComponent";
 
 const height = Dimensions.get("window").height;
 
@@ -34,7 +34,7 @@ export default function MapScreen({
   const getCenterInfo = async () => {
     try {
       const response = await fetch(
-        `http://172.30.1.28:8080/api/center?address=${cityKr}`,
+        `http://${ipAddress}:8080/api/center?address=${cityKr}`,
         {
           method: "GET",
         }
