@@ -17,7 +17,7 @@ import java.util.Optional;
 public class Challenge extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "challengeId")
     private Long id;
 
     @ManyToOne
