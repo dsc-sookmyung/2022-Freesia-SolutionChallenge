@@ -84,9 +84,9 @@ public class CommunityService {
 
     // 이메일로 카테고리에서 내 게시글 조회
     @Transactional
-    public List<Community> findByEmail(String email, String category) {
+    public List<Community> findByEmail(String email) {
         User user = userRepository.findByEmail(email);
-        return communityRepository.findByUidAndCategory(user, category);
+        return communityRepository.findByUid(user);
     }
 
 }
