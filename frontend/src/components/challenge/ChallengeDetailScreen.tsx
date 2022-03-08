@@ -10,7 +10,8 @@ import {
   ScrollView,
 } from "react-native";
 import { Divider, ProfileIcon, mainStyle } from "../../CommonComponent";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
+import EmojiPicker from "rn-emoji-keyboard";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -24,12 +25,18 @@ const postInfo = {
 };
 
 export default function ChallengeDetail({ navigation }: any) {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedEmoji, setSelectedEmoji] = useState([]);
 
   const handleEdit = () =>
     navigation.navigate("EditChallengeScreen", { postInfo });
   const handleDelete = () => {
     console.log("delete");
+  };
+
+  const handlePick = (emojiObject) => {
+    console.log(emojiObject);
   };
 
   return (
@@ -69,8 +76,18 @@ export default function ChallengeDetail({ navigation }: any) {
         </Modal>
       </View>
       <Image style={styles.detailImage} source={postInfo.image} />
-      <View style={styles.postTexts}>
-        <Text style={styles.postTitle}>{postInfo.title}</Text>
+      <View style={styles.post}>
+        <View style={styles.postTop}>
+          <Text style={styles.postTitle}>{postInfo.title}</Text>
+          <TouchableOpacity onPress={() => setIsOpen(true)}>
+            <AntDesign name="heart" size={24} color="red" />
+          </TouchableOpacity>
+          <EmojiPicker
+            onEmojiSelected={handlePick}
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
+        </View>
         <Divider />
         <Text>{postInfo.contents}</Text>
       </View>
@@ -100,8 +117,13 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: screenWidth,
   },
-  postTexts: {
+  post: {
     margin: 10,
+  },
+  postTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   postTitle: {
     fontSize: 18,
