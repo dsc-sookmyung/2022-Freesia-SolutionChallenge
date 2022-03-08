@@ -19,28 +19,34 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.google.api-client:google-api-client:1.30.9'
-	//implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
-	implementation 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
-
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// jwt token
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
+	// auth
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+	// springboot + DB
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// swagger
 	implementation 'io.springfox:springfox-swagger2:2.9.2'
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
+	// crawling
 	implementation 'org.jsoup:jsoup:1.13.1'
+
+	// multipartfile upload
+	implementation 'commons-io:commons-io:2.6'
 }
 
 tasks.named('test') {
