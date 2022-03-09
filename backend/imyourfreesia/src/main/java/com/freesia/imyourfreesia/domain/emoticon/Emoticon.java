@@ -5,10 +5,17 @@ import com.freesia.imyourfreesia.domain.challenge.Challenge;
 import com.freesia.imyourfreesia.domain.comment.Comment;
 import com.freesia.imyourfreesia.domain.community.Community;
 import com.freesia.imyourfreesia.domain.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Entity
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Emoticon extends BaseTimeEntity {
 
     @Id
