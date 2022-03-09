@@ -2,18 +2,14 @@ package com.freesia.imyourfreesia.domain.emoticon;
 
 import com.freesia.imyourfreesia.domain.BaseTimeEntity;
 import com.freesia.imyourfreesia.domain.challenge.Challenge;
-import com.freesia.imyourfreesia.domain.comment.Comment;
-import com.freesia.imyourfreesia.domain.community.Community;
 import com.freesia.imyourfreesia.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Emoticon extends BaseTimeEntity {
@@ -29,24 +25,24 @@ public class Emoticon extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn (name = "challengeId")
-    private Challenge challenge;
+    private Challenge challengeId;
 
     @Column(nullable = false)
-    private String emoticon;
+    private String emoticonName;
 
     @Builder
-    public Emoticon(User uid, Challenge challenge, String emoticon){
+    public Emoticon(User uid, Challenge challengeId, String emoticonName){
         this.uid = uid;
-        this.challenge = challenge;
-        this.emoticon = emoticon;
+        this.challengeId = challengeId;
+        this.emoticonName = emoticonName;
     }
 
-    public void setUid(User uid){
-        this.uid = uid;
+    public void setUser(User user){
+        this.uid = user;
     }
 
     public void setChallenge(Challenge challenge){
-        this.challenge = challenge;
+        this.challengeId = challenge;
     }
 }
 
