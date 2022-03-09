@@ -1,8 +1,5 @@
 package com.freesia.imyourfreesia.dto.emoticon;
 
-import com.freesia.imyourfreesia.domain.challenge.Challenge;
-import com.freesia.imyourfreesia.domain.emoticon.Emoticon;
-import com.freesia.imyourfreesia.domain.user.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
@@ -10,22 +7,22 @@ import lombok.Getter;
 public class EmoticonResponseDto {
 
     @ApiModelProperty(example = "이모티콘 1 갯수")
-    private Long emoticon1;
+    private int emoticon1;
 
     @ApiModelProperty(example = "이모티콘 2 갯수")
-    private Long emoticon2;
+    private int emoticon2;
 
     @ApiModelProperty(example = "이모티콘 3 갯수")
-    private Long emoticon3;
+    private int emoticon3;
 
     @ApiModelProperty(example = "이모티콘 4 갯수")
-    private Long emoticon4;
+    private int emoticon4;
 
     @ApiModelProperty(example = "이모티콘 5 갯수")
-    private Long emoticon5;
+    private int emoticon5;
 
 
-    public EmoticonResponseDto(Long emoticon1, Long emoticon2, Long emoticon3, Long emoticon4, Long emoticon5) {
+    public EmoticonResponseDto(int emoticon1, int emoticon2, int emoticon3, int emoticon4, int emoticon5) {
         this.emoticon1 = emoticon1;
         this.emoticon2 = emoticon2;
         this.emoticon3 = emoticon3;
