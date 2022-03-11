@@ -44,7 +44,7 @@ export default function RecommendScreen() {
         }}
       >
         <Text style={{ padding: 6, fontSize: 16 }}>{item.title}</Text>
-        <Text style={{ padding: 6, fontSize: 12 }}>{item.createDate}</Text>
+        <Text style={{ padding: 6, fontSize: 12 }}>{item.createdDate}</Text>
       </View>
     </View>
   );

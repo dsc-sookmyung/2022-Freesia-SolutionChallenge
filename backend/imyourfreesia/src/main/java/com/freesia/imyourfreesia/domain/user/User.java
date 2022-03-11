@@ -2,12 +2,9 @@ package com.freesia.imyourfreesia.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.freesia.imyourfreesia.domain.BaseTimeEntity;
-import com.freesia.imyourfreesia.domain.community.Community;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -33,9 +30,6 @@ public class User extends BaseTimeEntity {
 
     @Column(length = 100)
     private String goalMsg;
-
-    @OneToMany (mappedBy = "uid")
-    private List<Community> community = new ArrayList<Community>();
 
     @Builder
     public User(String name, String email, String nickname, String profileImg, String goalMsg) {
