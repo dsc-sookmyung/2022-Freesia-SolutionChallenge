@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import javax.persistence.Column;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class ChallengeResponseDto {
@@ -13,15 +14,17 @@ public class ChallengeResponseDto {
     private User uid;
     private String title;
     private String contents;
+    private List<Long> imageId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    //private String image;
 
-    public ChallengeResponseDto(Challenge entity){
+
+    public ChallengeResponseDto(Challenge entity, List<Long> imageId){
         this.id = entity.getId();
         this.uid = entity.getUid();
         this.title = entity.getTitle();
         this.contents = entity.getContents();
+        this.imageId = imageId;
         this.createdDate =entity.getCreatedDate();
         this.modifiedDate = entity.getModifiedDate();
     }

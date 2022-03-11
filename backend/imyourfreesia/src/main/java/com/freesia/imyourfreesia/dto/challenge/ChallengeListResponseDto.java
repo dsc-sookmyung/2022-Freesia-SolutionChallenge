@@ -12,6 +12,7 @@ public class ChallengeListResponseDto {
     private User uid;
     private String title;
     private String contents;
+    private Long thumnailId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
@@ -20,7 +21,14 @@ public class ChallengeListResponseDto {
         this.uid = entity.getUid();
         this.title = entity.getTitle();
         this.contents = entity.getContents();
-        this.createdDate =entity.getCreatedDate();
+
+        if(!entity.getImage().isEmpty()){
+            this.thumnailId = entity.getImage().get(0).getId();
+        }else{
+            this.thumnailId = 0L;
+        }
+
+        this.createdDate = entity.getCreatedDate();
         this.modifiedDate = entity.getModifiedDate();
     }
 }

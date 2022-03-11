@@ -11,14 +11,14 @@ public class ChallengeSaveRequestDto {
     private String uid;
     private String title;
     private String contents;
-    //private String image;
+
 
     @Builder
-    public ChallengeSaveRequestDto(String uid, String title, String contents, String image){
+    public ChallengeSaveRequestDto(String uid, String title, String contents){
         this.uid = uid;
         this.title = title;
         this.contents = contents;
-        //this.image = image;
+
     }
 
     public Challenge toEntity(){
