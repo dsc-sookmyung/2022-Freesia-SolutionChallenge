@@ -1,8 +1,6 @@
 package com.freesia.imyourfreesia.dto.emoticon;
 
-import com.freesia.imyourfreesia.domain.challenge.Challenge;
 import com.freesia.imyourfreesia.domain.emoticon.Emoticon;
-import com.freesia.imyourfreesia.domain.user.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;

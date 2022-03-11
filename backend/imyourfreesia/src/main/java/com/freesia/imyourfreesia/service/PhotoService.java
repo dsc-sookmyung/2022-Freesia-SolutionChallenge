@@ -1,10 +1,7 @@
 package com.freesia.imyourfreesia.service;
 
-import com.freesia.imyourfreesia.domain.community.Community;
-import com.freesia.imyourfreesia.domain.community.CommunityRepository;
 import com.freesia.imyourfreesia.domain.community.Photo;
 import com.freesia.imyourfreesia.domain.community.PhotoRepository;
-import com.freesia.imyourfreesia.dto.community.CommunityResponseDto;
 import com.freesia.imyourfreesia.dto.community.PhotoDto;
 import com.freesia.imyourfreesia.dto.community.PhotoResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +16,6 @@ import java.util.stream.Collectors;
 public class PhotoService {
 
     private final PhotoRepository photoRepository;
-    private final CommunityRepository communityRepository;
 
     // 이미지 아이디에 따른 이미지 개별 조회
     @Transactional(readOnly = true)
@@ -45,15 +41,6 @@ public class PhotoService {
         return photoList.stream()
                 .map(PhotoResponseDto::new)
                 .collect(Collectors.toList());
-    }
-
-    // 게시글 아이디에 따른 이미지 개별 조회
-    @Transactional(readOnly = true)
-    public CommunityResponseDto searchById(Long id, List<Long> fileId){
-        Community community = communityRepository.findById(id).orElseThrow(()
-                -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-
-        return new CommunityResponseDto(community, fileId);
     }
 
     // 이미지 삭제

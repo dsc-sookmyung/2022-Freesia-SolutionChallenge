@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class PhotoResponseDto {
-    private Long fileId;
+    private String filePath;
 
     public PhotoResponseDto(Photo photo){
-        this.fileId = photo.getId();
+        this.filePath = photo.getFilePath();
     }
 }

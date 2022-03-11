@@ -4,6 +4,8 @@ import com.freesia.imyourfreesia.domain.community.Community;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import java.io.File;
+
 @Getter
 public class CommunityListResponseDto {
 
@@ -26,10 +28,11 @@ public class CommunityListResponseDto {
     private String content;
 
     @ApiModelProperty(example = "게시글 썸네일 이미지")
-    private Long thumbnailId;
+    private String thumbnailImagePath;
 
     @ApiModelProperty(example = "카테고리")
     private String category;
+
 
     public CommunityListResponseDto(Community community){
         this.id = community.getId();
@@ -40,9 +43,11 @@ public class CommunityListResponseDto {
         this.content = community.getContent();
         this.category = community.getCategory();
 
+        String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
+
         if(!community.getImage().isEmpty())
-            this.thumbnailId = community.getImage().get(0).getId();
+            this.thumbnailImagePath = absolutePath + community.getImage().get(0).getFilePath();
         else
-            this.thumbnailId = 0L;
+            this.thumbnailImagePath = "null";
     }
 }

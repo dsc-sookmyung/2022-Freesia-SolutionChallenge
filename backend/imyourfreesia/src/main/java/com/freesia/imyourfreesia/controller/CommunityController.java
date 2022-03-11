@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,13 +71,15 @@ public class CommunityController {
     public CommunityResponseDto view(@RequestParam Long id) throws Exception{
 
         List<PhotoResponseDto> photoResponseDtoList = photoService.findAllByCommunity(id);
-        List<Long> photoId = new ArrayList<>();
+        List<String> filePath = new ArrayList<>();
+
+        String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
 
         for (PhotoResponseDto photoResponseDto : photoResponseDtoList) {
-            photoId.add(photoResponseDto.getFileId());
+            filePath.add(absolutePath+photoResponseDto.getFilePath());
         }
 
-        return communityService.findById(id, photoId);
+        return communityService.findById(id, filePath);
     }
 
     // 게시글 수정
