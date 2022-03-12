@@ -18,14 +18,14 @@ import java.time.format.DateTimeFormatter;
 public class BaseTimeEntity {
 
     @CreatedDate
-    //private String createdDate;
-    private LocalDateTime createdDate;
+    private String createdDate;
+    //private LocalDateTime createdDate;
 
     @LastModifiedDate
-    //private String modifiedDate;
-    private LocalDateTime modifiedDate;
+    private String modifiedDate;
+    //private LocalDateTime modifiedDate;
 
-    /*
+
     @PrePersist
     public void onPrePersist(){
         this.createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
@@ -35,6 +35,6 @@ public class BaseTimeEntity {
     @PreUpdate
     public void onPreUpdate(){
         this.modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-    }*/
+    }
 
 }

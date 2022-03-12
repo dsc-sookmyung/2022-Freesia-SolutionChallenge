@@ -4,6 +4,7 @@ import com.freesia.imyourfreesia.domain.community.Community;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,7 @@ public class CommunityResponseDto {
 
     @ApiModelProperty(example = "생성 날짜")
     private String createdDate;
+    //private LocalDateTime createdDate;
 
     @ApiModelProperty(example = "게시글 작성자 이메일")
     private String email;
