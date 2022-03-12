@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -31,29 +33,35 @@ public class Challenge extends BaseTimeEntity {
     private String contents;
 
     //@Column(nullable = false)
-    private String image;
+    @OneToMany(
+            mappedBy = "challenge",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true
+    )
+    private List<ChallengePhoto> image = new ArrayList<>();
 
     @Builder
-    public Challenge(User uid, String title, String contents, String image){
+    public Challenge(User uid, String title, String contents){
         this.uid = uid;
         this.title = title;
         this.contents = contents;
-        this.image = image;
     }
 
     public void setUid(User uid){
         this.uid = uid;
     }
 
-    public void setImage(String image){
-        this.image = image;
-    }
-
-    //public void update(String title, String contents, String image) {
     public Challenge update(String title, String contents) {
         this.title = title;
         this.contents = contents;
-        //this.image = image;
         return this;
+    }
+
+    public void addImage(ChallengePhoto challengePhoto){
+        this.image.add(challengePhoto);
+
+        if(challengePhoto.getChallenge() != this){
+            challengePhoto.setChallenge(this);
+        }
     }
 }
