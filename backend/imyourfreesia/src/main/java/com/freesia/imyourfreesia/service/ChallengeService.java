@@ -61,10 +61,10 @@ public class ChallengeService {
 
     /* 챌린지 상세 조회 */
     @Transactional(readOnly = true)
-    public ChallengeResponseDto findById(Long id, List<Long> imageId){
+    public ChallengeResponseDto findById(Long id, List<String> filePath){
         Challenge challenge = challengeRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
-        return new ChallengeResponseDto(challenge, imageId);
+        return new ChallengeResponseDto(challenge, filePath);
     }
 
     /* 챌린지 수정 */

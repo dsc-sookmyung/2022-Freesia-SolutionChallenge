@@ -1,6 +1,5 @@
 package com.freesia.imyourfreesia.service;
 
-import com.freesia.imyourfreesia.domain.challenge.Challenge;
 import com.freesia.imyourfreesia.domain.challenge.ChallengePhoto;
 import com.freesia.imyourfreesia.dto.challenge.ChallengePhotoDto;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;

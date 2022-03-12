@@ -5,10 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class ChallengePhotoResponseDto {
-    private Long imageId;
+    //private Long imageId;
+    private String filePath;
 
     public ChallengePhotoResponseDto(ChallengePhoto entity){
-
-        this.imageId = entity.getId();
+        //this.imageId = entity.getId();
+        this.filePath = entity.getFilePath();
     }
 }

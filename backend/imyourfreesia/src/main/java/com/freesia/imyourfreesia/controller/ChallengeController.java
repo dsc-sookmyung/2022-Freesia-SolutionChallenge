@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,13 +76,14 @@ public class ChallengeController {
         List<ChallengePhotoResponseDto> photoResponseDtoList =
                 challengePhotoService.findAllByChallenge(id);
 
-        List<Long> photoId = new ArrayList<>();
+        List<String> filePath = new ArrayList<>();
+        String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
 
         for(ChallengePhotoResponseDto photoResponseDto : photoResponseDtoList)
-            photoId.add(photoResponseDto.getImageId());
+            filePath.add(absolutePath + photoResponseDto.getFilePath());
 
         return ResponseEntity.ok()
-                .body(challengeService.findById(id, photoId));
+                .body(challengeService.findById(id, filePath));
     }
 
      /* 챌린지 수정 */
@@ -150,7 +152,7 @@ public class ChallengeController {
         return ResponseEntity.noContent().build();
     }
 
-    /* 챌린지별 이미지 전체 조회 */
+    /* 챌린지별 이미지 전체 조회
     @ApiOperation(value="챌린지별 이미지 전체 조회", notes="챌린지별 이미지 전체 조회 API")
     @ApiImplicitParam(name = "id", value = "챌린지 id")
     @GetMapping("/challenge/img/list")
@@ -167,9 +169,9 @@ public class ChallengeController {
 
         return ResponseEntity.ok()
                 .body(photoList);
-    }
+    }*/
 
-    /* 챌린지 이미지 개별 조회 (썸네일) */
+    /* 챌린지 이미지 개별 조회 (썸네일)
     @ApiOperation(value="챌린지 이미지 개별 조회(썸네일)", notes="챌린지별 이미지 개별 조회(썸네일) API")
     @ApiImplicitParam(name = "thumnailId", value = "썸네일 id(thumnailId)")
     @GetMapping("/challenge/img")
@@ -178,6 +180,6 @@ public class ChallengeController {
 
         return ResponseEntity.ok()
                 .body(photoDto);
-    }
+    }*/
 
 }
