@@ -122,6 +122,7 @@ public class EmoticonService {
 
         for(Emoticon emoticon: emoticonAllList) {
             Date createDay = new Date(dateFormat.parse(emoticon.getCreatedDate()).getTime());
+            //Date createDay = new Date(dateFormat.parse(emoticon.getCreatedDate()).getTime());
             System.out.println("createDay: "+createDay);
 
             if(createDay.before(lastWeekDay) && createDay.after(firstWeekDay)) {
