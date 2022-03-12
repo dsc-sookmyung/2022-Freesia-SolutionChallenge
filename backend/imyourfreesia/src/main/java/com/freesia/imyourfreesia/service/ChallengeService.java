@@ -77,6 +77,7 @@ public class ChallengeService {
 
         if(!photoList.isEmpty()){
             for(ChallengePhoto photo : photoList){
+                photo.setChallenge(challenge);
                 challengePhotoRepository.save(photo);
             }
         }

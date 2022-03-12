@@ -15,7 +15,6 @@ import java.util.List;
 
 @Component
 public class ChallengeFileHandler {
-    //final String uploadPath = "C:\\upload/";
 
     private final ChallengePhotoService challengePhotoService;
 
@@ -36,6 +35,7 @@ public class ChallengeFileHandler {
             DateTimeFormatter dateTimeFormatter =
                     DateTimeFormatter.ofPattern("yyyyMMdd");
             String current_date = now.format(dateTimeFormatter);
+
 
             // 프로젝트 디렉터리 내의 저장을 위한 절대 경로 설정
             // 경로 구분자 File.separator 사용

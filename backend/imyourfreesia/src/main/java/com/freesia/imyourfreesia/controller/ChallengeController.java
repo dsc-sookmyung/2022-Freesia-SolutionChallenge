@@ -92,8 +92,8 @@ public class ChallengeController {
              @ApiImplicitParam(name = "id", value = "챌린지 id"),
              @ApiImplicitParam(name = "ChallengeSaveVO", value = "챌린지 저장 VO")
      })
-    @PutMapping(value = "/challenge", consumes = {"multipart/form-data"})
-    public ResponseEntity<Challenge> updateChallenge(@RequestParam Long id,
+    @PutMapping("/challenge")
+    public ResponseEntity<Long> updateChallenge(@RequestParam Long id,
                                                      ChallengeSaveVO challengeSaveVO) throws Exception {
         ChallengeUpdateRequestDto requestDto =
                 ChallengeUpdateRequestDto.builder()
@@ -140,7 +140,7 @@ public class ChallengeController {
         }
 
         return ResponseEntity.ok()
-                .body(challengeService.updateChallenge(id, requestDto, addFileList));
+                .body(challengeService.updateChallenge(id, requestDto, addFileList).getId());
     }
 
     /* 챌린지 삭제 */
