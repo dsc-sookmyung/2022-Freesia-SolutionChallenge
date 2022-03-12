@@ -15,8 +15,10 @@ public class ChallengeResponseDto {
     private String contents;
     //private List<Long> imageId;
     private List<String> filePath;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
+    //private LocalDateTime createdDate;
+    //private LocalDateTime modifiedDate;
+    private String createdDate;
+    private String modifiedDate;
 
 
     public ChallengeResponseDto(Challenge entity, List<String> filePath){
