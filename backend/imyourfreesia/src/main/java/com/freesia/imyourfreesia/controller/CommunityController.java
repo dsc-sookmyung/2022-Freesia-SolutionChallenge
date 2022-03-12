@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,13 +71,15 @@ public class CommunityController {
     public CommunityResponseDto view(@RequestParam Long id) throws Exception{
 
         List<PhotoResponseDto> photoResponseDtoList = photoService.findAllByCommunity(id);
-        List<Long> photoId = new ArrayList<>();
+        List<String> filePath = new ArrayList<>();
+
+        String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
 
         for (PhotoResponseDto photoResponseDto : photoResponseDtoList) {
-            photoId.add(photoResponseDto.getFileId());
+            filePath.add(absolutePath+photoResponseDto.getFilePath());
         }
 
-        return communityService.findById(id, photoId);
+        return communityService.findById(id, filePath);
     }
 
     // 게시글 수정
@@ -144,13 +147,13 @@ public class CommunityController {
 
     // 카테고리에 따른 내 게시글 가져오기
     @GetMapping("/community/my")
-    @ApiOperation(value="카테고리에 따른 커뮤니티 내 글 조회", notes="카테고리에 따른 커뮤니티 내 글 조회 API")
+    @ApiOperation(value="커뮤니티 내 글 조회", notes="커뮤니티 내 글 조회 API")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "email", value = "사용자 이메일"),
+            @ApiImplicitParam(name = "email", value = "사용자 이메일")
     })
-    public List<CommunityListResponseDto> my(@RequestParam String email, @RequestParam String category) throws Exception{
+    public List<CommunityListResponseDto> my(@RequestParam String email) throws Exception{
 
-        List<Community> communityList = communityService.findByEmail(email, category);
+        List<Community> communityList = communityService.findByEmail(email);
         List<CommunityListResponseDto> communityListResponseDtoList = new ArrayList<>();
 
         for (Community community: communityList) {

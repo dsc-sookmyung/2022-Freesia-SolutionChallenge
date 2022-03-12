@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommunitySaveRequestDto {
 
-    @ApiModelProperty(example = "게시글 작성자 이메일")
+    @ApiModelProperty(example = "게시글 작성자 아이디")
     private User uid;
 
     @ApiModelProperty(example = "게시글 작성자 이메일")

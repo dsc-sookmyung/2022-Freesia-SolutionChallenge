@@ -51,9 +51,9 @@ public class CommunityService {
 
     // 게시글 상세페이지 조회
     @Transactional
-    public CommunityResponseDto findById(Long id, List<Long> fileId){
+    public CommunityResponseDto findById(Long id, List<String> filePath){
         Community community = communityRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id="+id));
-        return new CommunityResponseDto(community, fileId);
+        return new CommunityResponseDto(community, filePath);
     }
 
     // 게시글 수정
@@ -84,9 +84,9 @@ public class CommunityService {
 
     // 이메일로 카테고리에서 내 게시글 조회
     @Transactional
-    public List<Community> findByEmail(String email, String category) {
+    public List<Community> findByEmail(String email) {
         User user = userRepository.findByEmail(email);
-        return communityRepository.findByUidAndCategory(user, category);
+        return communityRepository.findByUid(user);
     }
 
 }
