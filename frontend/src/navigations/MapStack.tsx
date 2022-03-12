@@ -37,7 +37,9 @@ export default function MapStackScreen() {
       { useGoogleMaps: false }
     );
 
-    setCityKr(locationKr[0].city);
+    locationKr[0].city == null
+      ? setCityKr(locationKr[0].district)
+      : setCityKr(locationKr[0].city);
 
     Geocoder.from(latitude, longitude)
       .then((json) => {

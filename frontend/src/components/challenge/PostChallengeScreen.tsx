@@ -10,6 +10,7 @@ import {
   TextInput,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { ImageBrowser } from "expo-image-picker-multiple";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
 
@@ -26,11 +27,9 @@ export default function PostChallengeScreen({ navigation }) {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
-      console.log(result.uri);
+      console.log(image);
     }
   };
 

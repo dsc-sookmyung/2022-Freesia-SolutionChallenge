@@ -33,6 +33,7 @@ export default function MapScreen({
   const [geocoding, setGeocoding] = useState(false);
   const getCenterInfo = async () => {
     try {
+      console.log(cityKr);
       const response = await fetch(
         `http://${ipAddress}:8080/api/center?address=${cityKr}`,
         {
@@ -81,7 +82,7 @@ export default function MapScreen({
             style={styles.linkView}
             onPress={() => Linking.openURL(c.websiteUrl)}
           >
-            <Text style={styles.linkText}>홈페이지</Text>
+            <Text style={styles.linkText}>Go To Website</Text>
             <Feather name="external-link" size={15} color="black" />
           </TouchableOpacity>
           <Divider />
