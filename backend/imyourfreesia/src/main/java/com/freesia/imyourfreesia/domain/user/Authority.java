@@ -1,14 +1,11 @@
 package com.freesia.imyourfreesia.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "authority")
 @Getter
 @Setter
 @Builder
@@ -16,7 +13,11 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class Authority {
 
+    @JsonIgnore
     @Id
-    @Column(name = "authority_name", length = 50)
+    @Column(name = "authorityId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String authorityName;
 }
