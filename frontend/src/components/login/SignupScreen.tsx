@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, TouchableOpacity, StyleSheet, TextInput, Alert, Dimensions, Image, ToastAndroid } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, TextInput, Alert, Dimensions, Image, ToastAndroid, ScrollView } from "react-native";
 import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from '@expo/vector-icons';
@@ -7,8 +7,10 @@ import { StackActions } from "@react-navigation/native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export default function SignIn({ navigation }: any) {
+export default function SignupScreen({ navigation }: any) {
 
+  const [id, setId] = useState<string>("");
+  const [pw, setPw] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
   const [goal, setGoal] = useState<string>("");
@@ -22,9 +24,10 @@ export default function SignIn({ navigation }: any) {
 
     if (!result.cancelled) {
       setProfileImage(result.uri);
-      console.log(profileImage);
     }
   };
+  const onChangeId = (e: string) => setId(e);
+  const onChangePw = (e: string) => setPw(e);
   const onChangeNickname = (e: string) => setNickname(e);
   const onChangeGoal = (e: string) => setGoal(e);
   const save = () => {
@@ -32,27 +35,44 @@ export default function SignIn({ navigation }: any) {
     ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
     navigation.dispatch(StackActions.popToTop);
   };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>프로필 사진을 설정해주세요.</Text>
-      <TouchableOpacity onPress={pickImage} style={styles.addImage}>
-        {profileImage ? (
-          <Image
-            source={{ uri: profileImage }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        ) : (
-          <Ionicons name="add" size={50} color="black" />
-        )}
-      </TouchableOpacity>
-      <Text style={styles.text}>닉네임을 설정해주세요.</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.text}>ID</Text>
+      <TextInput value={id}
+        onChangeText={onChangeId}
+        style={styles.textInput}
+      />
+
+      <Text style={styles.text}>Password</Text>
       <TextInput
-        value={nickname}
+        value={pw}
+        onChangeText={onChangePw}
+        style={styles.textInput}
+        secureTextEntry={true}
+      />
+
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 20 }}>
+        <Text style={styles.text}>Profile Image</Text>
+        <TouchableOpacity onPress={pickImage} style={styles.addImage}>
+          {profileImage ? (
+            <Image
+              source={{ uri: profileImage }}
+              style={{ width: "100%", height: "100%" }}
+            />
+          ) : (
+            <Ionicons name="add" size={50} color="black" />
+          )}
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.text}>Nickname</Text>
+      <TextInput value={nickname}
         onChangeText={onChangeNickname}
         style={styles.textInput}
       />
 
-      <Text style={styles.text}>목표를 입력해주세요.</Text>
+      <Text style={styles.text}>Goal</Text>
       <TextInput
         value={goal}
         onChangeText={onChangeGoal}
@@ -62,7 +82,7 @@ export default function SignIn({ navigation }: any) {
       <TouchableOpacity onPress={() => save()}>
         <Text style={styles.saveBtn}>Save</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -73,8 +93,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    marginTop: 30,
-    marginBottom: 20,
   },
   addImage: {
     justifyContent: "center",
@@ -86,6 +104,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderBottomWidth: 2,
+    marginBottom: 20,
   },
   saveBtn: {
     backgroundColor: theme.headerBg,

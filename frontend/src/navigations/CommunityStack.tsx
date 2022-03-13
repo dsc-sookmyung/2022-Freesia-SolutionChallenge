@@ -5,6 +5,7 @@ import CommunityScreen from "../components/community/CommunityScreen";
 import CreateScreen from "../components/community/CreateScreen";
 import EditScreen from "../components/community/EditScreen";
 import DetailScreen from "../components/community/DetailScreen";
+import ImageBrowserScreen from "../components/community/ImageBrowserScreen";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ export default function CommunityStack() {
       <Stack.Screen name="Create" component={CreateScreen} options={{ title: "Community" }} />
       <Stack.Screen name="Edit" component={EditScreen} options={{ title: "Community" }} />
       <Stack.Screen name="Detail" component={DetailScreen} options={{ title: null }} />
+      <Stack.Screen name="ImageBrowser" component={ImageBrowserScreen} options={{ title: null }} />
     </Stack.Navigator>
   )
 

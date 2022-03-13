@@ -1,12 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { Divider, ProfileIcon } from "../../CommonComponent";
+import Carousel, { ParallaxImage, Pagination } from 'react-native-snap-carousel';
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
+const images = [
+  'https://i.imgur.com/UPrs1EWl.jpg',
+  'https://i.imgur.com/MABUbpDl.jpg',
+  'https://i.imgur.com/UPrs1EWl.jpg',
+  'https://i.imgur.com/MABUbpDl.jpg',
+  'https://i.imgur.com/UPrs1EWl.jpg',
+];
+
+const renderItem = ({ item, index }, parallaxProps) => {
+  return (
+    <View style={styles.item}>
+      <ParallaxImage
+        source={{ uri: item }}
+        containerStyle={styles.imageContainer}
+        style={styles.image}
+        parallaxFactor={0}
+        {...parallaxProps}
+      />
+    </View>
+  );
+};
+
 export default function DetailScreen({ navigation, route }: any) {
 
+  const [index, setIndex] = useState(0);
+  const [entries, setEntries] = useState([]);
+  const carouselRef = useRef(null);
+  useEffect(() => {
+    setEntries(images);
+  }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const [likes, setLikes] = useState(route.params.likes);
   const [focused, setFocused] = useState(false);
@@ -70,7 +99,25 @@ export default function DetailScreen({ navigation, route }: any) {
         </TouchableOpacity>
       </View>
 
-      <Image source={{ uri: route.params.image }} style={styles.image} />
+      <Carousel
+        ref={carouselRef}
+        sliderWidth={SCREEN_WIDTH}
+        sliderHeight={SCREEN_WIDTH}
+        itemWidth={SCREEN_WIDTH}
+        data={entries}
+        renderItem={renderItem}
+        hasParallaxImages={true}
+        onSnapToItem={(index) => setIndex(index)}
+      />
+      <Pagination
+        dotsLength={entries.length}
+        activeDotIndex={index}
+        containerStyle={styles.dotContainer}
+        dotStyle={styles.dotStyle}
+        inactiveDotStyle={styles.inactiveDotStyle}
+        inactiveDotOpacity={0.4}
+        inactiveDotScale={0.6}
+      />
 
       <View style={styles.container}>
         <Text style={styles.title}>{route.params.title}</Text>
@@ -114,9 +161,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  image: {
+  item: {
     width: SCREEN_WIDTH,
     height: SCREEN_WIDTH,
+  },
+  imageContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    resizeMode: 'cover',
+  },
+  dotContainer: {
+  },
+  dotStyle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'black',
+  },
+  inactiveDotStyle: {
+    backgroundColor: 'grey',
   },
   container: {
     padding: 10,

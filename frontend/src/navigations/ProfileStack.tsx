@@ -4,7 +4,8 @@ import { theme } from "../color";
 import ProfileScreen from "../components/profile/ProfileScreen";
 import SettingScreen from "../components/profile/SettingScreen";
 import LoginScreen from "../components/login/LoginScreen";
-import SignInScreen from "../components/login/SignInScreen";
+import SignupScreen from "../components/login/SignupScreen";
+import SocialSignupScreen from "../components/login/SocialSignupScreen";
 
 const Stack = createStackNavigator();
 
@@ -24,8 +25,9 @@ export default function ProfileStack() {
     <Stack.Navigator initialRouteName="ProfileScreen" screenOptions={screenOptions}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: "Profile" }} />
       <Stack.Screen name="SettingScreen" component={SettingScreen} options={{ title: "Setting" }} />
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Login" }} />
+      <Stack.Screen name="Signup" component={SignupScreen} options={{ title: "Sign Up" }} />
+      <Stack.Screen name="SocialSignup" component={SocialSignupScreen} options={{ title: "Sign Up" }} />
     </Stack.Navigator>
   )
 

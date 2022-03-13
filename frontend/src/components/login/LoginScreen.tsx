@@ -1,16 +1,28 @@
-import React from "react";
-import { Text, View, TouchableOpacity, StyleSheet, ToastAndroid } from "react-native";
+import React, { useState } from "react";
+import { Text, View, TouchableOpacity, StyleSheet, ToastAndroid, TextInput } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackActions } from '@react-navigation/native';
 import axios from "axios";
 import axiosInstance from "../../axiosInstance";
+import { theme } from "../../color";
 
 const BASE_URL = "http://192.168.0.9:8080"; // localhost 대신 본인 컴퓨터 ip(IPv4) 주소
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login({ navigation }: any) {
+
+  // 일반 로그인
+  const [id, setId] = useState<string>("");
+  const [pw, setPw] = useState<string>("");
+  const onChangeId = (e: string) => setId(e);
+  const onChangePw = (e: string) => setPw(e);
+  const login = () => {
+    // 서버에 전송
+    ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
+    navigation.dispatch(StackActions.popToTop);
+  };
 
   // 구글 로그인
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -33,7 +45,7 @@ export default function Login({ navigation }: any) {
       });
       // access token으로 서버에서 유저 정보 받아옴
       // nickname == null 이면 회원가입 창으로 이동
-      navigation.navigate('SignIn');
+      navigation.navigate('SocialSignup');
       // nickname != null 이면 stack의 첫 화면으로 이동
       // navigation.dispatch(StackActions.popToTop);
     }
@@ -42,6 +54,27 @@ export default function Login({ navigation }: any) {
   return (
     <View style={styles.login}>
       <Text style={styles.loginTitle}>Login</Text>
+      <View style={styles.inputArea}>
+        <Text style={styles.text}>ID</Text>
+        <TextInput value={id} onChangeText={onChangeId} style={styles.textInput} />
+      </View>
+      <View style={styles.inputArea}>
+        <Text style={styles.text}>Password</Text>
+        <TextInput value={pw} onChangeText={onChangePw} style={styles.textInput} secureTextEntry={true} />
+      </View>
+      <TouchableOpacity onPress={() => login()}>
+        <View style={{ ...styles.socialLogin, backgroundColor: theme.headerBg, marginVertical: 20 }}>
+          <Text style={{ ...styles.socialLoginTitle, color: "black" }}>Login</Text>
+        </View>
+      </TouchableOpacity>
+      <Text>If you don't have an account?</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+        <Text style={{ textDecorationLine: "underline" }}>Sign Up</Text>
+      </TouchableOpacity>
+
+      <View style={{ width: "100%", height: 1, marginVertical: 20, backgroundColor: "#eeeeee" }} />
+
+      <Text style={styles.loginTitle}>Social Login</Text>
       <TouchableOpacity>
         <View style={{ ...styles.socialLogin, backgroundColor: "#FFE500" }}>
           <Text style={{ ...styles.socialLoginTitle, color: "#684848" }}>
@@ -74,6 +107,22 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "700",
     marginBottom: 20,
+  },
+  inputArea: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 30,
+    marginBottom: 10,
+  },
+  text: {
+    flex: 1,
+    fontSize: 20,
+    textAlign: "center",
+    marginRight: 10,
+  },
+  textInput: {
+    flex: 2,
+    borderBottomWidth: 2,
   },
   socialLogin: {
     justifyContent: "center",
