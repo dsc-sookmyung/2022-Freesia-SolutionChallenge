@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api(tags={"freesia Community API"})
+@Api(tags={"Community API"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")

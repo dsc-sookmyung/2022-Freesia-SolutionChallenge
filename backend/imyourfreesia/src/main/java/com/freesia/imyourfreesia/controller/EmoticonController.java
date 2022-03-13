@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags={"freesia Emoticon API"})
+@Api(tags={"Emoticon API"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
