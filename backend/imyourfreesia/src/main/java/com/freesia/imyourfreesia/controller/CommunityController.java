@@ -66,7 +66,7 @@ public class CommunityController {
     // 게시글 상세 조회
     @GetMapping("/community")
     @ApiOperation(value="커뮤니티 글 상세 조회", notes="커뮤니티 글 상세 조회 API")
-    @ApiImplicitParam(name = "id", value = "게시글 id")
+    @ApiImplicitParam(name = "id", value = "게시글 id", example = "1")
     public CommunityResponseDto view(@RequestParam Long id) throws Exception{
 
         List<PhotoResponseDto> photoResponseDtoList = photoService.findAllByCommunity(id);
@@ -138,7 +138,7 @@ public class CommunityController {
     // 게시글 삭제
     @DeleteMapping("/community")
     @ApiOperation(value="커뮤니티 글 삭제", notes="게시글 글 삭제 API")
-    @ApiImplicitParam(name = "id", value = "게시글 id")
+    @ApiImplicitParam(name = "id", value = "게시글 id", example = "1")
     public Long delete(@RequestParam Long id){
         communityService.delete(id);
         return id;

@@ -67,7 +67,7 @@ public class ChallengeController {
 
     /* 챌린지 상세 조회 */
     @ApiOperation(value="챌린지 상세 조회", notes="챌린지 상세 조회 API")
-    @ApiImplicitParam(name = "id", value = "챌린지 id")
+    @ApiImplicitParam(name = "id", value = "챌린지 id", example = "1")
     @GetMapping("/challenge")
     public ResponseEntity<ChallengeResponseDto> loadChallengeDetail(@RequestParam Long id) throws Exception {
 
@@ -87,7 +87,7 @@ public class ChallengeController {
      /* 챌린지 수정 */
      @ApiOperation(value="챌린지 수정", notes="챌린지 수정 API")
      @ApiImplicitParams({
-             @ApiImplicitParam(name = "id", value = "챌린지 id"),
+             @ApiImplicitParam(name = "id", value = "챌린지 id", example = "1"),
              @ApiImplicitParam(name = "ChallengeSaveVO", value = "챌린지 저장 VO")
      })
     @PutMapping("/challenge")
@@ -143,7 +143,7 @@ public class ChallengeController {
 
     /* 챌린지 삭제 */
     @ApiOperation(value="챌린지 삭제", notes="챌린지 삭제 API")
-    @ApiImplicitParam(name = "id", value = "챌린지 id")
+    @ApiImplicitParam(name = "id", value = "챌린지 id", example = "1")
     @DeleteMapping("/challenge")
     public ResponseEntity<?> deleteChallenge(@RequestParam Long id){
         challengeService.deleteChallenge(id);

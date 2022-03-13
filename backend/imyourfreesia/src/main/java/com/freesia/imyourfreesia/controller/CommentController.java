@@ -34,7 +34,7 @@ public class CommentController {
 
     /* 댓글 조회 */
     @ApiOperation(value="댓글 조회", notes="댓글 조회 API")
-    @ApiImplicitParam(name = "pid", value = "게시글 id", dataType="Long", paramType="query")
+    @ApiImplicitParam(name = "pid", value = "게시글 id", dataType="Long", paramType="query", example = "1")
     @GetMapping("/comment")
     public ResponseEntity<List<Comment>> loadCmt(@RequestParam Long pid){
         return ResponseEntity.ok()
@@ -44,7 +44,7 @@ public class CommentController {
     /* 댓글 수정 */
     @ApiOperation(value="댓글 수정", notes="댓글 수정 API")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "댓글 id", dataType="Long", paramType="query"),
+            @ApiImplicitParam(name = "id", value = "댓글 id", dataType="Long", paramType="query", example = "1"),
             @ApiImplicitParam(name = "CommentUpdateRequestDto", value = "댓글 수정 Dto")
     })
     @PutMapping("/comment")
@@ -56,7 +56,7 @@ public class CommentController {
 
     /* 댓글 삭제 */
     @ApiOperation(value="댓글 삭제", notes="댓글 삭제 API")
-    @ApiImplicitParam(name = "id", value = "댓글 id", dataType="Long", paramType="query")
+    @ApiImplicitParam(name = "id", value = "댓글 id", dataType="Long", paramType="query", example = "1")
     @DeleteMapping("/comment")
     public ResponseEntity<?> delete(@RequestParam Long id){
         commentService.delete(id);

@@ -32,7 +32,7 @@ public class CheeringController {
 
     /* 응원 해제 */
     @ApiOperation(value="응원 해제", notes="응원 해제 API")
-    @ApiImplicitParam(name = "id", value = "응원 id")
+    @ApiImplicitParam(name = "id", value = "응원 id", example = "1")
     @DeleteMapping("/cheering")
     public ResponseEntity<?> UnCheering(@RequestParam Long id){
         cheeringService.unCheering(id);

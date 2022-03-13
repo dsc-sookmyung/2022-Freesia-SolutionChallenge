@@ -32,7 +32,7 @@ public class LikesController {
 
     /* 좋아요 해제 */
     @ApiOperation(value="좋아요 해제", notes="좋아요 해제 API")
-    @ApiImplicitParam(name = "id", value = "좋아요 id", dataType="Long", paramType="query")
+    @ApiImplicitParam(name = "id", value = "좋아요 id", dataType="Long", paramType="query", example = "1")
     @DeleteMapping("/likes")
     public ResponseEntity<?> unLikes(@RequestParam Long id){
         likesService.unLikes(id);
@@ -41,7 +41,7 @@ public class LikesController {
 
     /* 좋아요 목록 조회 */
     @ApiOperation(value="좋아요 목록 조회", notes="좋아요 목록 조회 API")
-    @ApiImplicitParam(name = "pid", value = "게시글 id", dataType="Long", paramType="query")
+    @ApiImplicitParam(name = "pid", value = "게시글 id", dataType="Long", paramType="query", example = "1")
     @GetMapping("/likes")
     public ResponseEntity<List<Likes>> loadLikes(@RequestParam Long pid){
         return ResponseEntity.ok()
@@ -50,7 +50,7 @@ public class LikesController {
 
     /* 좋아요 개수 조회 */
     @ApiOperation(value="좋아요 개수 조회", notes="좋아요 개수 조회 API")
-    @ApiImplicitParam(name = "pid", value = "게시글 id", dataType="Long", paramType="query")
+    @ApiImplicitParam(name = "pid", value = "게시글 id", dataType="Long", paramType="query", example = "1")
     @GetMapping("/likes/cnt")
     public Long countLikes(@RequestParam Long pid){
         return likesService.countByPid(pid);
