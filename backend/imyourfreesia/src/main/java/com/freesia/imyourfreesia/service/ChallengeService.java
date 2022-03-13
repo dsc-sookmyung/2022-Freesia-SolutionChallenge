@@ -93,4 +93,15 @@ public class ChallengeService {
 
         challengeRepository.delete(challenge);
     }
+
+    /* 마이페이지 챌린지 조회 */
+    @Transactional(readOnly = true)
+    public List<ChallengeListResponseDto> findByUid(String email){
+        User user = userRepository.findByEmail(email);
+
+        return challengeRepository.findByUid(user)
+                .stream()
+                .map(ChallengeListResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }

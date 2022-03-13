@@ -47,11 +47,13 @@ public class User extends BaseTimeEntity {
             inverseJoinColumns = {@JoinColumn(name = "authorityId", referencedColumnName = "authorityId")})
     private Set<Authority> authorities;
 
-    public void update(String username, String password, String nickName, String profileImg, String goalMsg) {
-        this.username = username;
-        this.password = password;
+    //public void update(String username, String password, String nickName, String profileImg, String goalMsg) {
+    public User update(String nickName, String profileImg, String goalMsg) {
+        //this.username = username;
+        //this.password = password;
         this.nickName = nickName;
         this.profileImg = profileImg;
         this.goalMsg = goalMsg;
+        return this;
     }
 }

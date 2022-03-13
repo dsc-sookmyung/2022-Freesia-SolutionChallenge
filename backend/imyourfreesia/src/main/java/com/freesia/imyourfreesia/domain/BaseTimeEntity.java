@@ -9,6 +9,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,14 +19,16 @@ import java.time.format.DateTimeFormatter;
 public class BaseTimeEntity {
 
     @CreatedDate
-    private String createdDate;
+    //private String createdDate;
     //private LocalDateTime createdDate;
+    private LocalDate createdDate;
 
     @LastModifiedDate
-    private String modifiedDate;
+    //private String modifiedDate;
     //private LocalDateTime modifiedDate;
+    private LocalDate modifiedDate;
 
-
+    /*
     @PrePersist
     public void onPrePersist(){
         this.createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
@@ -35,6 +38,6 @@ public class BaseTimeEntity {
     @PreUpdate
     public void onPreUpdate(){
         this.modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-    }
+    }*/
 
 }

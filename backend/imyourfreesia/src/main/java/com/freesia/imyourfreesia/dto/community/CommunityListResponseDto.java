@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class CommunityListResponseDto {
@@ -33,6 +35,11 @@ public class CommunityListResponseDto {
     @ApiModelProperty(example = "카테고리")
     private String category;
 
+    // private String createdDate;
+    // private String modifiedDate;
+
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
 
     public CommunityListResponseDto(Community community){
         this.id = community.getId();
@@ -49,5 +56,8 @@ public class CommunityListResponseDto {
             this.thumbnailImagePath = absolutePath + community.getImage().get(0).getFilePath();
         else
             this.thumbnailImagePath = "null";
+
+        this.createdDate = community.getCreatedDate();
+        this.modifiedDate = community.getModifiedDate();
     }
 }

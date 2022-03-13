@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class LikeSaveRequestDto {
+public class LikesSaveRequestDto {
     private String uid;
     private Long pid;
 
     @Builder
-    public LikeSaveRequestDto(String uid, Long pid){
+    public LikesSaveRequestDto(String uid, Long pid){
         this.uid = uid;
         this.pid = pid;
     }

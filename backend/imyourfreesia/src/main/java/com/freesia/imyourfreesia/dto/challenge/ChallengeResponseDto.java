@@ -4,6 +4,7 @@ import com.freesia.imyourfreesia.domain.challenge.Challenge;
 import com.freesia.imyourfreesia.domain.user.User;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,10 +16,10 @@ public class ChallengeResponseDto {
     private String contents;
     //private List<Long> imageId;
     private List<String> filePath;
-    //private LocalDateTime createdDate;
-    //private LocalDateTime modifiedDate;
-    private String createdDate;
-    private String modifiedDate;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    // private String createdDate;
+    // private String modifiedDate;
 
 
     public ChallengeResponseDto(Challenge entity, List<String> filePath){
