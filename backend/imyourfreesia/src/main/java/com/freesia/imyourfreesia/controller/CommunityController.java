@@ -9,7 +9,6 @@ import com.freesia.imyourfreesia.service.PhotoService;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -148,9 +147,7 @@ public class CommunityController {
     // 카테고리에 따른 내 게시글 가져오기
     @GetMapping("/community/my")
     @ApiOperation(value="커뮤니티 내 글 조회", notes="커뮤니티 내 글 조회 API")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "email", value = "사용자 이메일")
-    })
+    @ApiImplicitParam(name = "email", value = "사용자 이메일")
     public List<CommunityListResponseDto> my(@RequestParam String email) throws Exception{
 
         List<Community> communityList = communityService.findByEmail(email);
