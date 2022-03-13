@@ -2,7 +2,7 @@ package com.freesia.imyourfreesia.controller;
 
 
 import com.freesia.imyourfreesia.domain.likes.Likes;
-import com.freesia.imyourfreesia.dto.likes.LikeSaveRequestDto;
+import com.freesia.imyourfreesia.dto.likes.LikesSaveRequestDto;
 import com.freesia.imyourfreesia.service.LikesService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,7 +25,7 @@ public class LikesController {
     @ApiOperation(value="좋아요 설정", notes="좋아요 설정 API")
     @ApiImplicitParam(name = "LikeSaveRequestDto", value = "좋아요 설정 dto")
     @PostMapping("/likes")
-    public ResponseEntity<Likes> likes(@RequestBody LikeSaveRequestDto requestDto){
+    public ResponseEntity<Likes> likes(@RequestBody LikesSaveRequestDto requestDto){
         return ResponseEntity.ok()
                 .body(likesService.likes(requestDto));
     }
