@@ -1,63 +1,74 @@
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput, Image } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput, Image, ScrollView, ToastAndroid } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from "expo-image-picker";
+import axiosInstance from "../../axiosInstance";
+import { StackActions } from "@react-navigation/native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export default function EditScreen({ route }: any) {
-  const [image, setImage] = useState(route.params.image);
+export default function EditScreen({ navigation, route }: any) {
+
   const [title, setTitle] = useState<string>(route.params.title);
   const [content, setContent] = useState<string>(route.params.content);
   const onChangeTitle = (e: string) => setTitle(e);
   const onChangeContent = (e: string) => setContent(e);
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
+  const editPost = () => {
+    let body = new FormData();
+    body.append('title', title);
+    body.append('content', content);
+    body.append('id', route.params.id);
+    route.params.images.forEach((image: any, index: number) => {
+      let files: any = {
+        uri: image,
+        type: 'multipart/form-data',
+        name: `${index}.png`
+      };
+      body.append('files', files);
     });
 
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-      console.log(result.uri);
-    }
+    axiosInstance.put(`/api/community`, body, {
+      headers: { 'content-type': 'multipart/form-data' }
+    }).then(function (response) {
+      ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
+      navigation.dispatch(StackActions.popToTop);
+    }).catch(function (error) {
+      console.log(error);
+    });
   };
 
   return (
     <View style={styles.container}>
+      <ScrollView>
+        <Text><Text style={{ fontWeight: "bold" }}>Category: </Text>{route.params.category}</Text>
+        <ScrollView horizontal>
+          {route.params.images ? route.params.images.map((image: any, index: number) => {
+            return (
+              <View style={{ flexDirection: "column" }} key={index}>
+                <Image
+                  style={{ height: 100, width: 100 }}
+                  source={{ uri: image }}
+                />
+              </View>
+            )
+          }) : null}
+        </ScrollView>
 
-      <Text><Text style={{ fontWeight: "bold" }}>Category: </Text>{route.params.category}</Text>
+        <TextInput
+          placeholder="Title"
+          value={title}
+          onChangeText={onChangeTitle}
+          style={styles.titleInput}
+        />
+        <TextInput
+          multiline={true}
+          placeholder="Contents"
+          value={content}
+          onChangeText={onChangeContent}
+          style={styles.contentInput}
+        />
+      </ScrollView>
 
-      <TouchableOpacity onPress={pickImage} style={styles.addImage}>
-        {image ? (
-          <Image
-            source={{ uri: image }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        ) : (
-          <Ionicons name="add" size={50} color="black" />
-        )}
-      </TouchableOpacity>
-
-      <TextInput
-        placeholder="Title"
-        value={title}
-        onChangeText={onChangeTitle}
-        style={styles.titleInput}
-      />
-      <TextInput
-        multiline={true}
-        placeholder="Contents"
-        value={content}
-        onChangeText={onChangeContent}
-        style={styles.contentInput}
-      />
-
-      <TouchableOpacity style={styles.createBtn}>
+      <TouchableOpacity onPress={editPost} style={styles.createBtn}>
         <Ionicons name="checkmark-circle" size={65} color="#ffd25E" />
       </TouchableOpacity>
     </View>

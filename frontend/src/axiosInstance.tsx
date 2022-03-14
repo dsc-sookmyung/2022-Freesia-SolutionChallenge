@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config: any) => {
     const token = await AsyncStorage.getItem('token');
-    config.headers["Content-Type"] = "application/json; charset=utf-8";
+    // config.headers["Content-Type"] = "application/json; charset=utf-8";
     config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },
