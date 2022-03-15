@@ -33,7 +33,6 @@ export default function MapScreen({
   const [geocoding, setGeocoding] = useState(false);
   const getCenterInfo = async () => {
     try {
-      console.log(cityKr);
       const response = await fetch(
         `http://${ipAddress}:8080/api/center?address=${cityKr}`,
         {

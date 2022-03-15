@@ -1,37 +1,31 @@
 import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput, Image } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from "expo-image-picker";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export default function CreateScreen({ route }: any) {
+export default function CreateScreen({ route, navigation }: any) {
   const [image, setImage] = useState(null);
+  const images = route.params.data;
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const onChangeTitle = (e: string) => setTitle(e);
   const onChangeContent = (e: string) => setContent(e);
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
 
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-      console.log(result.uri);
-    }
-  };
 
   return (
     <View style={styles.container}>
       <Text><Text style={{ fontWeight: "bold" }}>Category: </Text>{route.params.category}</Text>
-
-      <TouchableOpacity onPress={pickImage} style={styles.addImage}>
+      {images ? images.map((image: any, index: number) => {
+        return (
+          <Image
+            style={{ height: 100, width: 100 }}
+            source={{ uri: image.uri }}
+            key={index}
+          />
+        )
+      }) : null}
+      <TouchableOpacity onPress={() => navigation.navigate('ImageBrowser')} style={styles.addImage}>
         {image ? (
           <Image
             source={{ uri: image }}

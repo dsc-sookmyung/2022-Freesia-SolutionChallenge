@@ -5,12 +5,14 @@ import com.freesia.imyourfreesia.domain.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User extends BaseTimeEntity {
 
     @JsonIgnore
@@ -19,7 +21,12 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String username;
+
+    @Column(unique = true)
+    private String loginId;
+
+    private String password;
 
     @Column(unique = true)
     private String email;
@@ -31,16 +38,20 @@ public class User extends BaseTimeEntity {
     @Column(length = 100)
     private String goalMsg;
 
-    @Builder
-    public User(String name, String email, String nickname, String profileImg, String goalMsg) {
-        this.name = name;
-        this.email = email;
-        this.nickName = nickname;
+    private boolean activated;
+
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(
+            name = "user_authority",
+            joinColumns = {@JoinColumn(name = "userId", referencedColumnName = "userId")},
+            inverseJoinColumns = {@JoinColumn(name = "authorityId", referencedColumnName = "authorityId")})
+    private Set<Authority> authorities;
+
+    public void update(String username, String password, String nickName, String profileImg, String goalMsg) {
+        this.username = username;
+        this.password = password;
+        this.nickName = nickName;
         this.profileImg = profileImg;
         this.goalMsg = goalMsg;
-    }
-
-    public void update(String name) { // 자동 업데이트
-        this.name = name;
     }
 }

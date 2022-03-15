@@ -9,5 +9,4 @@ public class ImyourfreesiaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ImyourfreesiaApplication.class, args);
 	}
-
 }

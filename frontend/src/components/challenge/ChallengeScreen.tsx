@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -8,11 +8,16 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
+import {
+  Divider,
+  mainStyle,
+  screenWidth,
+  ipAddress,
+} from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
 
 const numColumns = 3;
-
+/* 
 const recentPostData = [
   {
     id: "1",
@@ -42,7 +47,7 @@ const recentPostData = [
     id: "7",
     title: "seven",
   },
-];
+]; */
 
 const rankingData = [
   {
@@ -81,6 +86,28 @@ const rank: string[] = [
 ];
 
 export default function ChallengScreen({ navigation }) {
+  const [postData, setPostData] = useState([]);
+
+  const getPostData = async () => {
+    try {
+      const response = await fetch(
+        `http://${ipAddress}:8080/api/challenge/list`,
+        {
+          method: "GET",
+        }
+      );
+      const json = await response.json();
+      setPostData(json);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getPostData();
+    console.log(postData);
+  }, []);
+
   const ProfileIcon = ({ imagePath, isUser }) => {
     if (imagePath == null)
       imagePath = require("../../../assets/profile_default.jpg");
@@ -109,6 +136,7 @@ export default function ChallengScreen({ navigation }) {
   };
 
   const PostItem = ({ item }) => {
+    console.log(item);
     return (
       <TouchableOpacity
         activeOpacity={0.8}
@@ -163,7 +191,7 @@ export default function ChallengScreen({ navigation }) {
       </ScrollView>
       <Divider />
       <FlatList
-        data={recentPostData}
+        data={postData}
         renderItem={PostItem}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}

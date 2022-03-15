@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Text,
   View,
@@ -10,12 +11,18 @@ import {
   TextInput,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { ImageBrowser } from "expo-image-picker-multiple";
 import { Ionicons } from "@expo/vector-icons";
-import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
+import {
+  Divider,
+  mainStyle,
+  screenWidth,
+  ipAddress,
+} from "../../CommonComponent";
+
+import axiosInstance from "../../axiosInstance";
 
 export default function PostChallengeScreen({ navigation }) {
-  const [image, setImage] = useState(null);
+  const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
 
@@ -28,23 +35,76 @@ export default function PostChallengeScreen({ navigation }) {
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
-      console.log(image);
+      setFiles([...files, result.uri]);
     }
+    console.log(files);
   };
 
   const handleCheck = () => {
-    const challengePostInfo = {
-      image,
-      title,
-      contents,
-    };
+    postChallengeData();
 
-    console.log(challengePostInfo);
-
-    image == null
+    /* files == null
       ? Alert.alert("Write Post", "Please select an image", [{ text: "Okay" }])
-      : navigation.navigate("ChallengeScreen", { challengePostInfo });
+      : navigation.navigate("ChallengeScreen"); */
+  };
+
+  const postChallengeData = async () => {
+    /* const token = await AsyncStorage.getItem("token");
+    try {
+      const response = await fetch(`http://${ipAddress}:8080/api/challenge`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          files,
+          title,
+          contents,
+          uid: "1",
+        }),
+      });
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    } */
+
+    /*  axiosInstance
+      .get(`/api/centers`)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log("------------------------");
+        console.log(error);
+      }); */
+
+    let body = new FormData();
+    // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
+    files.map((f, index) => {
+      let file = {
+        uri: f.uri,
+        type: "multipart/form-data",
+        name: `${index}.jpg`,
+      };
+      //body.append(file);
+    });
+
+    console.log(body);
+    axiosInstance
+      .post(
+        `/api/challenge`,
+        {},
+        {
+          params: { title, contents, uid: "1111" },
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const handleTitleChange = (payload) => setTitle(payload);
@@ -53,9 +113,9 @@ export default function PostChallengeScreen({ navigation }) {
   return (
     <View style={{ ...mainStyle.mainView, paddingTop: 20 }}>
       <TouchableOpacity onPress={pickImage} style={styles.addImage}>
-        {image ? (
+        {files ? (
           <Image
-            source={{ uri: image }}
+            source={{ uri: files[0] }}
             style={{ width: "100%", height: "100%" }}
           />
         ) : (
