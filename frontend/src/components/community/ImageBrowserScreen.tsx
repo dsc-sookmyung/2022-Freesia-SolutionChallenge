@@ -8,7 +8,6 @@ import { theme } from '../../color';
 export default function ImageBrowserScreen({ navigation }: any) {
   const onSuccess = async (data: any) => {
     navigation.navigate('Create', { data });
-    console.log(data);
   };
 
   const widgetErrors = useMemo(
