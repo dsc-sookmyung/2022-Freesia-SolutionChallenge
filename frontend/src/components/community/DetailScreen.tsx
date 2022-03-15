@@ -36,17 +36,39 @@ export default function DetailScreen({ navigation, route }: any) {
       });
   }, []);
   const [modalVisible, setModalVisible] = useState(false);
-  const [likes, setLikes] = useState(route.params.likes);
+  const [likes, setLikes] = useState(0);
+  useEffect(() => {
+    axiosInstance.get(`/api/likes/cnt?pid=${route.params.id}`)
+      .then(function (response) {
+        setLikes(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  }, []);
   const [focused, setFocused] = useState(false);
   const iconName: string = focused ? "flower" : "flower-outline";
   const likeEvent = () => {
     if (focused == false) {
-      setFocused(!focused);
-      setLikes((prevCount: number) => prevCount + 1);
+      axiosInstance.post(`/api/likes`, {
+        pid: route.params.id,
+        uid: 1 // test
+      }).then(function (response) {
+        ToastAndroid.show("Like this Post!", ToastAndroid.SHORT);
+        setFocused(!focused);
+        setLikes((prevCount: number) => prevCount + 1);
+      }).catch(function (error) {
+        console.log(error);
+      });
     }
     else {
-      setFocused(!focused);
-      setLikes((prevCount: number) => prevCount - 1);
+      axiosInstance.delete(`/api/likes?id=${route.params.id}`)
+        .then(function (response) {
+          ToastAndroid.show("Canceled", ToastAndroid.SHORT);
+          setFocused(!focused);
+          setLikes((prevCount: number) => prevCount - 1);
+        }).catch(function (error) {
+          console.log(error);
+        });
     }
   };
   const gotoEdit = () => {
@@ -141,7 +163,7 @@ export default function DetailScreen({ navigation, route }: any) {
             <TouchableOpacity onPress={() => likeEvent()}>
               <Ionicons name={iconName} size={30} color="black" style={{ marginRight: 5 }} />
             </TouchableOpacity>
-            <Text>{/*{likes}*/} Likes</Text>
+            <Text>{likes} Likes</Text>
           </View>
           <View style={styles.comments}>
             <Ionicons name="chatbubble-ellipses-outline" size={30} color="black" style={{ marginRight: 5 }} />

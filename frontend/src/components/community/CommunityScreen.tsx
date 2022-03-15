@@ -11,9 +11,6 @@ export default function CommunityScreen({ navigation }: any) {
 
   const [posts, setPosts] = useState([]);
   const [category, setCategory] = useState<string>("worries");
-  const worries = () => setCategory("worries");
-  const review = () => setCategory("review");
-  const gathering = () => setCategory("gathering");
 
   useEffect(() => {
     axiosInstance.get(`/api/communities?category=${category}`)
@@ -37,8 +34,6 @@ export default function CommunityScreen({ navigation }: any) {
       nickName: item.nickName,
       title: item.title,
       content: item.content,
-      // likes: item.likes,
-      // comments: item.comments,
       createdDate: item.createdDate
     });
   };
@@ -48,13 +43,13 @@ export default function CommunityScreen({ navigation }: any) {
 
       {/* category */}
       <View style={styles.category}>
-        <TouchableOpacity onPress={worries}>
+        <TouchableOpacity onPress={() => setCategory("worries")}>
           <Text style={{ ...styles.categoryItem, color: category === "worries" ? "black" : theme.grey, borderBottomWidth: category === "worries" ? 3 : null }}>worries</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={review}>
+        <TouchableOpacity onPress={() => setCategory("review")}>
           <Text style={{ ...styles.categoryItem, color: category === "review" ? "black" : theme.grey, borderBottomWidth: category === "review" ? 3 : null }}>review</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={gathering}>
+        <TouchableOpacity onPress={() => setCategory("gathering")}>
           <Text style={{ ...styles.categoryItem, color: category === "gathering" ? "black" : theme.grey, borderBottomWidth: category === "gathering" ? 3 : null }}>gathering</Text>
         </TouchableOpacity>
       </View>

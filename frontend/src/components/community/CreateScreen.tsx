@@ -20,7 +20,7 @@ export default function CreateScreen({ route, navigation }: any) {
     body.append('email', 'gdsc@gmail.com'); // test
     images.map((image: any, index: number) => {
       let files: any = {
-        uri: image,
+        uri: image.uri,
         type: 'multipart/form-data',
         name: `${index}.png`
       };
@@ -44,11 +44,10 @@ export default function CreateScreen({ route, navigation }: any) {
         <ScrollView horizontal>
           {images ? images.map((image: any, index: number) => {
             return (
-              <View style={{ flexDirection: "column" }}>
+              <View style={{ flexDirection: "column" }} key={index}>
                 <Image
                   style={{ height: 100, width: 100 }}
                   source={{ uri: image.uri }}
-                  key={index}
                 />
               </View>
             )
