@@ -6,6 +6,7 @@ import com.freesia.imyourfreesia.domain.likes.Likes;
 import com.freesia.imyourfreesia.domain.likes.LikesRepository;
 import com.freesia.imyourfreesia.domain.user.User;
 import com.freesia.imyourfreesia.domain.user.UserRepository;
+import com.freesia.imyourfreesia.dto.challenge.ChallengeListResponseDto;
 import com.freesia.imyourfreesia.dto.community.CommunityListResponseDto;
 import com.freesia.imyourfreesia.dto.likes.LikesListResponseDto;
 import com.freesia.imyourfreesia.dto.likes.LikesSaveRequestDto;
@@ -46,10 +47,14 @@ public class LikesService {
 
     /* 좋아요 목록 조회 */
     @Transactional(readOnly = true)
-    public List<Likes> findAllByPid(Long pid){
+    public List<LikesListResponseDto> findAllByPid(Long pid){
         Community community = communityRepository.findById(pid)
                 .orElseThrow(IllegalArgumentException::new);
-        return likesRepository.findAllByPid(community);
+
+        return likesRepository.findAllByPid(community)
+                .stream()
+                .map(LikesListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     /* 좋아요 개수 조회 */

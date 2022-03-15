@@ -9,11 +9,11 @@ import lombok.Getter;
 public class LikesListResponseDto {
     private Long id;
     private User uid;
-    private Community pid;
+    private Long pid;
 
     public LikesListResponseDto(Likes entity){
         this.id = entity.getId();
         this.uid = entity.getUid();
-        this.pid = entity.getPid();
+        this.pid = entity.getPid().getId();
     }
 }
