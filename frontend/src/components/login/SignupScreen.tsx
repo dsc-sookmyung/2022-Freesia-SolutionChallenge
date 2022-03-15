@@ -26,6 +26,8 @@ export default function SignupScreen({ navigation }: any) {
   const [profileImage, setProfileImage] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
   const [goal, setGoal] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -40,7 +42,9 @@ export default function SignupScreen({ navigation }: any) {
   };
   const onChangeId = (e: string) => setId(e);
   const onChangePw = (e: string) => setPw(e);
+  const onChangeEmail = (e: string) => setEmail(e);
   const onChangeNickname = (e: string) => setNickname(e);
+  const onChangeUsername = (e: string) => setUsername(e);
   const onChangeGoal = (e: string) => setGoal(e);
   const save = () => {
     // 서버에 전송
@@ -52,7 +56,7 @@ export default function SignupScreen({ navigation }: any) {
         nickName: nickname,
         password: pw,
         profileImg: profileImage,
-        username: nickname,
+        username: username,
       })
       .then(function (response) {
         console.log("success");
@@ -70,30 +74,12 @@ export default function SignupScreen({ navigation }: any) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.text}>ID</Text>
-      <TextInput
-        value={id}
-        onChangeText={onChangeId}
-        style={styles.textInput}
-      />
-
-      <Text style={styles.text}>Password</Text>
-      <TextInput
-        value={pw}
-        onChangeText={onChangePw}
-        style={styles.textInput}
-        secureTextEntry={true}
-      />
-
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
           alignItems: "center",
           marginVertical: 20,
         }}
       >
-        <Text style={styles.text}>Profile Image</Text>
         <TouchableOpacity onPress={pickImage} style={styles.addImage}>
           {profileImage ? (
             <Image
@@ -101,26 +87,63 @@ export default function SignupScreen({ navigation }: any) {
               style={{ width: "100%", height: "100%" }}
             />
           ) : (
-            <Ionicons name="add" size={50} color="black" />
+            <Ionicons name="person" size={SCREEN_WIDTH / 5} color="white" />
           )}
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.text}>Nickname</Text>
-      <TextInput
-        value={nickname}
-        onChangeText={onChangeNickname}
-        style={styles.textInput}
-      />
-
-      <Text style={styles.text}>Goal</Text>
-      <TextInput
-        value={goal}
-        onChangeText={onChangeGoal}
-        style={styles.textInput}
-      />
-
-      <TouchableOpacity onPress={() => save()}>
+      <View style={styles.signUpForm}>
+        <View style={styles.inputForm}>
+          <Text style={styles.text}>ID</Text>
+          <TextInput
+            value={id}
+            onChangeText={onChangeId}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.inputForm}>
+          <Text style={styles.text}>Password</Text>
+          <TextInput
+            value={pw}
+            onChangeText={onChangePw}
+            style={styles.textInput}
+            secureTextEntry={true}
+          />
+        </View>
+        <View style={styles.inputForm}>
+          <Text style={styles.text}>Email</Text>
+          <TextInput
+            value={email}
+            onChangeText={onChangeEmail}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.inputForm}>
+          <Text style={styles.text}>Username</Text>
+          <TextInput
+            value={username}
+            onChangeText={onChangeUsername}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.inputForm}>
+          <Text style={styles.text}>Nickname</Text>
+          <TextInput
+            value={nickname}
+            onChangeText={onChangeNickname}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.inputForm}>
+          <Text style={styles.text}>Goal</Text>
+          <TextInput
+            value={goal}
+            onChangeText={onChangeGoal}
+            style={styles.textInput}
+          />
+        </View>
+      </View>
+      <TouchableOpacity style={styles.btnContainer} onPress={() => save()}>
         <Text style={styles.saveBtn}>Save</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -132,6 +155,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  signUpForm: {
+    width: "85%",
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
   text: {
     fontSize: 20,
   },
@@ -142,12 +170,27 @@ const styles = StyleSheet.create({
     height: SCREEN_WIDTH / 4,
     backgroundColor: "lightgrey",
     borderRadius: SCREEN_WIDTH / 8,
+    marginVertical: "10%",
+    overflow: "hidden",
+  },
+  inputForm: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   textInput: {
-    borderBottomWidth: 2,
-    marginBottom: 20,
+    width: "70%",
+    elevation: 2,
+    borderRadius: 50,
+    backgroundColor: "white",
+    margin: 15,
+  },
+  btnContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   saveBtn: {
+    width: "20%",
     backgroundColor: theme.headerBg,
     fontSize: 20,
     fontWeight: "bold",

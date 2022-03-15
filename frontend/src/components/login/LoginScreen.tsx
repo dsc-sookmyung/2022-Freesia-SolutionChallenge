@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Text, View, TouchableOpacity, StyleSheet, ToastAndroid, TextInput } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ToastAndroid,
+  TextInput,
+} from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,11 +15,12 @@ import axios from "axios";
 import axiosInstance from "../../axiosInstance";
 import { theme } from "../../color";
 
+import { mainStyle, Divider } from "../../CommonComponent";
+
 const BASE_URL = "http://192.168.0.9:8080"; // localhost 대신 본인 컴퓨터 ip(IPv4) 주소
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login({ navigation }: any) {
-
   // 일반 로그인
   const [id, setId] = useState<string>("");
   const [pw, setPw] = useState<string>("");
@@ -50,7 +58,7 @@ export default function Login({ navigation }: any) {
         });
       // access token으로 서버에서 유저 정보 받아옴
       // nickname == null 이면 회원가입 창으로 이동
-      navigation.navigate('SocialSignup');
+      navigation.navigate("SocialSignup");
       // nickname != null 이면 stack의 첫 화면으로 이동
       // navigation.dispatch(StackActions.popToTop);
     }
@@ -61,29 +69,47 @@ export default function Login({ navigation }: any) {
   };
 
   return (
-    <View style={styles.login}>
+    <View style={{ ...styles.login, ...mainStyle.mainView }}>
       <Text style={styles.loginTitle}>Login</Text>
-      <View style={styles.inputArea}>
-        <Text style={styles.text}>ID</Text>
-        <TextInput value={id} onChangeText={onChangeId} style={styles.textInput} />
-      </View>
-      <View style={styles.inputArea}>
-        <Text style={styles.text}>Password</Text>
-        <TextInput value={pw} onChangeText={onChangePw} style={styles.textInput} secureTextEntry={true} />
+      <View style={styles.loginForm}>
+        <View style={styles.inputForm}>
+          <Text style={styles.text}>ID</Text>
+          <TextInput
+            value={id}
+            onChangeText={onChangeId}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.inputForm}>
+          <Text style={styles.text}>Password</Text>
+          <TextInput
+            value={pw}
+            onChangeText={onChangePw}
+            style={styles.textInput}
+            secureTextEntry={true}
+          />
+        </View>
       </View>
       <TouchableOpacity onPress={() => login()}>
-        <View style={{ ...styles.socialLogin, backgroundColor: theme.headerBg, marginVertical: 20 }}>
-          <Text style={{ ...styles.socialLoginTitle, color: "black" }}>Login</Text>
+        <View
+          style={{
+            ...styles.socialLogin,
+            backgroundColor: theme.headerBg,
+            marginVertical: 20,
+          }}
+        >
+          <Text style={{ ...styles.socialLoginTitle, color: "black" }}>
+            Login
+          </Text>
         </View>
       </TouchableOpacity>
       <Text>If you don't have an account?</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+      <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
         <Text style={{ textDecorationLine: "underline" }}>Sign Up</Text>
       </TouchableOpacity>
 
-      <View style={{ width: "100%", height: 1, marginVertical: 20, backgroundColor: "#eeeeee" }} />
-
-      <Text style={styles.loginTitle}>Social Login</Text>
+      <Divider />
+      {/* <Text style={styles.loginTitle}>Social Login</Text> */}
       <TouchableOpacity>
         <View style={{ ...styles.socialLogin, backgroundColor: "#FFE500" }}>
           <Text style={{ ...styles.socialLoginTitle, color: "#684848" }}>
@@ -107,31 +133,39 @@ export default function Login({ navigation }: any) {
 
 const styles = StyleSheet.create({
   login: {
-    flex: 1,
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
   },
   loginTitle: {
     fontSize: 25,
     fontWeight: "700",
     marginBottom: 20,
   },
+  loginForm: {
+    position: "relative",
+  } /* 
   inputArea: {
     flexDirection: "row",
     alignItems: "center",
     marginHorizontal: 30,
     marginBottom: 10,
-  },
+  }, */,
   text: {
-    flex: 1,
+    position: "absolute",
+    right: 330,
     fontSize: 20,
-    textAlign: "center",
-    marginRight: 10,
+  },
+  inputForm: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   textInput: {
-    flex: 2,
-    borderBottomWidth: 2,
+    width: 300,
+    elevation: 2,
+    borderRadius: 50,
+    backgroundColor: "white",
+    margin: 15,
   },
   socialLogin: {
     justifyContent: "center",
@@ -139,7 +173,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 40,
     borderRadius: 20,
-    marginVertical: 4,
+    marginVertical: 6,
   },
   socialLoginTitle: {
     color: "white",

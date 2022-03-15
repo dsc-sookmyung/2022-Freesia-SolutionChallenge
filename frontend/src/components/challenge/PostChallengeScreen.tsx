@@ -20,6 +20,8 @@ import {
 } from "../../CommonComponent";
 
 import axiosInstance from "../../axiosInstance";
+//import FormData from "form-data";
+//import "url-search-params-polyfill";
 
 export default function PostChallengeScreen({ navigation }) {
   const [files, setFiles] = useState([]);
@@ -79,26 +81,41 @@ export default function PostChallengeScreen({ navigation }) {
         console.log(error);
       }); */
 
+    let data = {
+      title,
+      contents,
+      files: null,
+      uid: "1111",
+    };
+
     let body = new FormData();
+    //body.append("data", JSON.stringify(data));
     // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
     files.map((f, index) => {
       let file = {
-        uri: f.uri,
+        uri: f,
         type: "multipart/form-data",
         name: `${index}.jpg`,
       };
-      //body.append(file);
+      body.append("files", file);
     });
+
+    body.append("title", title);
+    body.append("contents", contents);
+    body.append("uid", "1111");
+
+    /* let params = new URLSearchParams();
+    params.set("title", title);
+    params.set("contents", contents);
+    params.set("uid", "1111");
+    console.log(params); */
 
     console.log(body);
     axiosInstance
-      .post(
-        `/api/challenge`,
-        {},
-        {
-          params: { title, contents, uid: "1111" },
-        }
-      )
+      .post(`/api/challenge`, {
+        Accept: "application/json",
+        body,
+      })
       .then(function (response) {
         console.log(response);
       })
