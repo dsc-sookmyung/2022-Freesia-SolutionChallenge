@@ -68,15 +68,8 @@ export default function CommunityScreen({ navigation }: any) {
                   <View style={styles.contentArea}>
                     <Text numberOfLines={2}>{post.content}</Text>
                   </View>
-                  <View style={styles.statusArea}>
-                    <View style={styles.likes}>
-                      <AntDesign name="like2" size={20} color="black" style={{ marginRight: 5 }} />
-                      <Text>{/*{post.likes}*/} likes</Text>
-                    </View>
-                    <View style={styles.comments}>
-                      <Ionicons name="chatbubble-ellipses-outline" size={20} color="black" style={{ marginRight: 5 }} />
-                      <Text>{/*{post.comments}*/} comments</Text>
-                    </View>
+                  <View>
+                    <Text style={styles.date}>{post.createdDate}</Text>
                   </View>
                 </TouchableOpacity>
                 <View style={{ width: "100%", height: 5, backgroundColor: theme.devideBg }}></View>
@@ -130,14 +123,7 @@ const styles = StyleSheet.create({
   contentArea: {
     marginVertical: 15,
   },
-  statusArea: {
-    flexDirection: "row",
+  date: {
+    color: "grey",
   },
-  likes: {
-    flexDirection: "row",
-    marginRight: 10,
-  },
-  comments: {
-    flexDirection: "row",
-  }
 });

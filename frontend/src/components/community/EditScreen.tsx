@@ -17,17 +17,20 @@ export default function EditScreen({ navigation, route }: any) {
     body.append('title', title);
     body.append('content', content);
     body.append('id', route.params.id);
-    route.params.images.forEach((image: any, index: number) => {
+    route.params.images.map((image: any, index: number) => {
       let files: any = {
         uri: image,
-        type: 'multipart/form-data',
+        type: 'image/jpeg',
         name: `${index}.png`
       };
       body.append('files', files);
     });
 
     axiosInstance.put(`/api/community`, body, {
-      headers: { 'content-type': 'multipart/form-data' }
+      headers: { 'content-type': 'multipart/form-data' },
+      transformRequest: (data, headers) => {
+        return body;
+      },
     }).then(function (response) {
       ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
       navigation.dispatch(StackActions.popToTop);

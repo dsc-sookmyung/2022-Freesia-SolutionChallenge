@@ -14,21 +14,24 @@ export default function CreateScreen({ route, navigation }: any) {
   const onChangeContent = (e: string) => setContent(e);
   const createPost = () => {
     let body = new FormData();
-    body.append('category', route.params.category);
+    body.append('category', 'worries');
     body.append('title', title);
     body.append('content', content);
     body.append('email', 'gdsc@gmail.com'); // test
     images.map((image: any, index: number) => {
       let files: any = {
         uri: image.uri,
-        type: 'multipart/form-data',
+        type: 'image/jpeg',
         name: `${index}.png`
       };
       body.append('files', files);
     });
 
     axiosInstance.post(`/api/community`, body, {
-      headers: { 'content-type': 'multipart/form-data' }
+      headers: { 'content-type': `multipart/form-data` },
+      transformRequest: (data, headers) => {
+        return body;
+      },
     }).then(function (response) {
       ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
       navigation.dispatch(StackActions.popToTop);

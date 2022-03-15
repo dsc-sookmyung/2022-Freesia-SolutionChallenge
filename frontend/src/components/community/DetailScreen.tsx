@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity, Alert, ToastAndroid } from "react-native";
+import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity, Alert, ToastAndroid, TextInput } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { Divider, ProfileIcon } from "../../CommonComponent";
 import Carousel, { ParallaxImage, Pagination } from 'react-native-snap-carousel';
@@ -99,6 +99,8 @@ export default function DetailScreen({ navigation, route }: any) {
       },
     ]);
   };
+  const [comment, setComment] = useState<string>("");
+  const onChangeComment = (e: string) => setComment(e);
 
   return (
     <ScrollView>
@@ -171,6 +173,13 @@ export default function DetailScreen({ navigation, route }: any) {
           </View>
         </View>
         <Text style={styles.date}>{route.params.createdDate}</Text>
+        <View style={styles.commentInputArea}>
+          <TextInput placeholder="Comment" value={comment} onChangeText={onChangeComment} style={styles.commentInput} />
+          <TouchableOpacity>
+            <Text style={{ flex: 1, color: "blue" }}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+        <Text><Text style={{ fontWeight: "bold" }}>Nickname</Text>Comment</Text>
       </View>
     </ScrollView>
   );
@@ -258,5 +267,16 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     textAlign: "center",
     paddingVertical: 15,
+  },
+  commentInputArea: {
+    flex: 1,
+    marginVertical: 10,
+    flexDirection: "column",
+  },
+  commentInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 5,
   },
 });
