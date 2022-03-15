@@ -6,6 +6,8 @@ import com.freesia.imyourfreesia.domain.community.Photo;
 import com.freesia.imyourfreesia.domain.community.PhotoRepository;
 import com.freesia.imyourfreesia.domain.user.User;
 import com.freesia.imyourfreesia.domain.user.UserRepository;
+import com.freesia.imyourfreesia.dto.challenge.ChallengeListResponseDto;
+import com.freesia.imyourfreesia.dto.community.CommunityListResponseDto;
 import com.freesia.imyourfreesia.dto.community.CommunityResponseDto;
 import com.freesia.imyourfreesia.dto.community.CommunitySaveRequestDto;
 import com.freesia.imyourfreesia.dto.community.CommunityUpdateRequestDto;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -87,6 +90,17 @@ public class CommunityService {
     public List<Community> findByEmail(String email) {
         User user = userRepository.findByEmail(email);
         return communityRepository.findByUid(user);
+    }
+
+    /* 마이페이지 커뮤니티 조회 */
+    @Transactional(readOnly = true)
+    public List<CommunityListResponseDto> findByUid(String email){
+        User user = userRepository.findByEmail(email);
+
+        return communityRepository.findByUid(user)
+                .stream()
+                .map(CommunityListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 }

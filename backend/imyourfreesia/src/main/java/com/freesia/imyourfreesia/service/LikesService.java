@@ -1,18 +1,20 @@
 package com.freesia.imyourfreesia.service;
 
-import com.freesia.imyourfreesia.domain.comment.Comment;
 import com.freesia.imyourfreesia.domain.community.Community;
 import com.freesia.imyourfreesia.domain.community.CommunityRepository;
 import com.freesia.imyourfreesia.domain.likes.Likes;
 import com.freesia.imyourfreesia.domain.likes.LikesRepository;
 import com.freesia.imyourfreesia.domain.user.User;
 import com.freesia.imyourfreesia.domain.user.UserRepository;
-import com.freesia.imyourfreesia.dto.likes.LikeSaveRequestDto;
+import com.freesia.imyourfreesia.dto.community.CommunityListResponseDto;
+import com.freesia.imyourfreesia.dto.likes.LikesListResponseDto;
+import com.freesia.imyourfreesia.dto.likes.LikesSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +25,7 @@ public class LikesService {
 
     /* 좋아요 설정 */
     @Transactional
-    public Likes likes(LikeSaveRequestDto requestDto){
+    public Likes likes(LikesSaveRequestDto requestDto){
         User user = userRepository.findByEmail(requestDto.getUid());
         Community community = communityRepository.findById(requestDto.getPid())
                 .orElseThrow(IllegalArgumentException::new);
@@ -57,4 +59,16 @@ public class LikesService {
                 .orElseThrow(IllegalArgumentException::new);
         return likesRepository.countByPid(community);
     }
+
+    /* 마이페이지 북마크 조회 */
+    @Transactional(readOnly = true)
+    public List<LikesListResponseDto> findByUid(String email){
+        User user = userRepository.findByEmail(email);
+
+        return likesRepository.findByUid(user)
+                .stream()
+                .map(LikesListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
 }
