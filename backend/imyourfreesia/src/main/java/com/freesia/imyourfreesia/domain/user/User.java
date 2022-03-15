@@ -2,6 +2,7 @@ package com.freesia.imyourfreesia.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.freesia.imyourfreesia.domain.BaseTimeEntity;
+import com.freesia.imyourfreesia.domain.challenge.Challenge;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,6 +47,17 @@ public class User extends BaseTimeEntity {
             joinColumns = {@JoinColumn(name = "userId", referencedColumnName = "userId")},
             inverseJoinColumns = {@JoinColumn(name = "authorityId", referencedColumnName = "authorityId")})
     private Set<Authority> authorities;
+
+    @Builder
+    public User(String username, String loginId, String password, String email, String nickName, String profileImg, String goalMsg){
+        this.username = username;
+        this.loginId = loginId;
+        this.password = password;
+        this.email = email;
+        this.nickName = nickName;
+        this.profileImg = profileImg;
+        this.goalMsg = goalMsg;
+    }
 
     //public void update(String username, String password, String nickName, String profileImg, String goalMsg) {
     public User update(String nickName, String profileImg, String goalMsg) {

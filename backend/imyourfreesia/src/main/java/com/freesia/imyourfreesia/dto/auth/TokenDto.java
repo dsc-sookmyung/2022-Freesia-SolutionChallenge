@@ -12,4 +12,7 @@ public class TokenDto {
 
     @ApiModelProperty(example = "토큰")
     private String token;
+
+    @ApiModelProperty(example = "이메일")
+    private String email;
 }
