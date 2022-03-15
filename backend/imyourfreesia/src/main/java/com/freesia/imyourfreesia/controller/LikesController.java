@@ -2,6 +2,7 @@ package com.freesia.imyourfreesia.controller;
 
 
 import com.freesia.imyourfreesia.domain.likes.Likes;
+import com.freesia.imyourfreesia.dto.likes.LikesListResponseDto;
 import com.freesia.imyourfreesia.dto.likes.LikesSaveRequestDto;
 import com.freesia.imyourfreesia.service.LikesService;
 import io.swagger.annotations.Api;
@@ -25,9 +26,9 @@ public class LikesController {
     @ApiOperation(value="좋아요 설정", notes="좋아요 설정 API")
     @ApiImplicitParam(name = "LikeSaveRequestDto", value = "좋아요 설정 dto")
     @PostMapping("/likes")
-    public ResponseEntity<Likes> likes(@RequestBody LikesSaveRequestDto requestDto){
+    public ResponseEntity<Long> likes(@RequestBody LikesSaveRequestDto requestDto){
         return ResponseEntity.ok()
-                .body(likesService.likes(requestDto));
+                .body(likesService.likes(requestDto).getId());
     }
 
     /* 좋아요 해제 */
@@ -43,7 +44,7 @@ public class LikesController {
     @ApiOperation(value="좋아요 목록 조회", notes="좋아요 목록 조회 API")
     @ApiImplicitParam(name = "pid", value = "게시글 id", dataType="Long", paramType="query", example = "1")
     @GetMapping("/likes")
-    public ResponseEntity<List<Likes>> loadLikes(@RequestParam Long pid){
+    public ResponseEntity<List<LikesListResponseDto>> loadLikes(@RequestParam Long pid){
         return ResponseEntity.ok()
                 .body(likesService.findAllByPid(pid));
     }

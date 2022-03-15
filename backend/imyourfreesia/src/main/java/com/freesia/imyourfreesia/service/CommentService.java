@@ -6,6 +6,8 @@ import com.freesia.imyourfreesia.domain.community.Community;
 import com.freesia.imyourfreesia.domain.community.CommunityRepository;
 import com.freesia.imyourfreesia.domain.user.User;
 import com.freesia.imyourfreesia.domain.user.UserRepository;
+import com.freesia.imyourfreesia.dto.challenge.ChallengeListResponseDto;
+import com.freesia.imyourfreesia.dto.comment.CommentListResponseDto;
 import com.freesia.imyourfreesia.dto.comment.CommentSaveRequestDto;
 import com.freesia.imyourfreesia.dto.comment.CommentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -38,11 +41,22 @@ public class CommentService {
 
     /* 댓글 조회 */
     @Transactional(readOnly = true)
+    public List<CommentListResponseDto> findAllByPid(Long pid){
+        Community community = communityRepository.findById(pid)
+                .orElseThrow(IllegalArgumentException::new);
+
+        return commentRepository.findAllByPid(community)
+                .stream()
+                .map(CommentListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+    /*
     public List<Comment> findAllByPid(Long pid){
         Community community = communityRepository.findById(pid)
                 .orElseThrow(IllegalArgumentException::new);
         return commentRepository.findAllByPid(community);
-    }
+    }*/
+
 
     /* 댓글 수정 */
     @Transactional
