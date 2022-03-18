@@ -3,10 +3,12 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput, Image,
 import { Ionicons } from '@expo/vector-icons';
 import axiosInstance from "../../axiosInstance";
 import { StackActions } from "@react-navigation/native";
+import { Picker } from '@react-native-picker/picker';
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function CreateScreen({ route, navigation }: any) {
+  const [category, setCategory] = useState("worries");
   const images = route.params.data;
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -14,20 +16,20 @@ export default function CreateScreen({ route, navigation }: any) {
   const onChangeContent = (e: string) => setContent(e);
   const createPost = () => {
     let body = new FormData();
-    body.append('category', 'worries');
+    body.append('category', category);
     body.append('title', title);
     body.append('content', content);
     body.append('email', 'gdsc@gmail.com'); // test
     images.map((image: any, index: number) => {
       let files: any = {
         uri: image.uri,
-        type: 'image/jpeg',
+        type: 'image/png',
         name: `${index}.png`
       };
       body.append('files', files);
     });
 
-    axiosInstance.post(`/api/community`, body, {
+    axiosInstance.post(`/auth/community`, body, {
       headers: { 'content-type': `multipart/form-data` },
       transformRequest: (data, headers) => {
         return body;
@@ -43,7 +45,19 @@ export default function CreateScreen({ route, navigation }: any) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Text><Text style={{ fontWeight: "bold" }}>Category: </Text>{route.params.category}</Text>
+        <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+          <Text style={{ fontWeight: "bold" }}>Category: </Text>
+          <Picker
+            style={{ flex: 1 }}
+            selectedValue={category}
+            onValueChange={(itemValue, itemIndex) =>
+              setCategory(itemValue)
+            }>
+            <Picker.Item label="worries" value="worries" />
+            <Picker.Item label="review" value="review" />
+            <Picker.Item label="gathering" value="gathering" />
+          </Picker>
+        </View>
         <ScrollView horizontal>
           {images ? images.map((image: any, index: number) => {
             return (

@@ -20,13 +20,13 @@ export default function EditScreen({ navigation, route }: any) {
     route.params.images.map((image: any, index: number) => {
       let files: any = {
         uri: image,
-        type: 'image/jpeg',
+        type: 'image/png',
         name: `${index}.png`
       };
       body.append('files', files);
     });
 
-    axiosInstance.put(`/api/community`, body, {
+    axiosInstance.put(`/auth/community`, body, {
       headers: { 'content-type': 'multipart/form-data' },
       transformRequest: (data, headers) => {
         return body;

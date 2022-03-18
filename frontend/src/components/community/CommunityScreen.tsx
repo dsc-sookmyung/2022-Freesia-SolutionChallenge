@@ -13,7 +13,7 @@ export default function CommunityScreen({ navigation }: any) {
   const [category, setCategory] = useState<string>("worries");
 
   useEffect(() => {
-    axiosInstance.get(`/api/communities?category=${category}`)
+    axiosInstance.get(`/auth/communities?category=${category}`)
       .then(function (response) {
         setPosts(response.data);
       }).catch(function (error) {
@@ -22,9 +22,7 @@ export default function CommunityScreen({ navigation }: any) {
   }, [category]);
 
   const gotoCreate = () => {
-    navigation.navigate('Create', {
-      category: category,
-    });
+    navigation.navigate('Create');
   };
 
   const gotoDetail = (item) => {

@@ -28,7 +28,7 @@ export default function DetailScreen({ navigation, route }: any) {
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
   useEffect(() => {
-    axiosInstance.get(`/api/community?id=${route.params.id}`)
+    axiosInstance.get(`/auth/community?id=${route.params.id}`)
       .then(function (response) {
         setEntries(response.data.filePath);
       }).catch(function (error) {
@@ -38,7 +38,7 @@ export default function DetailScreen({ navigation, route }: any) {
   const [modalVisible, setModalVisible] = useState(false);
   const [likes, setLikes] = useState(0);
   useEffect(() => {
-    axiosInstance.get(`/api/likes/cnt?pid=${route.params.id}`)
+    axiosInstance.get(`/auth/likes/cnt?pid=${route.params.id}`)
       .then(function (response) {
         setLikes(response.data);
       }).catch(function (error) {
@@ -49,7 +49,7 @@ export default function DetailScreen({ navigation, route }: any) {
   const iconName: string = focused ? "flower" : "flower-outline";
   const likeEvent = () => {
     if (focused == false) {
-      axiosInstance.post(`/api/likes`, {
+      axiosInstance.post(`/auth/likes`, {
         pid: route.params.id,
         uid: 1 // test
       }).then(function (response) {
@@ -61,7 +61,7 @@ export default function DetailScreen({ navigation, route }: any) {
       });
     }
     else {
-      axiosInstance.delete(`/api/likes?id=${route.params.id}`)
+      axiosInstance.delete(`/auth/likes?id=${route.params.id}`)
         .then(function (response) {
           ToastAndroid.show("Canceled", ToastAndroid.SHORT);
           setFocused(!focused);
@@ -88,7 +88,7 @@ export default function DetailScreen({ navigation, route }: any) {
         text: 'Yes',
         onPress: () => {
           setModalVisible(!modalVisible);
-          axiosInstance.delete(`/api/community?id=${route.params.id}`)
+          axiosInstance.delete(`/auth/community?id=${route.params.id}`)
             .then(function (response) {
               ToastAndroid.show("Deleted Successfully!", ToastAndroid.SHORT);
               navigation.dispatch(StackActions.popToTop);
