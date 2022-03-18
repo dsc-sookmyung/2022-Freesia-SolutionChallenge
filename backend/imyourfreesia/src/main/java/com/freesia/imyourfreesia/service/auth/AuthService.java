@@ -1,9 +1,7 @@
 package com.freesia.imyourfreesia.service.auth;
 
 import com.freesia.imyourfreesia.config.JwtTokenUtil;
-import com.freesia.imyourfreesia.domain.user.Authority;
-import com.freesia.imyourfreesia.domain.user.User;
-import com.freesia.imyourfreesia.domain.user.UserRepository;
+import com.freesia.imyourfreesia.domain.user.*;
 import com.freesia.imyourfreesia.dto.auth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +21,7 @@ public class AuthService {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
+    private final GoalMsgRepository goalMsgRepository;
     private final GoogleService googleService;
     private final KakaoService kakaoService;
     private final NaverService naverService;
@@ -136,10 +135,17 @@ public class AuthService {
                 .email(userSaveRequestDto.getEmail())
                 .nickName(userSaveRequestDto.getNickName())
                 .profileImg(filePath)
-                .goalMsg(userSaveRequestDto.getGoalMsg())
                 .activated(true)
                 .authorities(Collections.singleton(authority))
                 .build();
+
+        GoalMsg goalMsg = GoalMsg.builder()
+                    .goalMsg(userSaveRequestDto.getGoalMsg())
+                    .build();
+
+        goalMsg.setUserId(user);
+
+        goalMsgRepository.save(goalMsg);
 
         return userRepository.save(user);
     }

@@ -1,7 +1,5 @@
 package com.freesia.imyourfreesia.controller;
 
-
-import com.freesia.imyourfreesia.domain.likes.Likes;
 import com.freesia.imyourfreesia.dto.likes.LikesListResponseDto;
 import com.freesia.imyourfreesia.dto.likes.LikesSaveRequestDto;
 import com.freesia.imyourfreesia.service.LikesService;
@@ -17,7 +15,7 @@ import java.util.List;
 @Api(tags={"Likes API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class LikesController {
     private final LikesService likesService;

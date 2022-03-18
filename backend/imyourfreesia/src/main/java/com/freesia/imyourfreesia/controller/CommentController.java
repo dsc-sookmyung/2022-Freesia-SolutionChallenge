@@ -18,7 +18,7 @@ import java.util.List;
 @Api(tags={"Comment API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
 

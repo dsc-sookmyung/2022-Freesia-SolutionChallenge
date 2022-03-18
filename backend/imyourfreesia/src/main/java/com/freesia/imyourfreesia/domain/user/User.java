@@ -36,8 +36,10 @@ public class User extends BaseTimeEntity {
 
     private String profileImg;
 
-    @Column(length = 100)
-    private String goalMsg;
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "goalMsgId")
+    //private String goalMsg;
+    private GoalMsg goalMsg;*/
 
     private boolean activated;
 
@@ -49,23 +51,23 @@ public class User extends BaseTimeEntity {
     private Set<Authority> authorities;
 
     @Builder
-    public User(String username, String loginId, String password, String email, String nickName, String profileImg, String goalMsg){
+    public User(String username, String loginId, String password, String email, String nickName, String profileImg){
         this.username = username;
         this.loginId = loginId;
         this.password = password;
         this.email = email;
         this.nickName = nickName;
         this.profileImg = profileImg;
-        this.goalMsg = goalMsg;
+        // this.goalMsg = goalMsg;
     }
 
     //public void update(String username, String password, String nickName, String profileImg, String goalMsg) {
-    public User update(String nickName, String profileImg, String goalMsg) {
+    public User update(String nickName, String profileImg) {
         //this.username = username;
         //this.password = password;
         this.nickName = nickName;
         this.profileImg = profileImg;
-        this.goalMsg = goalMsg;
+        //this.goalMsg = goalMsg;
         return this;
     }
 }
