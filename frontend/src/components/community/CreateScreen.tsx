@@ -1,59 +1,109 @@
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput, Image } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+  Image,
+  ScrollView,
+  ToastAndroid,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import axiosInstance from "../../axiosInstance";
+import { StackActions } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function CreateScreen({ route, navigation }: any) {
-  const [image, setImage] = useState(null);
+  const [category, setCategory] = useState("worries");
   const images = route.params.data;
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const onChangeTitle = (e: string) => setTitle(e);
   const onChangeContent = (e: string) => setContent(e);
+  const createPost = () => {
+    let body = new FormData();
+    body.append("category", category);
+    body.append("title", title);
+    body.append("content", content);
+    body.append("email", "gdsc@gmail.com"); // test
+    images.map((image: any, index: number) => {
+      let files: any = {
+        uri: image.uri,
+        type: "image/png",
+        name: `${index}.png`,
+      };
+      body.append("files", files);
+    });
 
+    axiosInstance
+      .post(`/auth/community`, body, {
+        headers: { "content-type": `multipart/form-data` },
+        transformRequest: (data, headers) => {
+          return body;
+        },
+      })
+      .then(function (response) {
+        ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
+        navigation.dispatch(StackActions.popToTop);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <View style={styles.container}>
-      <Text><Text style={{ fontWeight: "bold" }}>Category: </Text>{route.params.category}</Text>
-      {images ? images.map((image: any, index: number) => {
-        return (
-          <Image
-            style={{ height: 100, width: 100 }}
-            source={{ uri: image.uri }}
-            key={index}
-          />
-        )
-      }) : null}
-      <TouchableOpacity onPress={() => navigation.navigate('ImageBrowser')} style={styles.addImage}>
-        {image ? (
-          <Image
-            source={{ uri: image }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        ) : (
-          <Ionicons name="add" size={50} color="black" />
-        )}
-      </TouchableOpacity>
-      <TextInput
-        placeholder="Title"
-        value={title}
-        onChangeText={onChangeTitle}
-        style={styles.titleInput}
-      />
-      <TextInput
-        multiline={true}
-        placeholder="Contents"
-        value={content}
-        onChangeText={onChangeContent}
-        style={styles.contentInput}
-      />
+      <ScrollView>
+        <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+          <Text style={{ fontWeight: "bold" }}>Category: </Text>
+          <Picker
+            style={{ flex: 1 }}
+            selectedValue={category}
+            onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+          >
+            <Picker.Item label="worries" value="worries" />
+            <Picker.Item label="review" value="review" />
+            <Picker.Item label="gathering" value="gathering" />
+          </Picker>
+        </View>
+        <ScrollView horizontal>
+          {images
+            ? images.map((image: any, index: number) => {
+                return (
+                  <View style={{ flexDirection: "column" }} key={index}>
+                    <Image
+                      style={{ height: 100, width: 100 }}
+                      source={{ uri: image.uri }}
+                    />
+                  </View>
+                );
+              })
+            : null}
+        </ScrollView>
 
-      <TouchableOpacity style={styles.createBtn}>
+        <TextInput
+          placeholder="Title"
+          value={title}
+          onChangeText={onChangeTitle}
+          style={styles.titleInput}
+        />
+        <TextInput
+          multiline={true}
+          placeholder="Contents"
+          value={content}
+          onChangeText={onChangeContent}
+          style={styles.contentInput}
+        />
+      </ScrollView>
+
+      <TouchableOpacity onPress={createPost} style={styles.createBtn}>
         <Ionicons name="checkmark-circle" size={65} color="#ffd25E" />
       </TouchableOpacity>
     </View>
-
   );
 }
 

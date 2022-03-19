@@ -16,7 +16,7 @@ import java.util.Map;
 @Api(tags={"Cheering API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CheeringController {
     private final CheeringService cheeringService;

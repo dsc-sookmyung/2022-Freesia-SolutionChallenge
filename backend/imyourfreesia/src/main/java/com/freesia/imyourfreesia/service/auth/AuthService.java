@@ -1,9 +1,7 @@
 package com.freesia.imyourfreesia.service.auth;
 
 import com.freesia.imyourfreesia.config.JwtTokenUtil;
-import com.freesia.imyourfreesia.domain.user.Authority;
-import com.freesia.imyourfreesia.domain.user.User;
-import com.freesia.imyourfreesia.domain.user.UserRepository;
+import com.freesia.imyourfreesia.domain.user.*;
 import com.freesia.imyourfreesia.dto.auth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +21,7 @@ public class AuthService {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
+    private final GoalMsgRepository goalMsgRepository;
     private final GoogleService googleService;
     private final KakaoService kakaoService;
     private final NaverService naverService;
@@ -30,118 +29,89 @@ public class AuthService {
 
     // 구글 로그인
     @Transactional
-    public String googleLogin(GoogleLoginReqDto googleLoginReqDto, MultipartFile profileImage) throws Exception {
+    public TokenDto googleLogin(String accessToken) {
 
         String jwt;
 
-        GoogleOAuth2UserInfoDto googleOAuth2UserInfoDto = googleService.getUserInfoByAccessToken(googleLoginReqDto.getAccessToken());
+        GoogleOAuth2UserInfoDto googleOAuth2UserInfoDto = googleService.getUserInfoByAccessToken(accessToken);
 
+        if (userRepository.findOneWithAuthoritiesByEmail(googleOAuth2UserInfoDto.getEmail()).orElse(null) == null) {
+            Authority authority = Authority.builder()
+                    .authorityName("ROLE_USER")
+                    .build();
 
-        String namename = googleOAuth2UserInfoDto.getName();
-        System.out.println("================================");
-        System.out.println(namename);
+            User user = User.builder()
+                    .username(googleOAuth2UserInfoDto.getName())
+                    .email(googleOAuth2UserInfoDto.getEmail())
+                    .activated(true)
+                    .authorities(Collections.singleton(authority))
+                    .build();
 
-
-        if (userRepository.findOneWithAuthoritiesByEmail(googleOAuth2UserInfoDto.getEmail()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            userRepository.save(user);
         }
-
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
-
-        String filePath = convertImage(profileImage);
-
-        User user = User.builder()
-                .username(googleOAuth2UserInfoDto.getName())
-                .email(googleOAuth2UserInfoDto.getEmail())
-                .nickName(googleLoginReqDto.getNickName())
-                .profileImg(filePath)
-                .goalMsg(googleLoginReqDto.getGoalMsg())
-                .activated(true)
-                .authorities(Collections.singleton(authority))
-                .build();
-
-        userRepository.save(user);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(googleOAuth2UserInfoDto.getEmail());
 
         jwt = jwtTokenUtil.generateToken(userDetails);
-        return jwt;
+        return new TokenDto(jwt, googleOAuth2UserInfoDto.getEmail());
     }
 
     // 카카오 로그인
     @Transactional
-    public String kakaoLogin(KakaoLoginReqDto kakaoLoginReqDto, MultipartFile profileImage) throws Exception {
+    public TokenDto kakaoLogin(String accessToken) {
 
         String jwt;
 
-        KakaoOAuth2UserInfoDto kakaoOAuth2UserInfoDto = kakaoService.getUserInfoByAccessToken(kakaoLoginReqDto.getAccessToken());
+        KakaoOAuth2UserInfoDto kakaoOAuth2UserInfoDto = kakaoService.getUserInfoByAccessToken(accessToken);
 
-        if (userRepository.findOneWithAuthoritiesByEmail(kakaoOAuth2UserInfoDto.getEmail()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        if (userRepository.findOneWithAuthoritiesByEmail(kakaoOAuth2UserInfoDto.getEmail()).orElse(null) == null) {
+            Authority authority = Authority.builder()
+                    .authorityName("ROLE_USER")
+                    .build();
+
+            User user = User.builder()
+                    .username(kakaoOAuth2UserInfoDto.getName())
+                    .email(kakaoOAuth2UserInfoDto.getEmail())
+                    .activated(true)
+                    .authorities(Collections.singleton(authority))
+                    .build();
+
+            userRepository.save(user);
         }
-
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
-
-        String filePath = convertImage(profileImage);
-
-        User user = User.builder()
-                .username(kakaoOAuth2UserInfoDto.getName())
-                .email(kakaoOAuth2UserInfoDto.getEmail())
-                .nickName(kakaoLoginReqDto.getNickName())
-                .profileImg(filePath)
-                .goalMsg(kakaoLoginReqDto.getGoalMsg())
-                .activated(true)
-                .authorities(Collections.singleton(authority))
-                .build();
-
-        userRepository.save(user);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(kakaoOAuth2UserInfoDto.getEmail());
 
         jwt = jwtTokenUtil.generateToken(userDetails);
-        return jwt;
+        return new TokenDto(jwt, kakaoOAuth2UserInfoDto.getEmail());
     }
 
     // 네이버 로그인
     @Transactional
-    public String naverLoin(NaverLoginReqDto naverLoginReqDto, MultipartFile profileImage) throws Exception {
+    public TokenDto naverLoin(String accessToken) {
 
         String jwt;
 
-        NaverOAuth2UserInfoDto naverOAuth2UserInfoDto = naverService.getUserInfoByAccessToken(naverLoginReqDto.getAccessToken());
+        NaverOAuth2UserInfoDto naverOAuth2UserInfoDto = naverService.getUserInfoByAccessToken(accessToken);
 
-        if (userRepository.findOneWithAuthoritiesByEmail(naverOAuth2UserInfoDto.getEmail()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        if (userRepository.findOneWithAuthoritiesByEmail(naverOAuth2UserInfoDto.getEmail()).orElse(null) == null) {
+            Authority authority = Authority.builder()
+                    .authorityName("ROLE_USER")
+                    .build();
+
+            User user = User.builder()
+                    .username(naverOAuth2UserInfoDto.getName())
+                    .email(naverOAuth2UserInfoDto.getEmail())
+                    .activated(true)
+                    .authorities(Collections.singleton(authority))
+                    .build();
+
+            userRepository.save(user);
         }
-
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
-
-        String filePath = convertImage(profileImage);
-
-        User user = User.builder()
-                .username(naverOAuth2UserInfoDto.getName())
-                .email(naverOAuth2UserInfoDto.getEmail())
-                .nickName(naverLoginReqDto.getNickName())
-                .profileImg(filePath)
-                .goalMsg(naverLoginReqDto.getGoalMsg())
-                .activated(true)
-                .authorities(Collections.singleton(authority))
-                .build();
-
-        userRepository.save(user);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(naverOAuth2UserInfoDto.getEmail());
 
         jwt = jwtTokenUtil.generateToken(userDetails);
-        return jwt;
-
-
+        return new TokenDto(jwt, naverOAuth2UserInfoDto.getEmail());
     }
 
     // 일반 회원가입
@@ -165,32 +135,38 @@ public class AuthService {
                 .email(userSaveRequestDto.getEmail())
                 .nickName(userSaveRequestDto.getNickName())
                 .profileImg(filePath)
-                .goalMsg(userSaveRequestDto.getGoalMsg())
                 .activated(true)
                 .authorities(Collections.singleton(authority))
                 .build();
 
+        GoalMsg goalMsg = GoalMsg.builder()
+                    .goalMsg(userSaveRequestDto.getGoalMsg())
+                    .build();
+
+        goalMsg.setUserId(user);
+
+        goalMsgRepository.save(goalMsg);
+
         return userRepository.save(user);
     }
 
-
     // 일반 로그인
-    public String generalLogin(String loginId, String password) {
+    public TokenDto generalLogin(String loginId, String password) {
 
         String jwt;
 
         User user = userRepository.findByLoginIdAndPassword(loginId, password);
 
-        if(userRepository.findByLoginIdAndPassword(loginId, password) != null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-            jwt = jwtTokenUtil.generateToken(userDetails);
-            return jwt;
-
+        if(userRepository.findByLoginIdAndPassword(loginId, password) == null) {
+            throw new RuntimeException("로그인에 실패했습니다.");
         }
 
-        return "회원 정보가 없습니다.";
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        jwt = jwtTokenUtil.generateToken(userDetails);
+        return new TokenDto(jwt, user.getEmail());
     }
 
+    // 사진 변환
     public String convertImage(MultipartFile profileImage) throws Exception {
 
         String filePath = "";

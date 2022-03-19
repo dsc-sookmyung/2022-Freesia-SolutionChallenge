@@ -16,12 +16,10 @@ public class GeneralAuthVO {
     private String username;
 
     @ApiModelProperty(example = "유저 아이디")
-    @NotNull
     @Size(min = 3, max = 100)
     private String loginId;
 
     @ApiModelProperty(example = "유저 비밀번호")
-    @NotNull
     @Size(min = 3, max = 100)
     private String password;
 
@@ -36,12 +34,10 @@ public class GeneralAuthVO {
     private String nickName;
 
     @ApiModelProperty(example = "유저 프로필 이미지")
-    @NotNull
     @Size(min = 3, max = 100)
     private MultipartFile profileImg;
 
     @ApiModelProperty(example = "유저 목표")
-    @NotNull
     @Size(min = 3, max = 100)
     private String goalMsg;
 }

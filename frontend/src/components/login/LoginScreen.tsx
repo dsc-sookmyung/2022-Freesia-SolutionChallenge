@@ -17,7 +17,6 @@ import { theme } from "../../color";
 
 import { mainStyle, Divider } from "../../CommonComponent";
 
-const BASE_URL = "http://192.168.0.9:8080"; // localhost 대신 본인 컴퓨터 ip(IPv4) 주소
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login({ navigation }: any) {

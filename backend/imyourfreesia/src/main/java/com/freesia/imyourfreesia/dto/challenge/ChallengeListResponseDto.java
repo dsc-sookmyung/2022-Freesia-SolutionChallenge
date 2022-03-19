@@ -14,12 +14,10 @@ public class ChallengeListResponseDto {
     private User uid;
     private String title;
     private String contents;
-    //private Long thumnailId;
     private String filePath;
     private LocalDate createdDate;
     private LocalDate modifiedDate;
-    // private String createdDate;
-    // private String modifiedDate;
+
 
     public ChallengeListResponseDto(Challenge entity){
         this.id = entity.getId();

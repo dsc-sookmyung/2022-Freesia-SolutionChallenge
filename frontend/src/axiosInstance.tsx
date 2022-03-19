@@ -11,15 +11,10 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config: any) => {
-    const token = await AsyncStorage.getItem("token");
-    config.headers["Content-Type"] = "application/json; charset=utf-8;";
-    //config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    config.headers["Boundary"] = "//";
-    // config.headers["Content-Type"] =
-    //  "multipart/form-data; boundary=someArbitraryUniqueString; charset=utf-8"; */
-    /* config.headers["Accept"] = "application/json";
-    config.headers["Content-Type"] = "multipart/form-data;";
-  */
+    //const token = await AsyncStorage.getItem("token");
+    const token =
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnZHNjQGdtYWlsLmNvbSIsImV4cCI6MTY0Nzc1MjkzMSwiaWF0IjoxNjQ3NjY2NTMxfQ.vrEeTs4-t5TZTxqveujcOFd4QAQXTiRWmrG_8M5ONQ7HSqnuFr8loK1l3VfGSfazK01WHy_V9np2_lOGgS7Wkg";
+    // config.headers["Content-Type"] = "application/json; charset=utf-8";
     config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },

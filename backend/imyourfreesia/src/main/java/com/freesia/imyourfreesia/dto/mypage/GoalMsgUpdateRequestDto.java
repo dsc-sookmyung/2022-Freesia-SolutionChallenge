@@ -6,12 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserUpdateRequestDto {
-    private String nickName;
-
+public class GoalMsgUpdateRequestDto {
+    private String goalMsg;
 
     @Builder
-    public UserUpdateRequestDto(String nickName){
-        this.nickName = nickName;
+    public GoalMsgUpdateRequestDto(String goalMsg){
+        this.goalMsg = goalMsg;
     }
 }

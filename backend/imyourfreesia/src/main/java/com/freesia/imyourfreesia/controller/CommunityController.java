@@ -21,7 +21,7 @@ import java.util.List;
 @Api(tags={"Community API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommunityController {
 

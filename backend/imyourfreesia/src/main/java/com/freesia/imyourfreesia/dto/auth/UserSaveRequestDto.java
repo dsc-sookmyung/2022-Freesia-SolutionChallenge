@@ -1,5 +1,6 @@
 package com.freesia.imyourfreesia.dto.auth;
 
+import com.freesia.imyourfreesia.domain.user.GoalMsg;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,12 +22,10 @@ public class UserSaveRequestDto {
     private String username;
 
     @ApiModelProperty(example = "유저 아이디")
-    @NotNull
-    @Size(min = 3, max = 100)  
+    @Size(min = 3, max = 100)
     private String loginId;
 
     @ApiModelProperty(example = "유저 비밀번호")
-    @NotNull
     @Size(min = 3, max = 100)
     private String password;
     
@@ -36,12 +35,10 @@ public class UserSaveRequestDto {
     private String email;
 
     @ApiModelProperty(example = "유저 닉네임")
-    @NotNull
     @Size(min = 3, max = 100)
     private String nickName;
 
     @ApiModelProperty(example = "유저 목표")
-    @NotNull
     @Size(min = 3, max = 100)
     private String goalMsg;
 

@@ -15,40 +15,9 @@ import {
   ipAddress,
 } from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
+import axiosInstance from "../../axiosInstance";
 
 const numColumns = 3;
-/* 
-const recentPostData = [
-  {
-    id: "1",
-    title: "first",
-  },
-  {
-    id: "2",
-    title: "second",
-  },
-  {
-    id: "3",
-    title: "third",
-  },
-  {
-    id: "4",
-    title: "fourth",
-  },
-  {
-    id: "5",
-    title: "five",
-  },
-  {
-    id: "6",
-    title: "six",
-  },
-  {
-    id: "7",
-    title: "seven",
-  },
-]; */
-
 const rankingData = [
   {
     rank: 0,
@@ -89,23 +58,18 @@ export default function ChallengScreen({ navigation }) {
   const [postData, setPostData] = useState([]);
 
   const getPostData = async () => {
-    try {
-      const response = await fetch(
-        `http://${ipAddress}:8080/api/challenge/list`,
-        {
-          method: "GET",
-        }
-      );
-      const json = await response.json();
-      setPostData(json);
-    } catch (error) {
-      console.error(error);
-    }
+    axiosInstance
+      .get(`/auth/challenge/list`)
+      .then(function (response) {
+        setPostData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
     getPostData();
-    console.log(postData);
   }, []);
 
   const ProfileIcon = ({ imagePath, isUser }) => {
@@ -136,13 +100,16 @@ export default function ChallengScreen({ navigation }) {
   };
 
   const PostItem = ({ item }) => {
-    console.log(item);
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.postView}
         onPress={() => navigation.navigate("ChallengeDetailScreen")}
       >
+        <Image
+          style={styles.postView}
+          source={require("../../../assets/tori.jpg")}
+        />
         <Text>{item.title}</Text>
       </TouchableOpacity>
     );
@@ -224,7 +191,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   postView: {
-    backgroundColor: "#eeeeee",
     width: (screenWidth * 0.96) / numColumns,
     height: (screenWidth * 0.96) / numColumns,
     margin: (screenWidth * 0.04) / (numColumns * 2),

@@ -1,11 +1,10 @@
 package com.freesia.imyourfreesia.controller;
 
-import com.freesia.imyourfreesia.domain.user.UserRepository;
 import com.freesia.imyourfreesia.dto.auth.GeneralAuthVO;
 import com.freesia.imyourfreesia.dto.challenge.ChallengeListResponseDto;
-import com.freesia.imyourfreesia.dto.comment.CommentUpdateRequestDto;
 import com.freesia.imyourfreesia.dto.community.CommunityListResponseDto;
 import com.freesia.imyourfreesia.dto.likes.LikesListResponseDto;
+import com.freesia.imyourfreesia.dto.mypage.GoalMsgUpdateRequestDto;
 import com.freesia.imyourfreesia.dto.mypage.UserResponseDto;
 import com.freesia.imyourfreesia.dto.mypage.UserUpdateRequestDto;
 import com.freesia.imyourfreesia.service.ChallengeService;
@@ -26,7 +25,7 @@ import java.util.List;
 @Api(tags={"MyPage API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class MyPageController {
     private final ChallengeService challengeService;
@@ -55,13 +54,18 @@ public class MyPageController {
         UserUpdateRequestDto requestDto =
                 UserUpdateRequestDto.builder()
                         .nickName(generalAuthVO.getNickName())
-                        .goalMsg(generalAuthVO.getGoalMsg())
+                        //.goalMsg(generalAuthVO.getGoalMsg())
                         .build();
 
         MultipartFile multipart = generalAuthVO.getProfileImg();
 
+        GoalMsgUpdateRequestDto goalMsgUpdateRequestDto =
+                GoalMsgUpdateRequestDto.builder()
+                        .goalMsg(generalAuthVO.getGoalMsg())
+                        .build();
+
         return ResponseEntity.ok()
-                .body(userService.update(email, requestDto, multipart).getId());
+                .body(userService.update(email, requestDto, goalMsgUpdateRequestDto, multipart));
     }
 
     /* 마이페이지 챌린지 조회 */

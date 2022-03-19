@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags={"Emoticon API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class EmoticonController {
 

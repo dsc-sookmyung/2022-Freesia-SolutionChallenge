@@ -1,6 +1,7 @@
 package com.freesia.imyourfreesia.controller;
 
 import com.freesia.imyourfreesia.domain.comment.Comment;
+import com.freesia.imyourfreesia.dto.comment.CommentListResponseDto;
 import com.freesia.imyourfreesia.dto.comment.CommentSaveRequestDto;
 import com.freesia.imyourfreesia.dto.comment.CommentUpdateRequestDto;
 import com.freesia.imyourfreesia.service.CommentService;
@@ -17,7 +18,7 @@ import java.util.List;
 @Api(tags={"Comment API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
 
@@ -27,19 +28,25 @@ public class CommentController {
     @ApiOperation(value="댓글 등록", notes="댓글 등록 API")
     @ApiImplicitParam(name = "CommentSaveRequestDto", value = "댓글 등록 dto")
     @PostMapping("/comment")
-    public ResponseEntity<Comment> saveCmt(@RequestBody CommentSaveRequestDto requestDto){
+    public ResponseEntity<Long> saveCmt(@RequestBody CommentSaveRequestDto requestDto){
         return ResponseEntity.ok()
-                .body(commentService.save(requestDto));
+                .body(commentService.save(requestDto).getId());
     }
 
     /* 댓글 조회 */
     @ApiOperation(value="댓글 조회", notes="댓글 조회 API")
     @ApiImplicitParam(name = "pid", value = "게시글 id", dataType="Long", paramType="query", example = "1")
     @GetMapping("/comment")
-    public ResponseEntity<List<Comment>> loadCmt(@RequestParam Long pid){
+    public ResponseEntity<List<CommentListResponseDto>> loadCmt(@RequestParam Long pid){
         return ResponseEntity.ok()
                 .body(commentService.findAllByPid(pid));
     }
+    /*
+    public ResponseEntity<List<Comment>> loadCmt(@RequestParam Long pid){
+        return ResponseEntity.ok()
+                .body(commentService.findAllByPid(pid));
+    }*/
+
 
     /* 댓글 수정 */
     @ApiOperation(value="댓글 수정", notes="댓글 수정 API")
@@ -48,10 +55,10 @@ public class CommentController {
             @ApiImplicitParam(name = "CommentUpdateRequestDto", value = "댓글 수정 Dto")
     })
     @PutMapping("/comment")
-    public ResponseEntity<Comment> updateCmt(@RequestParam Long id,
+    public ResponseEntity<Long> updateCmt(@RequestParam Long id,
                                              @RequestBody CommentUpdateRequestDto requestDto){
         return ResponseEntity.ok()
-                .body(commentService.update(id, requestDto));
+                .body(commentService.update(id, requestDto).getId());
     }
 
     /* 댓글 삭제 */

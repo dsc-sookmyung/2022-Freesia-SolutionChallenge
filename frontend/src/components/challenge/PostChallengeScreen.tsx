@@ -1,34 +1,26 @@
 import React, { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  Text,
   View,
   Image,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
-  Alert,
+  ToastAndroid,
   TextInput,
+  ScrollView,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import { StackActions } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  Divider,
-  mainStyle,
-  screenWidth,
-  ipAddress,
-} from "../../CommonComponent";
+import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
 
 import axiosInstance from "../../axiosInstance";
-//import FormData from "form-data";
-//import "url-search-params-polyfill";
 
-export default function PostChallengeScreen({ navigation }) {
-  const [files, setFiles] = useState([]);
+export default function PostChallengeScreen({ route, navigation }) {
+  //const [images, setImages] = useState([]);
+  const images = route.params.data;
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
 
-  const pickImage = async () => {
+  /* const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -37,81 +29,48 @@ export default function PostChallengeScreen({ navigation }) {
     });
 
     if (!result.cancelled) {
-      setFiles([...files, result.uri]);
+      setImages([...images, result.uri]);
     }
-    console.log(files);
-  };
+    console.log(images);
+  }; */
 
-  const handleCheck = () => {
-    postChallengeData();
-
-    /* files == null
-      ? Alert.alert("Write Post", "Please select an image", [{ text: "Okay" }])
-      : navigation.navigate("ChallengeScreen"); */
-  };
-
-  const postChallengeData = async () => {
-    /* const token = await AsyncStorage.getItem("token");
-    try {
-      const response = await fetch(`http://${ipAddress}:8080/api/challenge`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          files,
-          title,
-          contents,
-          uid: "1",
-        }),
-      });
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    } */
-
-    /*  axiosInstance
-      .get(`/api/centers`)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log("------------------------");
-        console.log(error);
-      }); */
-
-    let data = {
-      title,
-      contents,
-      files: null,
-      uid: "1111",
-    };
-
+  const createPost = () => {
     let body = new FormData();
-    //body.append("data", JSON.stringify(data));
-    // 현재 사용자가 불러온 이미지 리스트들 => 각각 폼데이터에 넣어준다.
-    files.map((f, index) => {
-      let file = {
-        uri: f,
-        type: "multipart/form-data",
-        name: `${index}.jpg`,
-      };
-      body.append("files", file);
-    });
-
     body.append("title", title);
     body.append("contents", contents);
-    body.append("uid", "1111");
+    body.append("uid", "1111"); // test
+    images.map((image: any, index: number) => {
+      let files: any = {
+        uri: image.uri,
+        type: "image/png",
+        name: `${index}.png`,
+      };
+      body.append("files", files);
+    });
 
-    /* let params = new URLSearchParams();
+    axiosInstance
+      .post(`/auth/challenge`, body, {
+        headers: { "content-type": `multipart/form-data` },
+        transformRequest: (data, headers) => {
+          return body;
+        },
+      })
+      .then(function (response) {
+        ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
+        navigation.dispatch(StackActions.popToTop);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  /* let params = new URLSearchParams();
     params.set("title", title);
     params.set("contents", contents);
     params.set("uid", "1111");
     console.log(params); */
 
-    console.log(body);
-    axiosInstance
+  /* axiosInstance
       .post(`/api/challenge`, {
         Accept: "application/json",
         body,
@@ -121,24 +80,27 @@ export default function PostChallengeScreen({ navigation }) {
       })
       .catch(function (error) {
         console.log(error);
-      });
-  };
+      }); */
 
   const handleTitleChange = (payload) => setTitle(payload);
   const handleContentsChange = (payload) => setContents(payload);
 
   return (
     <View style={{ ...mainStyle.mainView, paddingTop: 20 }}>
-      <TouchableOpacity onPress={pickImage} style={styles.addImage}>
-        {files ? (
-          <Image
-            source={{ uri: files[0] }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        ) : (
-          <Ionicons name="add" size={50} color="black" />
-        )}
-      </TouchableOpacity>
+      <ScrollView horizontal>
+        {images
+          ? images.map((image: any, index: number) => {
+              return (
+                <View style={{ flexDirection: "column" }} key={index}>
+                  <Image
+                    style={{ height: 100, width: 100 }}
+                    source={{ uri: image.uri }}
+                  />
+                </View>
+              );
+            })
+          : null}
+      </ScrollView>
       <View style={styles.titleInputView}>
         <TextInput
           placeholder="Title"
@@ -158,7 +120,7 @@ export default function PostChallengeScreen({ navigation }) {
       </View>
 
       <TouchableOpacity
-        onPress={handleCheck}
+        onPress={createPost}
         activeOpacity={0.8}
         style={styles.writePost}
       >
@@ -199,3 +161,16 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
 });
+
+{
+  /* <TouchableOpacity onPress={pickImage} style={styles.addImage}>
+        {image ? (
+          <Image
+            source={{ uri: image }}
+            style={{ width: "100%", height: "100%" }}
+          />
+        ) : (
+          <Ionicons name="add" size={50} color="black" />
+        )}
+      </TouchableOpacity> */
+}

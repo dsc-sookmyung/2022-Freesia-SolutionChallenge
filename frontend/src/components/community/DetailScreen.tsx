@@ -1,18 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity, Alert, ToastAndroid, TextInput } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { Divider, ProfileIcon } from "../../CommonComponent";
 import Carousel, { ParallaxImage, Pagination } from 'react-native-snap-carousel';
+import axiosInstance from "../../axiosInstance";
+import { StackActions } from "@react-navigation/native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
-const images = [
-  'https://i.imgur.com/UPrs1EWl.jpg',
-  'https://i.imgur.com/MABUbpDl.jpg',
-  'https://i.imgur.com/UPrs1EWl.jpg',
-  'https://i.imgur.com/MABUbpDl.jpg',
-  'https://i.imgur.com/UPrs1EWl.jpg',
-];
 
 const renderItem = ({ item, index }, parallaxProps) => {
   return (
@@ -34,20 +28,47 @@ export default function DetailScreen({ navigation, route }: any) {
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
   useEffect(() => {
-    setEntries(images);
+    axiosInstance.get(`/auth/community?id=${route.params.id}`)
+      .then(function (response) {
+        setEntries(response.data.filePath);
+      }).catch(function (error) {
+        console.log(error);
+      });
   }, []);
   const [modalVisible, setModalVisible] = useState(false);
-  const [likes, setLikes] = useState(route.params.likes);
+  const [likes, setLikes] = useState(0);
+  useEffect(() => {
+    axiosInstance.get(`/auth/likes/cnt?pid=${route.params.id}`)
+      .then(function (response) {
+        setLikes(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  }, []);
   const [focused, setFocused] = useState(false);
   const iconName: string = focused ? "flower" : "flower-outline";
   const likeEvent = () => {
     if (focused == false) {
-      setFocused(!focused);
-      setLikes((prevCount: number) => prevCount + 1);
+      axiosInstance.post(`/auth/likes`, {
+        pid: route.params.id,
+        uid: 1 // test
+      }).then(function (response) {
+        ToastAndroid.show("Like this Post!", ToastAndroid.SHORT);
+        setFocused(!focused);
+        setLikes((prevCount: number) => prevCount + 1);
+      }).catch(function (error) {
+        console.log(error);
+      });
     }
     else {
-      setFocused(!focused);
-      setLikes((prevCount: number) => prevCount - 1);
+      axiosInstance.delete(`/auth/likes?id=${route.params.id}`)
+        .then(function (response) {
+          ToastAndroid.show("Canceled", ToastAndroid.SHORT);
+          setFocused(!focused);
+          setLikes((prevCount: number) => prevCount - 1);
+        }).catch(function (error) {
+          console.log(error);
+        });
     }
   };
   const gotoEdit = () => {
@@ -55,15 +76,31 @@ export default function DetailScreen({ navigation, route }: any) {
     navigation.navigate('Edit', {
       id: route.params.id,
       category: route.params.category,
-      nickname: route.params.nickname,
-      image: route.params.image,
+      images: entries,
       title: route.params.title,
       content: route.params.content,
-      likes: route.params.likes,
-      comments: route.params.comments,
-      date: route.params.date
     });
   };
+  const deletePost = () => {
+    Alert.alert('Warning', 'Do you want to delete post?', [
+      { text: 'No', style: 'cancel' },
+      {
+        text: 'Yes',
+        onPress: () => {
+          setModalVisible(!modalVisible);
+          axiosInstance.delete(`/auth/community?id=${route.params.id}`)
+            .then(function (response) {
+              ToastAndroid.show("Deleted Successfully!", ToastAndroid.SHORT);
+              navigation.dispatch(StackActions.popToTop);
+            }).catch(function (error) {
+              console.log(error);
+            });
+        }
+      },
+    ]);
+  };
+  const [comment, setComment] = useState<string>("");
+  const onChangeComment = (e: string) => setComment(e);
 
   return (
     <ScrollView>
@@ -82,7 +119,7 @@ export default function DetailScreen({ navigation, route }: any) {
               <Text style={styles.modalText}>Edit</Text>
             </TouchableOpacity>
             <View style={{ width: "100%", height: 1, backgroundColor: "#eeeeee" }}></View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={deletePost}>
               <Text style={styles.modalText}>Delete</Text>
             </TouchableOpacity>
           </View>
@@ -92,7 +129,7 @@ export default function DetailScreen({ navigation, route }: any) {
       <View style={styles.header}>
         <View style={styles.nicknameArea}>
           <ProfileIcon imagePath={null} />
-          <Text style={styles.nicknameText}>{route.params.nickname}</Text>
+          <Text style={styles.nicknameText}>{route.params.nickName}</Text>
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Ionicons name="menu-outline" size={40} color="black" />
@@ -132,10 +169,17 @@ export default function DetailScreen({ navigation, route }: any) {
           </View>
           <View style={styles.comments}>
             <Ionicons name="chatbubble-ellipses-outline" size={30} color="black" style={{ marginRight: 5 }} />
-            <Text>{route.params.comments} Comments</Text>
+            <Text>{/*{route.params.comments}*/} Comments</Text>
           </View>
         </View>
-        <Text style={styles.date}>{route.params.date}</Text>
+        <Text style={styles.date}>{route.params.createdDate}</Text>
+        <View style={styles.commentInputArea}>
+          <TextInput placeholder="Comment" value={comment} onChangeText={onChangeComment} style={styles.commentInput} />
+          <TouchableOpacity>
+            <Text style={{ flex: 1, color: "blue" }}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+        <Text><Text style={{ fontWeight: "bold" }}>Nickname</Text>Comment</Text>
       </View>
     </ScrollView>
   );
@@ -223,5 +267,16 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     textAlign: "center",
     paddingVertical: 15,
+  },
+  commentInputArea: {
+    flex: 1,
+    marginVertical: 10,
+    flexDirection: "column",
+  },
+  commentInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 5,
   },
 });

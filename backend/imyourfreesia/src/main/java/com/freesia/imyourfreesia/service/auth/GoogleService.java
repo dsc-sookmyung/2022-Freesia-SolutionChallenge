@@ -25,9 +25,10 @@ public class GoogleService {
     private final ObjectMapper objectMapper;
 
     public GoogleOAuth2UserInfoDto getUserInfoByAccessToken(String accessToken) {
-        final String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
+        final String userInfoUri = "https://www.googleapis.com/oauth2/v3/userinfo";
 
         HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -36,7 +37,7 @@ public class GoogleService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(tokenInfoUri, request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(userInfoUri, request, String.class);
 
             GoogleOAuth2UserInfoDto googleOAuth2UserInfoDto = objectMapper.readValue(response.getBody(), GoogleOAuth2UserInfoDto.class);
 

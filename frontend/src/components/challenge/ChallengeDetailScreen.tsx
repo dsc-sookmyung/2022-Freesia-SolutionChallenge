@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   Dimensions,
   Modal,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { Divider, ProfileIcon, mainStyle } from "../../CommonComponent";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
@@ -39,6 +40,11 @@ export default function ChallengeDetail({ navigation }: any) {
     console.log(emojiObject);
   };
 
+  const PostContent = ({ item }) => {
+    return <Text style={styles.postDate}>{postInfo.postDate}</Text>;
+  };
+
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 80 });
   return (
     <ScrollView style={{ ...mainStyle.mainView, paddingHorizontal: 0 }}>
       <View style={styles.topBar}>
@@ -91,7 +97,12 @@ export default function ChallengeDetail({ navigation }: any) {
         <Divider />
         <Text>{postInfo.contents}</Text>
       </View>
-      <Text style={styles.postDate}>{postInfo.postDate}</Text>
+      <FlatList
+        data={postInfo}
+        viewabilityConfig={viewConfigRef.current}
+        renderItem={PostContent}
+        keyExtractor={(c) => c.id}
+      />
     </ScrollView>
   );
 }
