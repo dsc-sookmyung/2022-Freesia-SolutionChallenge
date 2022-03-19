@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 @Data
 public class GeneralAuthVO {
     @ApiModelProperty(example = "유저 이름")
-    @NotNull
     @Size(min = 3, max = 50)
     private String username;
 
