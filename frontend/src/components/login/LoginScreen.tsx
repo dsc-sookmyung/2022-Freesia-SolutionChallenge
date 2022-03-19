@@ -44,6 +44,7 @@ export default function Login({ navigation }: any) {
     if (response?.type === "success") {
       const { authentication } = response;
 
+      console.log(authentication.accessToken);
       // 서버에 전송
       axiosInstance
         .post(`/auth/google`, {

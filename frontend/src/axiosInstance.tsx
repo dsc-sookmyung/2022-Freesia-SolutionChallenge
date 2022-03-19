@@ -12,14 +12,14 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config: any) => {
     const token = await AsyncStorage.getItem("token");
-    //config.headers["Content-Type"] = "application/json; charset=utf-8;";
-    config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    config.headers["Content-Type"] = "application/json; charset=utf-8;";
+    //config.headers["Content-Type"] = "application/x-www-form-urlencoded";
     config.headers["Boundary"] = "//";
     // config.headers["Content-Type"] =
     //  "multipart/form-data; boundary=someArbitraryUniqueString; charset=utf-8"; */
     /* config.headers["Accept"] = "application/json";
     config.headers["Content-Type"] = "multipart/form-data;";
- */
+  */
     config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },

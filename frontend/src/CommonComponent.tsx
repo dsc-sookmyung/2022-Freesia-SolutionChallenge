@@ -5,7 +5,7 @@ import getFonts from "./getFonts";
 
 export const screenPadding = 20;
 export const screenWidth = Dimensions.get("window").width - screenPadding * 2;
-export const ipAddress = "172.30.1.31";
+export const ipAddress = "172.30.1.25";
 
 export const mainStyle = StyleSheet.create({
   mainView: {

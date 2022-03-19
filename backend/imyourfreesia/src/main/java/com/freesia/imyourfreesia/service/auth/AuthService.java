@@ -36,6 +36,12 @@ public class AuthService {
 
         GoogleOAuth2UserInfoDto googleOAuth2UserInfoDto = googleService.getUserInfoByAccessToken(googleLoginReqDto.getAccessToken());
 
+
+        String namename = googleOAuth2UserInfoDto.getName();
+        System.out.println("================================");
+        System.out.println(namename);
+
+
         if (userRepository.findOneWithAuthoritiesByEmail(googleOAuth2UserInfoDto.getEmail()).orElse(null) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
