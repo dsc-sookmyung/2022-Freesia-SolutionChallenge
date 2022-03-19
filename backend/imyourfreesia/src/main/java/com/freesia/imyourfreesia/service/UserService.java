@@ -36,13 +36,22 @@ public class UserService {
                        GoalMsgUpdateRequestDto goalMsgUpdateRequestDto, MultipartFile files) throws Exception{
         User user = userRepository.findByEmail(email);
         String profileImg = authService.convertImage(files);
+
         user.update(userUpdateRequestDto.getNickName(), profileImg);
 
-        GoalMsg goalMsg = goalMsgRepository.findByUserId(user);
-        goalMsg.update(goalMsgUpdateRequestDto.getGoalMsg());
+        if(goalMsgRepository.findByUserId(user) != null) {
+            GoalMsg goalMsg = goalMsgRepository.findByUserId(user);
+            goalMsg.update(goalMsgUpdateRequestDto.getGoalMsg());
+        }
+        else {
+            GoalMsg goalMsg = GoalMsg.builder()
+                    .goalMsg(goalMsgUpdateRequestDto.getGoalMsg())
+                    .build();
 
+            goalMsg.setUserId(user);
+            goalMsgRepository.save(goalMsg);
+        }
         return user.getId();
-
     }
-
 }
+

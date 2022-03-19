@@ -54,7 +54,6 @@ public class MyPageController {
         UserUpdateRequestDto requestDto =
                 UserUpdateRequestDto.builder()
                         .nickName(generalAuthVO.getNickName())
-                        //.goalMsg(generalAuthVO.getGoalMsg())
                         .build();
 
         MultipartFile multipart = generalAuthVO.getProfileImg();
