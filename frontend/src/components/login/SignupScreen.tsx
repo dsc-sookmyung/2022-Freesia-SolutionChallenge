@@ -14,16 +14,18 @@ import {
 import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 import { StackActions } from "@react-navigation/native";
 
 import axiosInstance from "../../axiosInstance";
+import { ipAddress } from "../../CommonComponent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function SignupScreen({ navigation }: any) {
   const [id, setId] = useState<string>("");
   const [pw, setPw] = useState<string>("");
-  const [profileImage, setProfileImage] = useState<string>("");
+  const [profileImage, setProfileImage] = useState();
   const [nickname, setNickname] = useState<string>("");
   const [goal, setGoal] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -47,19 +49,30 @@ export default function SignupScreen({ navigation }: any) {
   const onChangeUsername = (e: string) => setUsername(e);
   const onChangeGoal = (e: string) => setGoal(e);
   const save = () => {
+    let body = new FormData();
+    body.append("email", email);
+    body.append("goalMsg", goal);
+    body.append("loginId", id);
+    body.append("nickName", nickname);
+    body.append("password", pw);
+    let profileImg: any = {
+      uri: profileImage,
+      type: "image/png",
+      name: `0.png`,
+    };
+    body.append("profileImg", profileImg);
+    body.append("username", username);
+
+    console.log(body);
     // 서버에 전송
-    axiosInstance
-      .post(`/auth/generalJoin`, {
-        email: "nrj022@sookmyung.ac.kr",
-        goalMsg: goal,
-        loginId: id,
-        nickName: nickname,
-        password: pw,
-        profileImg: profileImage,
-        username: username,
+    axios
+      .post(`http://${ipAddress}:8080/api/generalJoin`, body, {
+        headers: { "content-type": `multipart/form-data` },
+        transformRequest: (data, headers) => {
+          return body;
+        },
       })
       .then(function (response) {
-        console.log("success");
         console.log(response);
       })
       .catch(function (error) {
@@ -67,9 +80,9 @@ export default function SignupScreen({ navigation }: any) {
       });
     // access token으로 서버에서 유저 정보 받아옴
     // nickname == null 이면 회원가입 창으로 이동
-    navigation.navigate("SocialSignup");
+    //navigation.navigate("ProfileScreen");
     ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
-    navigation.dispatch(StackActions.popToTop);
+    //navigation.dispatch(StackActions.popToTop);
   };
 
   return (

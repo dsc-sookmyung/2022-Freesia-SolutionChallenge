@@ -15,7 +15,7 @@ import axios from "axios";
 import axiosInstance from "../../axiosInstance";
 import { theme } from "../../color";
 
-import { mainStyle, Divider } from "../../CommonComponent";
+import { mainStyle, Divider, ipAddress } from "../../CommonComponent";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -26,9 +26,33 @@ export default function Login({ navigation }: any) {
   const onChangeId = (e: string) => setId(e);
   const onChangePw = (e: string) => setPw(e);
   const login = () => {
+    let body = {
+      loginId: id,
+      password: pw,
+    };
+
+    /* axios
+      .post(`http://${ipAddress}:8080/api/generalLogin`, JSON.stringify(body))
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      }); */
+    fetch(`http://${ipAddress}:8080/api/generalLogin`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    })
+      .then((res) => {
+        console.log(res);
+        res.json();
+      })
+      .then((data) => console.log("success : " + data))
+      .catch((err) => console.log(err));
     // 서버에 전송
+    //AsyncStorage.setItem("token", response.data.token);
     ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
-    navigation.dispatch(StackActions.popToTop);
+    //navigation.dispatch(StackActions.popToTop);
   };
 
   // 구글 로그인
@@ -42,8 +66,6 @@ export default function Login({ navigation }: any) {
   React.useEffect(() => {
     if (response?.type === "success") {
       const { authentication } = response;
-
-      console.log(authentication.accessToken);
       // 서버에 전송
       axiosInstance
         .post(`/auth/google`, {
