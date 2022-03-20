@@ -1,20 +1,111 @@
-import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, Dimensions, Image, Modal, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { theme } from "../../color";
-import { EvilIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
+import * as ImagePicker from "expo-image-picker";
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function SettingScreen({ navigation }: any) {
-  const [nickname, setNickname] = useState<string>("nickname");
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [profileImg, setProfileImg] = useState<string>();
+  const [nickname, setNickname] = useState<string>();
+  const [goalMsg, setGoalMsg] = useState<string>();
+  const [loginId, setLoginId] = useState<string>();
+  const [newPassword, setNewPassword] = useState<string>();
+
+  // localStorage에 저장된 이메일 불러오기
+  const [email, setEmail] = useState<string>("");
+  AsyncStorage.getItem('email').then(response => setEmail(response));
+
+  // 사용자 정보 조회
+  useEffect(() => {
+    axiosInstance.get(`/auth/user?email=${email}`)
+      .then(function (response) {
+        setProfileImg(response.data.profileImg);
+        setNickname(response.data.nickName);
+        setGoalMsg(response.data.goalMsg);
+        // setLoginId(response.data.loginId);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   const onChangeNickname = (e: string) => setNickname(e);
-  const save = () => {
-    ToastAndroid.show("Saved", ToastAndroid.SHORT);
-    // 서버에 전송
+  const onChangeGoalMsg = (e: string) => setGoalMsg(e);
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setProfileImg(result.uri);
+    }
   };
+
+  // 회원정보 수정
+  const save = () => {
+    let body = new FormData();
+    let img: any = {
+      uri: profileImg,
+      type: 'image/png',
+      name: 'profile.png'
+    };
+    body.append('profileImg', img);
+    body.append('nickName', nickname);
+    body.append('goalMsg', goalMsg);
+
+    axiosInstance.put(`/auth/user?email=${email}`, body, {
+      headers: { 'content-type': `multipart/form-data` },
+      transformRequest: (data, headers) => {
+        return body;
+      },
+    }).then(function (response) {
+      ToastAndroid.show("Saved", ToastAndroid.SHORT);
+      navigation.navigate('ProfileScreen');
+    }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
+  // 비밀번호 변경
+  const onChangeNewPassword = (e: string) => setNewPassword(e);
+  const changePassword = () => {
+    let body = new FormData();
+    let img: any = {
+      uri: profileImg,
+      type: 'image/png',
+      name: 'profile.png'
+    };
+    body.append('profileImg', img);
+    body.append('nickName', nickname);
+    body.append('goalMsg', goalMsg);
+    body.append('password', newPassword);
+
+    axiosInstance.put(`/auth/user?email=${email}`, body, {
+      headers: { 'content-type': `multipart/form-data` },
+      transformRequest: (data, headers) => {
+        return body;
+      },
+    }).then(function (response) {
+      ToastAndroid.show("Saved", ToastAndroid.SHORT);
+      navigation.navigate('ProfileScreen');
+    }).catch(function (error) {
+      console.log(error);
+    });
+  };
+
+  // 로그아웃
   const logout = async () => {
     try {
       await AsyncStorage.removeItem('token'); // 토큰 제거
+      await AsyncStorage.removeItem('email'); // 이메일 제거
       ToastAndroid.show("Logged Out Successfully!", ToastAndroid.SHORT);
       navigation.navigate('ProfileScreen');
       return true;
@@ -24,6 +115,8 @@ export default function SettingScreen({ navigation }: any) {
       return false;
     }
   };
+
+  // 회원탈퇴
   const deleteAccount = () => {
     Alert.alert('Delete Account', 'Do you want to delete account?', [
       { text: 'No', style: 'cancel' },
@@ -39,14 +132,56 @@ export default function SettingScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        statusBarTranslucent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.modalView}>
+            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{ alignSelf: "flex-end" }}>
+              <Ionicons name="close" size={24} color="black" />
+            </TouchableOpacity>
+            <Text>Enter new password</Text>
+            <TextInput value={newPassword} onChangeText={onChangeNewPassword} style={{ ...styles.goalMsg, width: SCREEN_WIDTH * 0.4, textAlign: "center" }} secureTextEntry={true} />
+            <TouchableOpacity onPress={changePassword}>
+              <Text style={styles.saveBtn}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.userInfo}>
-        <EvilIcons name="user" size={150} color="black" />
+        <TouchableOpacity onPress={pickImage} style={styles.addImage}>
+          {profileImg ? (
+            <Image
+              source={{ uri: profileImg }}
+              style={{ width: "100%", height: "100%", borderRadius: 150, overflow: 'hidden' }}
+            />
+          ) : (
+            <Ionicons name="add" size={50} color="black" />
+          )}
+        </TouchableOpacity>
         <TextInput
           value={nickname}
           onChangeText={onChangeNickname}
           style={styles.nickname}
         />
-        <Text>간호사 준비 중입니다.</Text>
+        <TextInput
+          value={goalMsg}
+          onChangeText={onChangeGoalMsg}
+          style={styles.goalMsg}
+        />
+        {loginId ?
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text style={styles.pwd}>Change Password</Text>
+          </TouchableOpacity>
+          : null
+        }
+
         <TouchableOpacity onPress={() => save()}>
           <Text style={styles.saveBtn}>Save</Text>
         </TouchableOpacity>
@@ -76,12 +211,42 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 50,
   },
+  addImage: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: SCREEN_WIDTH / 4,
+    height: SCREEN_WIDTH / 4,
+    backgroundColor: "lightgrey",
+    borderRadius: SCREEN_WIDTH / 8,
+  },
   nickname: {
     fontSize: 20,
     fontWeight: "bold",
     paddingHorizontal: 10,
     marginVertical: 10,
     borderBottomWidth: 2,
+  },
+  goalMsg: {
+    paddingHorizontal: 10,
+    borderBottomWidth: 2,
+    marginBottom: 10,
+  },
+  pwd: {
+    color: "grey",
+    textDecorationLine: "underline",
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalView: {
+    width: SCREEN_WIDTH * 0.8,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
   },
   saveBtn: {
     fontSize: 16,

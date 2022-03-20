@@ -5,6 +5,7 @@ import { Divider, ProfileIcon } from "../../CommonComponent";
 import Carousel, { ParallaxImage, Pagination } from 'react-native-snap-carousel';
 import axiosInstance from "../../axiosInstance";
 import { StackActions } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -24,6 +25,9 @@ const renderItem = ({ item, index }, parallaxProps) => {
 
 export default function DetailScreen({ navigation, route }: any) {
 
+  const [writer, setWriter] = useState<string>(""); // 글쓴 사람 이메일
+  const [email, setEmail] = useState<string>(""); // 로그인한 유저 이메일
+  AsyncStorage.getItem('email').then(response => setEmail(response));
   const [index, setIndex] = useState(0);
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
@@ -31,6 +35,7 @@ export default function DetailScreen({ navigation, route }: any) {
     axiosInstance.get(`/auth/community?id=${route.params.id}`)
       .then(function (response) {
         setEntries(response.data.filePath);
+        setWriter(response.data.email);
       }).catch(function (error) {
         console.log(error);
       });
@@ -51,7 +56,7 @@ export default function DetailScreen({ navigation, route }: any) {
     if (focused == false) {
       axiosInstance.post(`/auth/likes`, {
         pid: route.params.id,
-        uid: 1 // test
+        uid: email,
       }).then(function (response) {
         ToastAndroid.show("Like this Post!", ToastAndroid.SHORT);
         setFocused(!focused);
@@ -70,6 +75,13 @@ export default function DetailScreen({ navigation, route }: any) {
           console.log(error);
         });
     }
+  };
+  const showModal = () => {
+    if (email == writer) {
+      setModalVisible(true);
+    } else {
+      Alert.alert('Warning', 'This is an author-only feature.');
+    };
   };
   const gotoEdit = () => {
     setModalVisible(!modalVisible);
@@ -131,7 +143,7 @@ export default function DetailScreen({ navigation, route }: any) {
           <ProfileIcon imagePath={null} />
           <Text style={styles.nicknameText}>{route.params.nickName}</Text>
         </View>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <TouchableOpacity onPress={showModal}>
           <Ionicons name="menu-outline" size={40} color="black" />
         </TouchableOpacity>
       </View>
