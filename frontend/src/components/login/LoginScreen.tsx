@@ -31,28 +31,19 @@ export default function Login({ navigation }: any) {
       password: pw,
     };
 
-    /* axios
-      .post(`http://${ipAddress}:8080/api/generalLogin`, JSON.stringify(body))
+    axios
+      .post(
+        `http://${ipAddress}:8080/api/generalLogin?loginId=${id}&password=${pw}`
+      )
       .then(function (response) {
-        console.log(response);
+        AsyncStorage.setItem("token", response.data.token); // 로컬에 토큰 저장
+        AsyncStorage.setItem("email", response.data.email); // 로컬에 이메일 저장
       })
       .catch(function (error) {
         console.log(error);
-      }); */
-    fetch(`http://${ipAddress}:8080/api/generalLogin`, {
-      method: "POST",
-      body: JSON.stringify(body),
-    })
-      .then((res) => {
-        console.log(res);
-        res.json();
-      })
-      .then((data) => console.log("success : " + data))
-      .catch((err) => console.log(err));
-    // 서버에 전송
-    //AsyncStorage.setItem("token", response.data.token);
+      });
     ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
-    //navigation.dispatch(StackActions.popToTop);
+    navigation.dispatch(StackActions.popToTop);
   };
 
   // 구글 로그인

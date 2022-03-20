@@ -80,7 +80,7 @@ export default function SignupScreen({ navigation }: any) {
       });
     // access token으로 서버에서 유저 정보 받아옴
     // nickname == null 이면 회원가입 창으로 이동
-    //navigation.navigate("ProfileScreen");
+    navigation.navigate("LoginScreen");
     ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
     //navigation.dispatch(StackActions.popToTop);
   };

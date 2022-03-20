@@ -10,14 +10,15 @@ import {
   TextInput,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { StackActions } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
 
 export default function EditChallengeScreen({ navigation, route }) {
-  //const [image, setImage] = useState(route.params.postInfo.Image);
+  let postData = route.params.postData;
   const [image, setImage] = useState(null);
-  const [title, setTitle] = useState(route.params.postInfo.title);
-  const [contents, setContents] = useState(route.params.postInfo.contents);
+  const [title, setTitle] = useState(postData.title);
+  const [contents, setContents] = useState(postData.contents);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -35,15 +36,12 @@ export default function EditChallengeScreen({ navigation, route }) {
   };
 
   const handleCheck = () => {
-    const challengePostInfo = {
-      image,
-      title,
-      contents,
-    };
+    postData.title = title;
+    postData.contents = contents;
 
     image == null
       ? Alert.alert("Write Post", "Please select an image", [{ text: "Okay" }])
-      : navigation.navigate("ChallengeScreen", { challengePostInfo });
+      : StackActions.pop();
   };
 
   const handleTitleChange = (payload) => setTitle(payload);

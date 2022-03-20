@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Text,
   View,
@@ -13,6 +13,7 @@ import {
 import { Divider, ProfileIcon, mainStyle } from "../../CommonComponent";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import EmojiPicker from "rn-emoji-keyboard";
+import axiosInstance from "../../axiosInstance";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -25,32 +26,62 @@ const postInfo = {
   postDate: "2022.2.27",
 };
 
-export default function ChallengeDetail({ navigation }: any) {
+export default function ChallengeDetail({ route, navigation }: any) {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const postData = route.params.item;
   const [selectedEmoji, setSelectedEmoji] = useState([]);
 
+  console.log(postData);
+
+  // 챌린지 편집, 삭제 모달
   const handleEdit = () =>
-    navigation.navigate("EditChallengeScreen", { postInfo });
+    navigation.navigate("EditChallengeScreen", { postData });
   const handleDelete = () => {
     console.log("delete");
+    axiosInstance
+      .delete(`/auth/challenge?id=${postData.id}`)
+      .then(function (response) {
+        console.log(response);
+        navigation.navigate("ChallengeScreen");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const handlePick = (emojiObject) => {
     console.log(emojiObject);
   };
 
-  const PostContent = ({ item }) => {
+  /* const PostContent = ({ item }) => {
     return <Text style={styles.postDate}>{postInfo.postDate}</Text>;
   };
 
-  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 80 });
+  const getPostData = async () => {
+    axiosInstance
+      .get(`/auth/challenge/list`)
+      .then(function (response) {
+        setPostData(response.data);
+        //console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }; */
+
+  /* useEffect(() => {
+    getPostData();
+  }, []); */
+
   return (
     <ScrollView style={{ ...mainStyle.mainView, paddingHorizontal: 0 }}>
       <View style={styles.topBar}>
         <View style={styles.topProfile}>
           <ProfileIcon imagePath={postInfo.profileImage} />
-          <Text style={styles.nicknameText}>{postInfo.nickname}</Text>
+          <Text style={styles.nicknameText}>
+            {postData.uid == null ? postInfo.nickname : postData.uid.nickName}
+          </Text>
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Ionicons name="menu-outline" size={40} color="black" />
@@ -84,7 +115,7 @@ export default function ChallengeDetail({ navigation }: any) {
       <Image style={styles.detailImage} source={postInfo.image} />
       <View style={styles.post}>
         <View style={styles.postTop}>
-          <Text style={styles.postTitle}>{postInfo.title}</Text>
+          <Text style={styles.postTitle}>{postData.title}</Text>
           <TouchableOpacity onPress={() => setIsOpen(true)}>
             <AntDesign name="heart" size={24} color="red" />
           </TouchableOpacity>
@@ -95,14 +126,9 @@ export default function ChallengeDetail({ navigation }: any) {
           />
         </View>
         <Divider />
-        <Text>{postInfo.contents}</Text>
+        <Text>{postData.contents}</Text>
+        <Text style={styles.createdDate}>{postData.createdDate}</Text>
       </View>
-      <FlatList
-        data={postInfo}
-        viewabilityConfig={viewConfigRef.current}
-        renderItem={PostContent}
-        keyExtractor={(c) => c.id}
-      />
     </ScrollView>
   );
 }
@@ -181,5 +207,10 @@ const styles = StyleSheet.create({
     margin: 10,
     color: "grey",
     fontSize: 12,
+  },
+  createdDate: {
+    marginTop: 30,
+    fontSize: 10,
+    color: "lightgrey",
   },
 });

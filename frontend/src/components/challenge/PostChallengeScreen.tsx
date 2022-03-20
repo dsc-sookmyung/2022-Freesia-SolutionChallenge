@@ -12,6 +12,7 @@ import { StackActions } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
 
 export default function PostChallengeScreen({ route, navigation }) {
@@ -34,11 +35,12 @@ export default function PostChallengeScreen({ route, navigation }) {
     console.log(images);
   }; */
 
-  const createPost = () => {
+  const createPost = async () => {
+    const email = await AsyncStorage.getItem("email");
     let body = new FormData();
     body.append("title", title);
     body.append("contents", contents);
-    body.append("uid", "1111"); // test
+    body.append("uid", email);
     images.map((image: any, index: number) => {
       let files: any = {
         uri: image.uri,
@@ -47,6 +49,8 @@ export default function PostChallengeScreen({ route, navigation }) {
       };
       body.append("files", files);
     });
+
+    console.log(body);
 
     axiosInstance
       .post(`/auth/challenge`, body, {

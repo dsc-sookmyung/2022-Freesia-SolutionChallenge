@@ -15,6 +15,8 @@ import axiosInstance from "../../axiosInstance";
 import { StackActions } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function CreateScreen({ route, navigation }: any) {
@@ -24,12 +26,14 @@ export default function CreateScreen({ route, navigation }: any) {
   const [content, setContent] = useState<string>("");
   const onChangeTitle = (e: string) => setTitle(e);
   const onChangeContent = (e: string) => setContent(e);
-  const createPost = () => {
+
+  const createPost = async () => {
+    const email = await AsyncStorage.getItem("email");
     let body = new FormData();
     body.append("category", category);
     body.append("title", title);
     body.append("content", content);
-    body.append("email", "gdsc@gmail.com"); // test
+    body.append("email", email);
     images.map((image: any, index: number) => {
       let files: any = {
         uri: image.uri,

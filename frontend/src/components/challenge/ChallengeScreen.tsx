@@ -57,7 +57,7 @@ const rank: string[] = [
 export default function ChallengScreen({ navigation }) {
   const [postData, setPostData] = useState([]);
 
-  const getPostData = async () => {
+  const getPostList = async () => {
     axiosInstance
       .get(`/auth/challenge/list`)
       .then(function (response) {
@@ -69,7 +69,7 @@ export default function ChallengScreen({ navigation }) {
   };
 
   useEffect(() => {
-    getPostData();
+    getPostList();
   }, []);
 
   const ProfileIcon = ({ imagePath, isUser }) => {
@@ -100,16 +100,16 @@ export default function ChallengScreen({ navigation }) {
   };
 
   const PostItem = ({ item }) => {
+    console.log(item);
+    console.log("--------------------------------");
+
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.postView}
-        onPress={() => navigation.navigate("ChallengeDetailScreen")}
+        onPress={() => navigation.navigate("ChallengeDetailScreen", { item })}
       >
-        <Image
-          style={styles.postView}
-          source={require("../../../assets/tori.jpg")}
-        />
+        <Image style={styles.postView} source={{ uri: item.filePath }} />
         <Text>{item.title}</Text>
       </TouchableOpacity>
     );
@@ -132,7 +132,7 @@ export default function ChallengScreen({ navigation }) {
   );
 
   return (
-    <View style={mainStyle.mainView}>
+    <View style={{ ...mainStyle.mainView, backgroundColor: "pink" }}>
       <Text style={styles.subTItle}>Ranking</Text>
       <Divider />
       <ScrollView
@@ -158,7 +158,7 @@ export default function ChallengScreen({ navigation }) {
       </ScrollView>
       <Divider />
       <FlatList
-        data={postData}
+        data={postData.slice().reverse()}
         renderItem={PostItem}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   postView: {
+    backgroundColor: "grey",
     width: (screenWidth * 0.96) / numColumns,
     height: (screenWidth * 0.96) / numColumns,
     margin: (screenWidth * 0.04) / (numColumns * 2),

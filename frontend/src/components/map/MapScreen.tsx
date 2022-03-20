@@ -98,7 +98,11 @@ export default function MapScreen({
         height: height * 0.7,
       }}
     >
-      <CenterInfo />
+      {centerInfo == [] ? (
+        <Text>There are no centers around</Text>
+      ) : (
+        <CenterInfo />
+      )}
     </View>
   );
 
