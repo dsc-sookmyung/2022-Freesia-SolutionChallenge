@@ -1,18 +1,41 @@
-import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons, EvilIcons } from '@expo/vector-icons';
 import MyChallengeList from "./MyChallengeList";
 import MyCommunityList from "./MyCommunityList";
 import MyBookmarkList from "./MyBookmarkList";
 import { theme } from "../../color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axiosInstance from "../../axiosInstance";
 
 export default function ProfileScreen({ navigation }: any) {
 
-  // const isLogin = AsyncStorage.getItem('token');
-  const isLogin: boolean = false;
+  const [profileImg, setProfileImg] = useState<string>();
+  const [nickname, setNickname] = useState<string>();
+  const [goalMsg, setGoalMsg] = useState<string>();
+  const [days, setDays] = useState<number>();
 
-  if (!isLogin) {
+  // localStorage에 저장된 이메일, 토큰 불러오기
+  const [token, setToken] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  AsyncStorage.getItem('token').then(response => setToken(response));
+  AsyncStorage.getItem('email').then(response => setEmail(response));
+
+  // 사용자 정보 조회
+  useEffect(() => {
+    axiosInstance.get(`/auth/user?email=${email}`)
+      .then(function (response) {
+        setProfileImg(response.data.profileImg);
+        setNickname(response.data.nickName);
+        setGoalMsg(response.data.goalMsg);
+        setDays(response.data.days);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  }, [profileImg, nickname, goalMsg]);
+
+  // 토큰이 없으면 로그인 알림 출력
+  if (!token) {
     Alert.alert('Warning', 'You can use it after login.', [
       {
         onPress: () => {
@@ -20,7 +43,7 @@ export default function ProfileScreen({ navigation }: any) {
         }
       },
     ]);
-  }
+  };
 
   const gotoSetting = () => {
     navigation.navigate('SettingScreen');
@@ -40,17 +63,20 @@ export default function ProfileScreen({ navigation }: any) {
       <View style={styles.userInfo}>
         <View style={styles.profileArea}>
           <View style={styles.nicknameArea}>
-            <EvilIcons name="user" size={70} color="black" />
-            <Text style={styles.nickname}>nickname</Text>
+            {profileImg ?
+              <Image source={{ uri: profileImg }} style={{ width: 60, height: 60, borderRadius: 30 }} />
+              : <EvilIcons name="user" size={70} color="black" />
+            }
+            <Text style={styles.nickname}>{nickname == null ? "내용을 입력하세요" : nickname}</Text>
           </View>
           <TouchableOpacity onPress={gotoSetting}>
             <Ionicons name="settings-outline" size={30} color="black" />
           </TouchableOpacity>
         </View>
         <View style={styles.goalArea}>
-          <Text>간호사 준비 중입니다.</Text>
+          <Text>{goalMsg == null ? "내용을 입력하세요" : goalMsg}</Text>
           <Text style={styles.dday}>
-            <Text style={{ color: "#FF4588" }}>+39</Text> days
+            <Text style={{ color: "#FF4588" }}>+{days}</Text> days
           </Text>
         </View>
       </View>
