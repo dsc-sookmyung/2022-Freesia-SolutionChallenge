@@ -99,15 +99,15 @@ export default function ChallengScreen({ navigation }) {
     );
   };
 
-  const PostItem = ({ item }) => {
-    console.log(item);
-    console.log("--------------------------------");
-
+  const ItemPost = ({ item }) => {
+    const challengeId = item.id;
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.postView}
-        onPress={() => navigation.navigate("ChallengeDetailScreen", { item })}
+        onPress={() =>
+          navigation.navigate("ChallengeDetailScreen", { challengeId })
+        }
       >
         <Image style={styles.postView} source={{ uri: item.filePath }} />
         <Text>{item.title}</Text>
@@ -159,12 +159,14 @@ export default function ChallengScreen({ navigation }) {
       <Divider />
       <FlatList
         data={postData.slice().reverse()}
-        renderItem={PostItem}
+        renderItem={ItemPost}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
       />
       <TouchableOpacity
-        onPress={() => navigation.navigate("PostChallengeScreen")}
+        onPress={() =>
+          navigation.navigate("PostChallengeScreen", { isCreate: true })
+        }
         activeOpacity={0.8}
         style={styles.writePost}
       >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -16,10 +16,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
 
 export default function PostChallengeScreen({ route, navigation }) {
-  //const [images, setImages] = useState([]);
-  const images = route.params.data;
-  const [title, setTitle] = useState("");
-  const [contents, setContents] = useState("");
+  const [isCreate, setIsCreate] = useState<Boolean>(
+    route.params.isCreate == null ? null : route.params.isCreate
+  );
+  let images = route.params.data;
+  const [challengeId, setChallengeId] = useState();
+  const [title, setTitle] = useState<string>("");
+  const [contents, setContents] = useState<string>("");
+
+  useEffect(() => {
+    // Create이 아닌 경우 포스트 데이터 가져옴
+    isCreate == false ? setTitle(route.params.postData.title) : null;
+    isCreate == false ? setContents(route.params.postData.contents) : null;
+    isCreate == false ? setChallengeId(route.params.postData.id) : null;
+  }, []);
 
   /* const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -35,7 +45,7 @@ export default function PostChallengeScreen({ route, navigation }) {
     console.log(images);
   }; */
 
-  const createPost = async () => {
+  const createFormData = async () => {
     const email = await AsyncStorage.getItem("email");
     let body = new FormData();
     body.append("title", title);
@@ -50,41 +60,45 @@ export default function PostChallengeScreen({ route, navigation }) {
       body.append("files", files);
     });
 
-    console.log(body);
+    isCreate == false ? body.append("id", challengeId) : null;
 
-    axiosInstance
-      .post(`/auth/challenge`, body, {
-        headers: { "content-type": `multipart/form-data` },
-        transformRequest: (data, headers) => {
-          return body;
-        },
-      })
-      .then(function (response) {
-        ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
-        navigation.dispatch(StackActions.popToTop);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    return body;
   };
 
-  /* let params = new URLSearchParams();
-    params.set("title", title);
-    params.set("contents", contents);
-    params.set("uid", "1111");
-    console.log(params); */
+  const sendPost = async () => {
+    let body = await createFormData();
 
-  /* axiosInstance
-      .post(`/api/challenge`, {
-        Accept: "application/json",
-        body,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      }); */
+    console.log(body);
+    isCreate == false
+      ? axiosInstance
+          .put(`/auth/challenge`, body, {
+            headers: { "content-type": `multipart/form-data` },
+            transformRequest: (data, headers) => {
+              return body;
+            },
+          })
+          .then(function (response) {
+            ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
+            navigation.navigate("ChallengeDetailScreen", { challengeId });
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+      : axiosInstance
+          .post(`/auth/challenge`, body, {
+            headers: { "content-type": `multipart/form-data` },
+            transformRequest: (data, headers) => {
+              return body;
+            },
+          })
+          .then(function (response) {
+            ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
+            navigation.dispatch(StackActions.popToTop);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+  };
 
   const handleTitleChange = (payload) => setTitle(payload);
   const handleContentsChange = (payload) => setContents(payload);
@@ -124,7 +138,7 @@ export default function PostChallengeScreen({ route, navigation }) {
       </View>
 
       <TouchableOpacity
-        onPress={createPost}
+        onPress={sendPost}
         activeOpacity={0.8}
         style={styles.writePost}
       >

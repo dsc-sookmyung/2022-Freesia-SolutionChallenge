@@ -29,18 +29,32 @@ const postInfo = {
 export default function ChallengeDetail({ route, navigation }: any) {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const postData = route.params.item;
+  const challengeId = route.params.challengeId;
+  const [postData, setPostData] = useState({});
   const [selectedEmoji, setSelectedEmoji] = useState([]);
 
-  console.log(postData);
+  const getPostData = () => {
+    axiosInstance
+      .get(`/auth/challenge?id=${challengeId}`)
+      .then(function (response) {
+        setPostData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getPostData();
+  }, []);
 
   // 챌린지 편집, 삭제 모달
   const handleEdit = () =>
-    navigation.navigate("EditChallengeScreen", { postData });
+    navigation.navigate("PostChallengeScreen", { postData, isCreate: false });
   const handleDelete = () => {
     console.log("delete");
     axiosInstance
-      .delete(`/auth/challenge?id=${postData.id}`)
+      .delete(`/auth/challenge?id=${challengeId}`)
       .then(function (response) {
         console.log(response);
         navigation.navigate("ChallengeScreen");
@@ -80,7 +94,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
         <View style={styles.topProfile}>
           <ProfileIcon imagePath={postInfo.profileImage} />
           <Text style={styles.nicknameText}>
-            {postData.uid == null ? postInfo.nickname : postData.uid.nickName}
+            {postData.uid == null ? null : postData.uid.nickName}
           </Text>
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
