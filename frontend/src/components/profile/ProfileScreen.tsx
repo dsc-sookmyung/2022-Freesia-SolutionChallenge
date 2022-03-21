@@ -7,6 +7,7 @@ import MyBookmarkList from "./MyBookmarkList";
 import { theme } from "../../color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
+import { CommonActions, useIsFocused } from "@react-navigation/native";
 
 export default function ProfileScreen({ navigation }: any) {
 
@@ -22,6 +23,7 @@ export default function ProfileScreen({ navigation }: any) {
   AsyncStorage.getItem('email').then(response => setEmail(response));
 
   // 사용자 정보 조회
+  const isFocused = useIsFocused();
   useEffect(() => {
     axiosInstance.get(`/auth/user?email=${email}`)
       .then(function (response) {
@@ -32,7 +34,7 @@ export default function ProfileScreen({ navigation }: any) {
       }).catch(function (error) {
         console.log(error);
       });
-  }, [profileImg, nickname, goalMsg]);
+  }, [isFocused]);
 
   // 토큰이 없으면 로그인 알림 출력
   if (!token) {
