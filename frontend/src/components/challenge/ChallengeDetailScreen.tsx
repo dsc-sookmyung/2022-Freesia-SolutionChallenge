@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -8,12 +8,10 @@ import {
   Dimensions,
   Modal,
   ScrollView,
-  FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Divider, ProfileIcon, mainStyle } from "../../CommonComponent";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import EmojiPicker from "rn-emoji-keyboard";
 import axiosInstance from "../../axiosInstance";
 
 const screenWidth = Dimensions.get("window").width;
@@ -28,16 +26,45 @@ const postInfo = {
   postDate: "2022.2.27",
 };
 
+const emojiCollection = [
+  {
+    emoji: "😆",
+    name: "emoticon1",
+    id: 0,
+  },
+  {
+    emoji: "😍",
+    name: "emoticon2",
+    id: 1,
+  },
+  {
+    emoji: "🥳",
+    name: "emoticon3",
+    id: 2,
+  },
+  {
+    emoji: "👍",
+    name: "emoticon4",
+    id: 3,
+  },
+  {
+    emoji: "❤️",
+    name: "emoticon5",
+    id: 4,
+  },
+];
+
 export default function ChallengeDetail({ route, navigation }: any) {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const challengeId = route.params.challengeId;
   const authorEmail = route.params.authorEmail;
   const [postData, setPostData] = useState({});
   const [cheering, setCheering] = useState<boolean>(false);
   const [userEmail, setUserEmail] = useState<String>("");
   const [cheeringId, setCheeringId] = useState();
-  const [selectedEmoji, setSelectedEmoji] = useState([]);
+  const [emojiListShow, setEmojiListShow] = useState(false);
+  const [emojiCount, setEmojiCount] = useState({});
+  const [emojiClicked, setEmojiClicked] = useState<boolean>(false);
 
   // 게시글 상세 정보 가져오기
   const getPostData = () => {
@@ -65,9 +92,22 @@ export default function ChallengeDetail({ route, navigation }: any) {
       });
   };
 
+  // 게시글의 이모티콘 데이터 가져오기
+  const getEmojiData = () => {
+    axiosInstance
+      .get(`/auth/emoticon?challengeId=${challengeId}`)
+      .then(function (response) {
+        setEmojiCount(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     getPostData();
     getCheeringData();
+    getEmojiData();
   }, []);
 
   // 챌린지 편집, 삭제 모달
@@ -129,9 +169,89 @@ export default function ChallengeDetail({ route, navigation }: any) {
       });
   };
 
-  const handlePick = (emojiObject) => {
-    console.log(emojiObject);
+  // 이모티콘 클릭 시 설정
+  const handleEmojiClicked = (emoji) => {
+    setEmojiClicked(true);
+
+    let emojiCountSample = emojiCount;
+    let emojiName = emoji.name;
+    emojiCountSample[emojiName]++;
+    setEmojiCount(emojiCountSample);
+    setEmojiListShow(false);
+
+    axiosInstance
+      .post(`/auth/emoticon`, {
+        challengeId: challengeId,
+        email: authorEmail,
+        emoticonName: emojiName,
+      })
+      .then(function (response) {})
+      .catch(function (error) {
+        console.log(error);
+      });
   };
+
+  // 이모티콘 관련 view
+  const EmojiContainer = () => {
+    return (
+      <View style={styles.emojiContainer}>
+        <TouchableOpacity onPress={() => setEmojiListShow(!emojiListShow)}>
+          <Ionicons
+            style={{ marginLeft: 10, paddingTop: 5 }}
+            name="md-heart-sharp"
+            size={24}
+            color={emojiClicked ? "red" : "lightgrey"}
+          />
+        </TouchableOpacity>
+        {emojiListShow ? (
+          <View style={styles.emojiList}>
+            {emojiCollection.map((emoji, idx) => (
+              <TouchableOpacity
+                key={idx}
+                onPress={() => handleEmojiClicked(emoji)}
+              >
+                <Text style={{ fontSize: 24, marginHorizontal: 5 }}>
+                  {emoji.emoji}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        ) : null}
+      </View>
+    );
+  };
+
+  // 게시글 응원 관련 view
+  const CheeringAuthor = () => (
+    <TouchableOpacity
+      onPress={() => {
+        cheering ? deleteCheering() : postCheering();
+      }}
+    >
+      <Text
+        style={{
+          ...styles.nicknameText,
+          color: cheering ? "orange" : "lightgrey",
+        }}
+      >
+        Cheering
+      </Text>
+    </TouchableOpacity>
+  );
+
+  // 종류별 이모지 개수 표시
+  const ShowEmojiCount = () => (
+    <View style={{ flexDirection: "row" }}>
+      {emojiCollection.map((emoji, idx) =>
+        emojiCount[emoji.name] == 0 ? null : (
+          <View key={idx} style={styles.emojiView}>
+            <Text>{emoji.emoji}</Text>
+            <Text style={{ marginLeft: 5 }}>{emojiCount[emoji.name]}</Text>
+          </View>
+        )
+      )}
+    </View>
+  );
 
   return (
     <ScrollView style={{ ...mainStyle.mainView, paddingHorizontal: 0 }}>
@@ -141,20 +261,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
           <Text style={styles.nicknameText}>
             {postData.uid == null ? null : postData.uid.nickName}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              cheering ? deleteCheering() : postCheering();
-            }}
-          >
-            <Text
-              style={{
-                ...styles.nicknameText,
-                color: cheering ? "orange" : "lightgrey",
-              }}
-            >
-              Cheering
-            </Text>
-          </TouchableOpacity>
+          <CheeringAuthor />
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Ionicons name="menu-outline" size={40} color="black" />
@@ -175,9 +282,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
               <TouchableOpacity onPress={handleEdit}>
                 <Text style={styles.modalText}>Edit</Text>
               </TouchableOpacity>
-              <View
-                style={{ width: "100%", height: 1, backgroundColor: "#eeeeee" }}
-              ></View>
+              <Divider />
               <TouchableOpacity onPress={handleDelete}>
                 <Text style={styles.modalText}>Delete</Text>
               </TouchableOpacity>
@@ -189,14 +294,10 @@ export default function ChallengeDetail({ route, navigation }: any) {
       <View style={styles.post}>
         <View style={styles.postTop}>
           <Text style={styles.postTitle}>{postData.title}</Text>
-          <TouchableOpacity onPress={() => setIsOpen(true)}>
-            <AntDesign name="heart" size={24} color="red" />
-          </TouchableOpacity>
-          <EmojiPicker
-            onEmojiSelected={handlePick}
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-          />
+          <View style={styles.emojiContainer}>
+            <ShowEmojiCount />
+            <EmojiContainer />
+          </View>
         </View>
         <Divider />
         <Text>{postData.contents}</Text>
@@ -239,19 +340,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
   },
-  status: {
-    flexDirection: "row",
-    marginVertical: 15,
-  },
-  likes: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 10,
-  },
-  comments: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   date: {
     color: "grey",
     marginTop: 20,
@@ -285,5 +373,27 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontSize: 10,
     color: "lightgrey",
+  },
+  emojiContainer: {
+    flexDirection: "row",
+    position: "relative",
+  },
+  emojiList: {
+    position: "absolute",
+    right: -5,
+    bottom: 40,
+    flexDirection: "row",
+    padding: 10,
+    borderRadius: 50,
+    backgroundColor: "white",
+    elevation: 2,
+  },
+  emojiView: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    marginHorizontal: 5,
+    padding: 5,
+    borderRadius: 20,
+    elevation: 2,
   },
 });

@@ -1,8 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity, Alert, ToastAndroid, TextInput } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Dimensions,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  ToastAndroid,
+  TextInput,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { Divider, ProfileIcon } from "../../CommonComponent";
-import Carousel, { ParallaxImage, Pagination } from 'react-native-snap-carousel';
+import Carousel, {
+  ParallaxImage,
+  Pagination,
+} from "react-native-snap-carousel";
 import axiosInstance from "../../axiosInstance";
 import { StackActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,29 +38,32 @@ const renderItem = ({ item, index }, parallaxProps) => {
 };
 
 export default function DetailScreen({ navigation, route }: any) {
-
   const [writer, setWriter] = useState<string>(""); // 글쓴 사람 이메일
   const [email, setEmail] = useState<string>(""); // 로그인한 유저 이메일
-  AsyncStorage.getItem('email').then(response => setEmail(response));
+  AsyncStorage.getItem("email").then((response) => setEmail(response));
   const [index, setIndex] = useState(0);
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
   useEffect(() => {
-    axiosInstance.get(`/auth/community?id=${route.params.id}`)
+    axiosInstance
+      .get(`/auth/community?id=${route.params.id}`)
       .then(function (response) {
         setEntries(response.data.filePath);
         setWriter(response.data.email);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
   }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const [likes, setLikes] = useState(0);
   useEffect(() => {
-    axiosInstance.get(`/auth/likes/cnt?pid=${route.params.id}`)
+    axiosInstance
+      .get(`/auth/likes/cnt?pid=${route.params.id}`)
       .then(function (response) {
         setLikes(response.data);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
   }, []);
@@ -54,24 +71,28 @@ export default function DetailScreen({ navigation, route }: any) {
   const iconName: string = focused ? "flower" : "flower-outline";
   const likeEvent = () => {
     if (focused == false) {
-      axiosInstance.post(`/auth/likes`, {
-        pid: route.params.id,
-        uid: email,
-      }).then(function (response) {
-        ToastAndroid.show("Like this Post!", ToastAndroid.SHORT);
-        setFocused(!focused);
-        setLikes((prevCount: number) => prevCount + 1);
-      }).catch(function (error) {
-        console.log(error);
-      });
-    }
-    else {
-      axiosInstance.delete(`/auth/likes?id=${route.params.id}`)
+      axiosInstance
+        .post(`/auth/likes`, {
+          pid: route.params.id,
+          uid: email,
+        })
+        .then(function (response) {
+          ToastAndroid.show("Like this Post!", ToastAndroid.SHORT);
+          setFocused(!focused);
+          setLikes((prevCount: number) => prevCount + 1);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      axiosInstance
+        .delete(`/auth/likes?id=${route.params.id}`)
         .then(function (response) {
           ToastAndroid.show("Canceled", ToastAndroid.SHORT);
           setFocused(!focused);
           setLikes((prevCount: number) => prevCount - 1);
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
           console.log(error);
         });
     }
@@ -80,12 +101,12 @@ export default function DetailScreen({ navigation, route }: any) {
     if (email == writer) {
       setModalVisible(true);
     } else {
-      Alert.alert('Warning', 'This is an author-only feature.');
-    };
+      Alert.alert("Warning", "This is an author-only feature.");
+    }
   };
   const gotoEdit = () => {
     setModalVisible(!modalVisible);
-    navigation.navigate('Edit', {
+    navigation.navigate("Edit", {
       id: route.params.id,
       category: route.params.category,
       images: entries,
@@ -94,20 +115,22 @@ export default function DetailScreen({ navigation, route }: any) {
     });
   };
   const deletePost = () => {
-    Alert.alert('Warning', 'Do you want to delete post?', [
-      { text: 'No', style: 'cancel' },
+    Alert.alert("Warning", "Do you want to delete post?", [
+      { text: "No", style: "cancel" },
       {
-        text: 'Yes',
+        text: "Yes",
         onPress: () => {
           setModalVisible(!modalVisible);
-          axiosInstance.delete(`/auth/community?id=${route.params.id}`)
+          axiosInstance
+            .delete(`/auth/community?id=${route.params.id}`)
             .then(function (response) {
               ToastAndroid.show("Deleted Successfully!", ToastAndroid.SHORT);
               navigation.dispatch(StackActions.popToTop);
-            }).catch(function (error) {
+            })
+            .catch(function (error) {
               console.log(error);
             });
-        }
+        },
       },
     ]);
   };
@@ -125,12 +148,16 @@ export default function DetailScreen({ navigation, route }: any) {
           setModalVisible(!modalVisible);
         }}
       >
-        <TouchableOpacity activeOpacity={0} onPress={() => setModalVisible(!modalVisible)} style={styles.overlay}>
+        <TouchableOpacity
+          activeOpacity={0}
+          onPress={() => setModalVisible(!modalVisible)}
+          style={styles.overlay}
+        >
           <View style={styles.modalView}>
             <TouchableOpacity onPress={gotoEdit}>
               <Text style={styles.modalText}>Edit</Text>
             </TouchableOpacity>
-            <View style={{ width: "100%", height: 1, backgroundColor: "#eeeeee" }}></View>
+            <Divider />
             <TouchableOpacity onPress={deletePost}>
               <Text style={styles.modalText}>Delete</Text>
             </TouchableOpacity>
@@ -175,23 +202,40 @@ export default function DetailScreen({ navigation, route }: any) {
         <View style={styles.status}>
           <View style={styles.likes}>
             <TouchableOpacity onPress={() => likeEvent()}>
-              <Ionicons name={iconName} size={30} color="black" style={{ marginRight: 5 }} />
+              <Ionicons
+                name={iconName}
+                size={30}
+                color="black"
+                style={{ marginRight: 5 }}
+              />
             </TouchableOpacity>
             <Text>{likes} Likes</Text>
           </View>
           <View style={styles.comments}>
-            <Ionicons name="chatbubble-ellipses-outline" size={30} color="black" style={{ marginRight: 5 }} />
+            <Ionicons
+              name="chatbubble-ellipses-outline"
+              size={30}
+              color="black"
+              style={{ marginRight: 5 }}
+            />
             <Text>{/*{route.params.comments}*/} Comments</Text>
           </View>
         </View>
         <Text style={styles.date}>{route.params.createdDate}</Text>
         <View style={styles.commentInputArea}>
-          <TextInput placeholder="Comment" value={comment} onChangeText={onChangeComment} style={styles.commentInput} />
+          <TextInput
+            placeholder="Comment"
+            value={comment}
+            onChangeText={onChangeComment}
+            style={styles.commentInput}
+          />
           <TouchableOpacity>
             <Text style={{ flex: 1, color: "blue" }}>Submit</Text>
           </TouchableOpacity>
         </View>
-        <Text><Text style={{ fontWeight: "bold" }}>Nickname</Text>Comment</Text>
+        <Text>
+          <Text style={{ fontWeight: "bold" }}>Nickname</Text>Comment
+        </Text>
       </View>
     </ScrollView>
   );
@@ -202,7 +246,7 @@ const styles = StyleSheet.create({
     padding: 8,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   nicknameArea: {
     flexDirection: "row",
@@ -223,22 +267,21 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   image: {
     ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
-  dotContainer: {
-  },
+  dotContainer: {},
   dotStyle: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   inactiveDotStyle: {
-    backgroundColor: 'grey',
+    backgroundColor: "grey",
   },
   container: {
     padding: 10,
