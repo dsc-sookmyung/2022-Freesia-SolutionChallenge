@@ -1,24 +1,10 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { screenWidth } from "../../CommonComponent";
+import axiosInstance from "../../axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const numColumns = 3;
-
-// 테스트용 데이터
-const posts = [
-  { id: 1, category: 'worries', nickname: 'alice', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text1', likes: 1, comments: 1, date: "2022.02.22" },
-  { id: 2, category: 'review', nickname: 'bear', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text2', likes: 2, comments: 1, date: "2022.02.22" },
-  { id: 3, category: 'review', nickname: 'cake', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text3', likes: 3, comments: 1, date: "2022.02.22" },
-  { id: 4, category: 'review', nickname: 'diana', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text4', likes: 4, comments: 1, date: "2022.02.22" },
-  { id: 5, category: 'review', nickname: 'egg', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text5', likes: 5, comments: 1, date: "2022.02.22" },
-  { id: 6, category: 'review', nickname: 'love', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text6', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 7, category: 'review', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text7', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 8, category: 'gathering', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text8', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 9, category: 'gathering', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text9', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 10, category: 'gathering', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text10', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 11, category: 'worries', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text10', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 12, category: 'worries', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text10', likes: 6, comments: 1, date: "2022.02.22" },
-  { id: 13, category: 'worries', nickname: 'famous', image: 'https://www.collinsdictionary.com/images/full/freesia_183445007.jpg', title: 'title', content: 'main text10', likes: 6, comments: 1, date: "2022.02.22" },
-]
 
 const PostItem = ({ item }) => {
   return (
@@ -26,12 +12,27 @@ const PostItem = ({ item }) => {
       activeOpacity={0.8}
       style={styles.postView}
     >
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image source={{ uri: item.filePath }} style={styles.image} />
     </TouchableOpacity>
   );
 };
 
 export default function MyChallengeList() {
+
+  // localStorage에 저장된 이메일 불러오기
+  const [email, setEmail] = useState<string>("");
+  AsyncStorage.getItem('email').then(response => setEmail(response));
+
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    axiosInstance.get(`/auth/mypage/challenge?email=${email}`)  // 내가 쓴 챌린지 글 조회
+      .then(function (response) {
+        setPosts(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <View style={styles.container}>
       <FlatList

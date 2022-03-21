@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import {
   Divider,
@@ -16,30 +17,9 @@ import {
 } from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
 import axiosInstance from "../../axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const numColumns = 3;
-const rankingData = [
-  {
-    rank: 0,
-    numberOfStickers: 5,
-  },
-  {
-    rank: 1,
-    numberOfStickers: 5,
-  },
-  {
-    rank: 2,
-    numberOfStickers: 5,
-  },
-  {
-    rank: 3,
-    numberOfStickers: 5,
-  },
-  {
-    rank: 4,
-    numberOfStickers: 5,
-  },
-];
 
 const rank: string[] = [
   "1st",
@@ -56,8 +36,31 @@ const rank: string[] = [
 
 export default function ChallengScreen({ navigation }) {
   const [postData, setPostData] = useState([]);
+  const [rankingData, setRankingData] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [userNickName, setUserNickName] = React.useState("");
 
-  const getPostList = async () => {
+  const getRankingList = () => {
+    axiosInstance
+      .get(`/auth/cheering/ranking`)
+      .then(function (response) {
+        setRankingData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  const getPostList = () => {
     axiosInstance
       .get(`/auth/challenge/list`)
       .then(function (response) {
@@ -68,8 +71,35 @@ export default function ChallengScreen({ navigation }) {
       });
   };
 
+  const getUserInfo = async () => {
+    const email = await AsyncStorage.getItem("email");
+    axiosInstance
+      .get(`/auth/user?email=${email}`)
+      .then(function (response) {
+        setUserNickName(response.data.nickName);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const getUserCheeringNum = async () => {
+    const email = await AsyncStorage.getItem("email");
+    axiosInstance
+      .get(`/auth/cheering/cnt?userEmail=${email}`)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     getPostList();
+    getRankingList();
+    getUserInfo();
+    getUserCheeringNum();
   }, []);
 
   const ProfileIcon = ({ imagePath, isUser }) => {
@@ -101,38 +131,46 @@ export default function ChallengScreen({ navigation }) {
 
   const ItemPost = ({ item }) => {
     const challengeId = item.id;
+    const authorEmail = item.uid.email;
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.postView}
         onPress={() =>
-          navigation.navigate("ChallengeDetailScreen", { challengeId })
+          navigation.navigate("ChallengeDetailScreen", {
+            challengeId,
+            authorEmail,
+          })
         }
       >
         <Image
           style={styles.postView}
           source={require("../../../assets/tori.jpg")}
         />
-        <Text>{item.title}</Text>
       </TouchableOpacity>
     );
   };
 
-  const Ranking = ({ rank, numberOfStickers, isUser, imagePath }) => (
-    <TouchableOpacity activeOpacity={0.8} style={styles.ranking}>
-      {rank == "1st" ? (
-        <Image
-          style={styles.crownImg}
-          source={require("../../../assets/crown.png")}
-        ></Image>
-      ) : null}
-      <ProfileIcon imagePath={imagePath} isUser={isUser} />
-      <View style={styles.numberOfStickers}>
-        <Text>{numberOfStickers}</Text>
-      </View>
-      <Text>{rank}</Text>
-    </TouchableOpacity>
-  );
+  const Ranking = ({ data, rank, isUser, imagePath }) => {
+    const rankerCheeringInfo = Object.values(data);
+    const numberOfCheering = rankerCheeringInfo[0];
+    console.log(numberOfCheering);
+    return (
+      <TouchableOpacity activeOpacity={0.8} style={styles.ranking}>
+        {rank == "1st" ? (
+          <Image
+            style={styles.crownImg}
+            source={require("../../../assets/crown.png")}
+          ></Image>
+        ) : null}
+        <ProfileIcon imagePath={imagePath} isUser={isUser} />
+        <View style={styles.numberOfCheering}>
+          <Text>{numberOfCheering}</Text>
+        </View>
+        <Text>{rank}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={mainStyle.mainView}>
@@ -144,18 +182,18 @@ export default function ChallengScreen({ navigation }) {
         style={styles.rankingScrollView}
       >
         <Ranking
-          rank={"73st"}
+          data={{ Aaaa: 2 }}
+          rank={userNickName}
           imagePath={null}
           isUser={true}
-          numberOfStickers={25}
         />
         {rankingData.map((r, idx) => (
           <Ranking
-            rank={rank[r.rank]}
+            data={r}
+            rank={rank[idx]}
             key={idx}
             isUser={false}
             imagePath={require("../../../assets/tori.jpg")}
-            numberOfStickers={r.numberOfStickers}
           />
         ))}
       </ScrollView>
@@ -165,7 +203,11 @@ export default function ChallengScreen({ navigation }) {
         renderItem={ItemPost}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
+
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("PostChallengeScreen", { isCreate: true })
@@ -208,7 +250,7 @@ const styles = StyleSheet.create({
   writePostIcon: {
     color: "#ffd25E",
   },
-  numberOfStickers: {
+  numberOfCheering: {
     position: "absolute",
     right: 5,
     bottom: 20,

@@ -10,6 +10,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Divider, ProfileIcon, mainStyle } from "../../CommonComponent";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import EmojiPicker from "rn-emoji-keyboard";
@@ -31,9 +32,14 @@ export default function ChallengeDetail({ route, navigation }: any) {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const challengeId = route.params.challengeId;
+  const authorEmail = route.params.authorEmail;
   const [postData, setPostData] = useState({});
+  const [cheering, setCheering] = useState<boolean>(false);
+  const [userEmail, setUserEmail] = useState<String>("");
+  const [cheeringId, setCheeringId] = useState();
   const [selectedEmoji, setSelectedEmoji] = useState([]);
 
+  // 게시글 상세 정보 가져오기
   const getPostData = () => {
     axiosInstance
       .get(`/auth/challenge?id=${challengeId}`)
@@ -45,7 +51,19 @@ export default function ChallengeDetail({ route, navigation }: any) {
       });
   };
 
-  const getCheeringData = () => {};
+  // 현재 유저, 작성자 간 cheering 데이터 가져오기
+  const getCheeringData = async () => {
+    const email = await AsyncStorage.getItem("email");
+    setUserEmail(email);
+    axiosInstance
+      .get(`/auth/cheering/mycheer?myEmail=${email}&yourEmail=${authorEmail}`)
+      .then(function (response) {
+        setCheering(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     getPostData();
@@ -60,7 +78,6 @@ export default function ChallengeDetail({ route, navigation }: any) {
     axiosInstance
       .delete(`/auth/challenge?id=${challengeId}`)
       .then(function (response) {
-        console.log(response);
         navigation.navigate("ChallengeScreen");
       })
       .catch(function (error) {
@@ -68,31 +85,53 @@ export default function ChallengeDetail({ route, navigation }: any) {
       });
   };
 
-  const handleCheering = () => {};
+  function isCheeringId(element) {
+    if (element.yourEmail == authorEmail) {
+      return true;
+    }
+  }
 
-  const handlePick = (emojiObject) => {
-    console.log(emojiObject);
-  };
-
-  /* const PostContent = ({ item }) => {
-    return <Text style={styles.postDate}>{postInfo.postDate}</Text>;
-  };
-
-  const getPostData = async () => {
+  // 게시글 작성자 이메일로 cheering id 찾기
+  const getCheeringId = () => {
     axiosInstance
-      .get(`/auth/challenge/list`)
+      .get(`/auth/cheering/mycheer/list?userEmail=${userEmail}`)
       .then(function (response) {
-        setPostData(response.data);
-        //console.log(response.data);
+        const cheering = response.data.find(isCheeringId);
+        setCheeringId(cheering.id);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }; */
+  };
 
-  /* useEffect(() => {
-    getPostData();
-  }, []); */
+  // cheering 취소
+  const deleteCheering = () => {
+    getCheeringId();
+    axiosInstance
+      .delete(`/auth/cheering?id=${cheeringId}`)
+      .then(function (response) {
+        setCheering(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  // cheering 설정
+  const postCheering = () => {
+    axiosInstance
+      .post(`/auth/cheering`, { myEmail: userEmail, yourEmail: authorEmail })
+      .then(function (response) {
+        setCheering(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const handlePick = (emojiObject) => {
+    console.log(emojiObject);
+  };
 
   return (
     <ScrollView style={{ ...mainStyle.mainView, paddingHorizontal: 0 }}>
@@ -102,11 +141,15 @@ export default function ChallengeDetail({ route, navigation }: any) {
           <Text style={styles.nicknameText}>
             {postData.uid == null ? null : postData.uid.nickName}
           </Text>
-          <TouchableOpacity onPress={() => handleCheering()}>
+          <TouchableOpacity
+            onPress={() => {
+              cheering ? deleteCheering() : postCheering();
+            }}
+          >
             <Text
               style={{
                 ...styles.nicknameText,
-                color: "lightgrey",
+                color: cheering ? "orange" : "lightgrey",
               }}
             >
               Cheering

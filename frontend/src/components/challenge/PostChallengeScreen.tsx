@@ -93,7 +93,7 @@ export default function PostChallengeScreen({ route, navigation }) {
           })
           .then(function (response) {
             ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
-            navigation.dispatch(StackActions.popToTop);
+            navigation.navigate("ChallengeScreen");
           })
           .catch(function (error) {
             console.log(error);

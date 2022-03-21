@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -28,7 +26,7 @@
       "package": "com.frontend.frontend",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyBzEx0-Xlye_acfH40AXOG-LKFVMtRXKCc"
+          "apiKey": "AIzaSyDPDJXC-prffVcYbXwRtNT8n4S3GCJ7ofY"
         }
       }
     },

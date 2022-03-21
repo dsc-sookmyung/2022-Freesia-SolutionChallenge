@@ -26,16 +26,18 @@ public class UserResponseDto {
         this.nickName = entity.getNickName();
         this.profileImg = entity.getProfileImg();
 
-        this.goalMsg = goalMsg.getGoalMsg();
-        this.goalMsg_modifiedDate = goalMsg.getModifiedDate();
+        if(goalMsg!=null){
+            this.goalMsg = goalMsg.getGoalMsg();
+            this.goalMsg_modifiedDate = goalMsg.getModifiedDate();
 
-        if(this.goalMsg == "") {
-            this.days = 0;
-        }
-        else {
-            LocalDate startDatetime = LocalDate.now();
-            Period period = Period.between(goalMsg_modifiedDate, startDatetime);
-            this.days = period.getDays()+1;
+            if(this.goalMsg == "") {
+                this.days = 0;
+            }
+            else {
+                LocalDate startDatetime = LocalDate.now();
+                Period period = Period.between(goalMsg_modifiedDate, startDatetime);
+                this.days = period.getDays()+1;
+            }
         }
     }
 }

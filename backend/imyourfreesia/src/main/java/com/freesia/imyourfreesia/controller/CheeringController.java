@@ -62,4 +62,18 @@ public class CheeringController {
     public List<Map.Entry<String, Long>> ranking() {
         return cheeringService.ranking();
     }
+
+    /* 내가 응원한 유저 아이디 조회 */
+    @GetMapping("/cheering/mycheer/list")
+    public ResponseEntity<List<Cheering>> getMyCheerList(@RequestParam String userEmail){
+        return ResponseEntity.ok()
+                .body(cheeringService.findByMyEmail(userEmail));
+    }
+
+    /* 상대방 응원 여부 */
+    @GetMapping("/cheering/mycheer")
+    public ResponseEntity<Boolean> getMyCheer(@RequestParam String myEmail, String yourEmail){
+        return ResponseEntity.ok()
+                .body(cheeringService.findByMyEmailAndYourEmail(myEmail,yourEmail));
+    }
 }

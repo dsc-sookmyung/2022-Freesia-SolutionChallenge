@@ -79,4 +79,21 @@ public class CheeringService {
 
         return cheeringRepository.countByCreatedDateBetweenAndYourEmail(startDatetime, endDatetime, userEmail);
     }
+
+    /* 내가 응원한 유저 아이디 조회 */
+    @Transactional
+    public List<Cheering> findByMyEmail(String userEmail){
+        return cheeringRepository.findByMyEmail(userEmail);
+    }
+
+    /* 상대방 응원 여부 */
+    @Transactional
+    public Boolean findByMyEmailAndYourEmail(String myEmail, String yourEmail){
+        Cheering cheering = cheeringRepository.findByMyEmailAndYourEmail(myEmail,yourEmail);
+        if(cheering!=null){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

@@ -26,7 +26,10 @@ const screenOptions = ({ route }) => {
 const GalleryBtn = () => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("ImageBrowser")}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("ImageBrowser")}
+      style={{ marginRight: 20 }}
+    >
       <Ionicons name="camera" size={24} color="black" />
     </TouchableOpacity>
   );
@@ -43,11 +46,7 @@ export default function CommunityStack() {
       <Stack.Screen
         name="Create"
         component={CreateScreen}
-        options={{
-          title: "Community",
-          headerRight: () => <GalleryBtn />,
-          headerRightContainerStyle: { marginRight: 20 },
-        }}
+        options={{ title: "Community", headerRight: () => <GalleryBtn /> }}
         initialParams={{ route: null }}
       />
       <Stack.Screen

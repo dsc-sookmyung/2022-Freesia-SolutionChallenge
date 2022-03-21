@@ -13,9 +13,9 @@ import {
 } from "react-native";
 import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
+import { StackActions } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import { StackActions } from "@react-navigation/native";
 
 import axiosInstance from "../../axiosInstance";
 import { ipAddress } from "../../CommonComponent";
@@ -80,7 +80,7 @@ export default function SignupScreen({ navigation }: any) {
       });
     // access token으로 서버에서 유저 정보 받아옴
     // nickname == null 이면 회원가입 창으로 이동
-    navigation.navigate("LoginScreen");
+    navigation.navigate("Login");
     ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
     //navigation.dispatch(StackActions.popToTop);
   };

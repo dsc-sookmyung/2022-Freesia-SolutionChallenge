@@ -58,22 +58,19 @@ export default function Login({ navigation }: any) {
     if (response?.type === "success") {
       const { authentication } = response;
       // 서버에 전송
-      axiosInstance
-        .post(`/auth/google`, {
+      axios
+        .post(`http://${ipAddress}:8080/api/google`, {
           accessToken: authentication.accessToken,
         })
         .then(function (response) {
           AsyncStorage.setItem("token", response.data.token); // 로컬에 토큰 저장
+          AsyncStorage.setItem("email", response.data.email); // 로컬에 이메일 저장
           ToastAndroid.show("Logged In Successfully!", ToastAndroid.SHORT);
         })
         .catch(function (error) {
           console.log(error);
         });
-      // access token으로 서버에서 유저 정보 받아옴
-      // nickname == null 이면 회원가입 창으로 이동
-      navigation.navigate("SocialSignup");
-      // nickname != null 이면 stack의 첫 화면으로 이동
-      // navigation.dispatch(StackActions.popToTop);
+      navigation.dispatch(StackActions.popToTop());
     }
   }, [response]);
 
