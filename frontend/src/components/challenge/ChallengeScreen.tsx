@@ -109,7 +109,10 @@ export default function ChallengScreen({ navigation }) {
           navigation.navigate("ChallengeDetailScreen", { challengeId })
         }
       >
-        <Image style={styles.postView} source={{ uri: item.filePath }} />
+        <Image
+          style={styles.postView}
+          source={require("../../../assets/tori.jpg")}
+        />
         <Text>{item.title}</Text>
       </TouchableOpacity>
     );
@@ -132,7 +135,7 @@ export default function ChallengScreen({ navigation }) {
   );
 
   return (
-    <View style={{ ...mainStyle.mainView, backgroundColor: "pink" }}>
+    <View style={mainStyle.mainView}>
       <Text style={styles.subTItle}>Ranking</Text>
       <Divider />
       <ScrollView
@@ -193,7 +196,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   postView: {
-    backgroundColor: "grey",
     width: (screenWidth * 0.96) / numColumns,
     height: (screenWidth * 0.96) / numColumns,
     margin: (screenWidth * 0.04) / (numColumns * 2),

@@ -17,6 +17,7 @@ import axiosInstance from "../../axiosInstance";
 
 const screenWidth = Dimensions.get("window").width;
 
+// 임시 데이터
 const postInfo = {
   profileImage: require("../../../assets/profile_default.jpg"),
   nickname: "nickname",
@@ -44,8 +45,11 @@ export default function ChallengeDetail({ route, navigation }: any) {
       });
   };
 
+  const getCheeringData = () => {};
+
   useEffect(() => {
     getPostData();
+    getCheeringData();
   }, []);
 
   // 챌린지 편집, 삭제 모달
@@ -63,6 +67,8 @@ export default function ChallengeDetail({ route, navigation }: any) {
         console.log(error);
       });
   };
+
+  const handleCheering = () => {};
 
   const handlePick = (emojiObject) => {
     console.log(emojiObject);
@@ -96,6 +102,16 @@ export default function ChallengeDetail({ route, navigation }: any) {
           <Text style={styles.nicknameText}>
             {postData.uid == null ? null : postData.uid.nickName}
           </Text>
+          <TouchableOpacity onPress={() => handleCheering()}>
+            <Text
+              style={{
+                ...styles.nicknameText,
+                color: "lightgrey",
+              }}
+            >
+              Cheering
+            </Text>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Ionicons name="menu-outline" size={40} color="black" />
