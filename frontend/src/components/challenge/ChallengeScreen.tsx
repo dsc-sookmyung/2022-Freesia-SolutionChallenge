@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -7,65 +7,19 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
-import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
+import {
+  Divider,
+  mainStyle,
+  screenWidth,
+  ipAddress,
+} from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
+import axiosInstance from "../../axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const numColumns = 3;
-
-const recentPostData = [
-  {
-    id: "1",
-    title: "first",
-  },
-  {
-    id: "2",
-    title: "second",
-  },
-  {
-    id: "3",
-    title: "third",
-  },
-  {
-    id: "4",
-    title: "fourth",
-  },
-  {
-    id: "5",
-    title: "five",
-  },
-  {
-    id: "6",
-    title: "six",
-  },
-  {
-    id: "7",
-    title: "seven",
-  },
-];
-
-const rankingData = [
-  {
-    rank: 0,
-    numberOfStickers: 5,
-  },
-  {
-    rank: 1,
-    numberOfStickers: 5,
-  },
-  {
-    rank: 2,
-    numberOfStickers: 5,
-  },
-  {
-    rank: 3,
-    numberOfStickers: 5,
-  },
-  {
-    rank: 4,
-    numberOfStickers: 5,
-  },
-];
 
 const rank: string[] = [
   "1st",
@@ -81,6 +35,74 @@ const rank: string[] = [
 ];
 
 export default function ChallengScreen({ navigation }) {
+  const [postData, setPostData] = useState([]);
+  const [rankingData, setRankingData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [userNickName, setUserNickName] = useState("");
+  const [userCheering, setUserCheering] = useState(0);
+
+  const getRankingList = () => {
+    axiosInstance
+      .get(`/auth/cheering/ranking`)
+      .then(function (response) {
+        setRankingData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  const getPostList = () => {
+    axiosInstance
+      .get(`/auth/challenge/list`)
+      .then(function (response) {
+        setPostData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const getUserInfo = async () => {
+    const email = await AsyncStorage.getItem("email");
+    axiosInstance
+      .get(`/auth/user?email=${email}`)
+      .then(function (response) {
+        setUserNickName(response.data.nickName);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const getUserCheeringNum = async () => {
+    const email = await AsyncStorage.getItem("email");
+    axiosInstance
+      .get(`/auth/cheering/cnt?userEmail=${email}`)
+      .then(function (response) {
+        setUserCheering(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getPostList();
+    getRankingList();
+    getUserInfo();
+    getUserCheeringNum();
+  }, []);
+
   const ProfileIcon = ({ imagePath, isUser }) => {
     if (imagePath == null)
       imagePath = require("../../../assets/profile_default.jpg");
@@ -108,33 +130,47 @@ export default function ChallengScreen({ navigation }) {
     );
   };
 
-  const PostItem = ({ item }) => {
+  const ItemPost = ({ item }) => {
+    const challengeId = item.id;
+    const authorEmail = item.uid.email;
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.postView}
-        onPress={() => navigation.navigate("ChallengeDetailScreen")}
+        onPress={() =>
+          navigation.navigate("ChallengeDetailScreen", {
+            challengeId,
+            authorEmail,
+          })
+        }
       >
-        <Text>{item.title}</Text>
+        <Image
+          style={styles.postView}
+          source={require("../../../assets/tori.jpg")}
+        />
       </TouchableOpacity>
     );
   };
 
-  const Ranking = ({ rank, numberOfStickers, isUser, imagePath }) => (
-    <TouchableOpacity activeOpacity={0.8} style={styles.ranking}>
-      {rank == "1st" ? (
-        <Image
-          style={styles.crownImg}
-          source={require("../../../assets/crown.png")}
-        ></Image>
-      ) : null}
-      <ProfileIcon imagePath={imagePath} isUser={isUser} />
-      <View style={styles.numberOfStickers}>
-        <Text>{numberOfStickers}</Text>
-      </View>
-      <Text>{rank}</Text>
-    </TouchableOpacity>
-  );
+  const Ranking = ({ data, rank, isUser, imagePath }) => {
+    const rankerCheeringInfo = Object.values(data);
+    const numberOfCheering = rankerCheeringInfo[0];
+    return (
+      <TouchableOpacity activeOpacity={0.8} style={styles.ranking}>
+        {rank == "1st" ? (
+          <Image
+            style={styles.crownImg}
+            source={require("../../../assets/crown.png")}
+          ></Image>
+        ) : null}
+        <ProfileIcon imagePath={imagePath} isUser={isUser} />
+        <View style={styles.numberOfCheering}>
+          <Text>{numberOfCheering}</Text>
+        </View>
+        <Text>{rank}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={mainStyle.mainView}>
@@ -146,30 +182,36 @@ export default function ChallengScreen({ navigation }) {
         style={styles.rankingScrollView}
       >
         <Ranking
-          rank={"73st"}
+          data={{ Aaaa: userCheering }}
+          rank={userNickName}
           imagePath={null}
           isUser={true}
-          numberOfStickers={25}
         />
         {rankingData.map((r, idx) => (
           <Ranking
-            rank={rank[r.rank]}
+            data={r}
+            rank={Object.keys(r)}
             key={idx}
             isUser={false}
             imagePath={require("../../../assets/tori.jpg")}
-            numberOfStickers={r.numberOfStickers}
           />
         ))}
       </ScrollView>
       <Divider />
       <FlatList
-        data={recentPostData}
-        renderItem={PostItem}
+        data={postData.slice().reverse()}
+        renderItem={ItemPost}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
+
       <TouchableOpacity
-        onPress={() => navigation.navigate("PostChallengeScreen")}
+        onPress={() =>
+          navigation.navigate("PostChallengeScreen", { isCreate: true })
+        }
         activeOpacity={0.8}
         style={styles.writePost}
       >
@@ -196,7 +238,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   postView: {
-    backgroundColor: "#eeeeee",
     width: (screenWidth * 0.96) / numColumns,
     height: (screenWidth * 0.96) / numColumns,
     margin: (screenWidth * 0.04) / (numColumns * 2),
@@ -209,7 +250,7 @@ const styles = StyleSheet.create({
   writePostIcon: {
     color: "#ffd25E",
   },
-  numberOfStickers: {
+  numberOfCheering: {
     position: "absolute",
     right: 5,
     bottom: 20,

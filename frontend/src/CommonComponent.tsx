@@ -5,6 +5,7 @@ import getFonts from "./getFonts";
 
 export const screenPadding = 20;
 export const screenWidth = Dimensions.get("window").width - screenPadding * 2;
+export const ipAddress = "172.30.1.25";
 
 export const mainStyle = StyleSheet.create({
   mainView: {
@@ -56,15 +57,19 @@ export function defaultFont(props) {
       <AppLoading
         startAsync={LoadFonts}
         onFinish={() => setIsReady(true)}
-        onError={() => { }}
+        onError={() => {}}
       />
     );
   }
-  return <Text style={{ ...styles.defaultFont, ...props.style }}>{props.children}</Text>
+  return (
+    <Text style={{ ...styles.defaultFont, ...props.style }}>
+      {props.children}
+    </Text>
+  );
 }
 
 const styles = StyleSheet.create({
   defaultFont: {
     fontFamily: "SpoqaBold",
-  }
-})
+  },
+});

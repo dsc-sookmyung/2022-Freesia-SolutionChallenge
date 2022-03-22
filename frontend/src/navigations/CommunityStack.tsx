@@ -19,14 +19,17 @@ const screenOptions = ({ route }) => {
     },
     cardStyle: {
       backgroundColor: "white",
-    }
+    },
   };
 };
 
 const GalleryBtn = () => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('ImageBrowser')} style={{ marginRight: 20 }}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("ImageBrowser")}
+      style={{ marginRight: 20 }}
+    >
       <Ionicons name="camera" size={24} color="black" />
     </TouchableOpacity>
   );
@@ -35,12 +38,32 @@ const GalleryBtn = () => {
 export default function CommunityStack() {
   return (
     <Stack.Navigator initialRouteName="List" screenOptions={screenOptions}>
-      <Stack.Screen name="List" component={CommunityScreen} options={{ title: "Community" }} />
-      <Stack.Screen name="Create" component={CreateScreen} options={{ title: "Community", headerRight: () => <GalleryBtn /> }} initialParams={{ route: null }} />
-      <Stack.Screen name="Edit" component={EditScreen} options={{ title: "Community" }} />
-      <Stack.Screen name="Detail" component={DetailScreen} options={{ title: null }} />
-      <Stack.Screen name="ImageBrowser" component={ImageBrowserScreen} options={{ title: null }} />
+      <Stack.Screen
+        name="List"
+        component={CommunityScreen}
+        options={{ title: "Community" }}
+      />
+      <Stack.Screen
+        name="Create"
+        component={CreateScreen}
+        options={{ title: "Community", headerRight: () => <GalleryBtn /> }}
+        initialParams={{ route: null }}
+      />
+      <Stack.Screen
+        name="Edit"
+        component={EditScreen}
+        options={{ title: "Community" }}
+      />
+      <Stack.Screen
+        name="Detail"
+        component={DetailScreen}
+        options={{ title: null }}
+      />
+      <Stack.Screen
+        name="ImageBrowser"
+        component={ImageBrowserScreen}
+        options={{ title: null }}
+      />
     </Stack.Navigator>
-  )
-
+  );
 }

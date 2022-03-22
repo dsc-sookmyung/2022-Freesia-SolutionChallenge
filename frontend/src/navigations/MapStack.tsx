@@ -37,7 +37,9 @@ export default function MapStackScreen() {
       { useGoogleMaps: false }
     );
 
-    setCityKr(locationKr[0].city);
+    locationKr[0].city == null
+      ? setCityKr(locationKr[0].district)
+      : setCityKr(locationKr[0].city);
 
     Geocoder.from(latitude, longitude)
       .then((json) => {
@@ -47,13 +49,7 @@ export default function MapStackScreen() {
           city_si: addressComponent[3].long_name,
           city_gu: addressComponent[2].long_name,
         });
-        setLocationName(
-          addressComponent[4].long_name +
-            " " +
-            addressComponent[3].long_name +
-            " " +
-            addressComponent[2].long_name
-        );
+        setLocationName(addressComponent[2].long_name);
       })
       .catch((error) => console.warn(error));
   };
@@ -82,7 +78,7 @@ export default function MapStackScreen() {
           }}
         >
           <Ionicons name="location-sharp" size={18} color="black" />
-          <Text style={{ fontSize: 11, paddingLeft: 4 }}>{locationName}</Text>
+          <Text style={{ fontSize: 12, paddingLeft: 4 }}>{locationName}</Text>
         </View>
       </View>
     );

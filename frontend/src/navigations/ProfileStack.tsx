@@ -16,19 +16,41 @@ const screenOptions = ({ route }) => {
     },
     cardStyle: {
       backgroundColor: "white",
-    }
+    },
   };
 };
 
 export default function ProfileStack() {
   return (
-    <Stack.Navigator initialRouteName="ProfileScreen" screenOptions={screenOptions}>
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: "Profile" }} />
-      <Stack.Screen name="SettingScreen" component={SettingScreen} options={{ title: "Setting" }} />
-      <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Login" }} />
-      <Stack.Screen name="Signup" component={SignupScreen} options={{ title: "Sign Up" }} />
-      <Stack.Screen name="SocialSignup" component={SocialSignupScreen} options={{ title: "Sign Up" }} />
+    <Stack.Navigator
+      initialRouteName="ProfileScreen"
+      screenOptions={screenOptions}
+    >
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{ title: "Profile" }}
+      />
+      <Stack.Screen
+        name="SettingScreen"
+        component={SettingScreen}
+        options={{ title: "Setting" }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ title: "Login" }}
+      />
+      <Stack.Screen
+        name="Signup"
+        component={SignupScreen}
+        options={{ title: "Sign Up" }}
+      />
+      <Stack.Screen
+        name="SocialSignup"
+        component={SocialSignupScreen}
+        options={{ title: "Sign Up" }}
+      />
     </Stack.Navigator>
-  )
-
+  );
 }

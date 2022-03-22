@@ -1,14 +1,23 @@
 import React, { useState } from "react";
-import { Text, View, TouchableOpacity, StyleSheet, TextInput, Alert, Dimensions, Image, ToastAndroid } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  Alert,
+  Dimensions,
+  Image,
+  ToastAndroid,
+} from "react-native";
 import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import { StackActions } from "@react-navigation/native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function SocialSignupScreen({ navigation }: any) {
-
   const [profileImage, setProfileImage] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
   const [goal, setGoal] = useState<string>("");
@@ -27,13 +36,21 @@ export default function SocialSignupScreen({ navigation }: any) {
   const onChangeNickname = (e: string) => setNickname(e);
   const onChangeGoal = (e: string) => setGoal(e);
   const save = () => {
-    // 서버에 전송
+    // 서버에 전송axiosInstance
+
     ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
     navigation.dispatch(StackActions.popToTop);
   };
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 20 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginVertical: 20,
+        }}
+      >
         <Text style={styles.text}>Profile Image</Text>
         <TouchableOpacity onPress={pickImage} style={styles.addImage}>
           {profileImage ? (
@@ -96,5 +113,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 50,
     paddingVertical: 5,
-  }
+  },
 });

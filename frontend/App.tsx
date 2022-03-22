@@ -67,4 +67,8 @@ export default function App() {
       <StatusBar style="auto" />
     </NavigationContainer>
   );
+
+  {
+    /* <Tab.Screen name="Map" component={MapStack} /> */
+  }
 }

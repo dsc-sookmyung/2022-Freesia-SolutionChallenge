@@ -1,17 +1,27 @@
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput, Image, ScrollView, ToastAndroid, Alert } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+  Image,
+  ScrollView,
+  ToastAndroid,
+  Alert,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import axiosInstance from "../../axiosInstance";
 import { StackActions } from "@react-navigation/native";
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function CreateScreen({ route, navigation }: any) {
-
   const [email, setEmail] = useState<string>("");
-  AsyncStorage.getItem('email').then(response => setEmail(response));
+  AsyncStorage.getItem("email").then((response) => setEmail(response));
   const [category, setCategory] = useState("worries");
   const images = route.params.data;
   const [title, setTitle] = useState<string>("");
@@ -20,34 +30,38 @@ export default function CreateScreen({ route, navigation }: any) {
   const onChangeContent = (e: string) => setContent(e);
   const createPost = () => {
     if (title == "" || content == "" || images == null) {
-      Alert.alert("Write Post", "Please enter all the values.", [{ text: "Okay" }]);
-    }
-    else {
+      Alert.alert("Write Post", "Please enter all the values.", [
+        { text: "Okay" },
+      ]);
+    } else {
       let body = new FormData();
-      body.append('category', category);
-      body.append('title', title);
-      body.append('content', content);
-      body.append('email', email);
+      body.append("category", category);
+      body.append("title", title);
+      body.append("content", content);
+      body.append("email", email);
       images.map((image: any, index: number) => {
         let files: any = {
           uri: image.uri,
-          type: 'image/png',
-          name: `${index}.png`
+          type: "image/png",
+          name: `${index}.png`,
         };
-        body.append('files', files);
+        body.append("files", files);
       });
 
-      axiosInstance.post(`/auth/community`, body, {
-        headers: { 'content-type': `multipart/form-data` },
-        transformRequest: (data, headers) => {
-          return body;
-        },
-      }).then(function (response) {
-        ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
-        navigation.dispatch(StackActions.popToTop);
-      }).catch(function (error) {
-        console.log(error);
-      });
+      axiosInstance
+        .post(`/auth/community`, body, {
+          headers: { "content-type": `multipart/form-data` },
+          transformRequest: (data, headers) => {
+            return body;
+          },
+        })
+        .then(function (response) {
+          ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
+          navigation.dispatch(StackActions.popToTop);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   };
 
@@ -59,25 +73,26 @@ export default function CreateScreen({ route, navigation }: any) {
           <Picker
             style={{ flex: 1 }}
             selectedValue={category}
-            onValueChange={(itemValue, itemIndex) =>
-              setCategory(itemValue)
-            }>
+            onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+          >
             <Picker.Item label="worries" value="worries" />
             <Picker.Item label="review" value="review" />
             <Picker.Item label="gathering" value="gathering" />
           </Picker>
         </View>
         <ScrollView horizontal>
-          {images ? images.map((image: any, index: number) => {
-            return (
-              <View style={{ flexDirection: "column" }} key={index}>
-                <Image
-                  style={{ height: 100, width: 100 }}
-                  source={{ uri: image.uri }}
-                />
-              </View>
-            )
-          }) : null}
+          {images
+            ? images.map((image: any, index: number) => {
+                return (
+                  <View style={{ flexDirection: "column" }} key={index}>
+                    <Image
+                      style={{ height: 100, width: 100 }}
+                      source={{ uri: image.uri }}
+                    />
+                  </View>
+                );
+              })
+            : null}
         </ScrollView>
 
         <TextInput
@@ -99,7 +114,6 @@ export default function CreateScreen({ route, navigation }: any) {
         <Ionicons name="checkmark-circle" size={65} color="#ffd25E" />
       </TouchableOpacity>
     </View>
-
   );
 }
 

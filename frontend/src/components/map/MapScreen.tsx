@@ -18,7 +18,7 @@ import {
 import BottomSheet from "reanimated-bottom-sheet";
 import { Feather } from "@expo/vector-icons";
 
-import { Divider } from "../../CommonComponent";
+import { Divider, ipAddress } from "../../CommonComponent";
 
 const height = Dimensions.get("window").height;
 
@@ -34,7 +34,7 @@ export default function MapScreen({
   const getCenterInfo = async () => {
     try {
       const response = await fetch(
-        `http://172.30.1.28:8080/api/center?address=${cityKr}`,
+        `http://${ipAddress}:8080/api/center?address=${cityKr}`,
         {
           method: "GET",
         }
@@ -81,7 +81,7 @@ export default function MapScreen({
             style={styles.linkView}
             onPress={() => Linking.openURL(c.websiteUrl)}
           >
-            <Text style={styles.linkText}>홈페이지</Text>
+            <Text style={styles.linkText}>Go To Website</Text>
             <Feather name="external-link" size={15} color="black" />
           </TouchableOpacity>
           <Divider />
@@ -98,7 +98,11 @@ export default function MapScreen({
         height: height * 0.7,
       }}
     >
-      <CenterInfo />
+      {centerInfo == [] ? (
+        <Text>There are no centers around</Text>
+      ) : (
+        <CenterInfo />
+      )}
     </View>
   );
 
