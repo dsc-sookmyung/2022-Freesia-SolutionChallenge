@@ -12,10 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -63,6 +59,21 @@ public class EmoticonService {
         }
     }
 
+    // 글 아이디와 사용자에 따른 이모티콘 조회
+    @Transactional
+    public EmoticonResponseDto findByChallengeIdAndUidAndEmoticonName(Long challengeId, String email) {
+
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findByEmail(email);
+
+        List<Emoticon> emoticon1List = emoticonRepository.findByChallengeIdAndUidAndEmoticonName(challenge, user, "emoticon1");
+        List<Emoticon> emoticon2List = emoticonRepository.findByChallengeIdAndUidAndEmoticonName(challenge, user, "emoticon2");
+        List<Emoticon> emoticon3List = emoticonRepository.findByChallengeIdAndUidAndEmoticonName(challenge, user, "emoticon3");
+        List<Emoticon> emoticon4List = emoticonRepository.findByChallengeIdAndUidAndEmoticonName(challenge, user, "emoticon4");
+        List<Emoticon> emoticon5List = emoticonRepository.findByChallengeIdAndUidAndEmoticonName(challenge, user, "emoticon5");
+
+        return new EmoticonResponseDto(emoticon1List.size(), emoticon2List.size(), emoticon3List.size(), emoticon4List.size(), emoticon5List.size());
+    }
 
     // 글에 따른 이모티콘 갯수 조회
     @Transactional

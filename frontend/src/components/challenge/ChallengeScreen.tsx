@@ -155,7 +155,6 @@ export default function ChallengScreen({ navigation }) {
   const Ranking = ({ data, rank, isUser, imagePath }) => {
     const rankerCheeringInfo = Object.values(data);
     const numberOfCheering = rankerCheeringInfo[0];
-    console.log(numberOfCheering);
     return (
       <TouchableOpacity activeOpacity={0.8} style={styles.ranking}>
         {rank == "1st" ? (
@@ -191,7 +190,7 @@ export default function ChallengScreen({ navigation }) {
         {rankingData.map((r, idx) => (
           <Ranking
             data={r}
-            rank={rank[idx]}
+            rank={Object.keys(r)}
             key={idx}
             isUser={false}
             imagePath={require("../../../assets/tori.jpg")}

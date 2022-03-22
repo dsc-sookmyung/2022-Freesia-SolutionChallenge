@@ -10,6 +10,7 @@ import {
 import { Ionicons, AntDesign, EvilIcons } from "@expo/vector-icons";
 import { theme } from "../../color";
 import axiosInstance from "../../axiosInstance";
+import { useIsFocused } from "@react-navigation/native";
 // import { defaultFont as Text } from "../../CommonComponent";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -18,6 +19,7 @@ export default function CommunityScreen({ navigation }: any) {
   const [posts, setPosts] = useState([]);
   const [category, setCategory] = useState<string>("worries");
 
+  const isFocused = useIsFocused();
   useEffect(() => {
     axiosInstance
       .get(`/auth/communities?category=${category}`)
@@ -27,7 +29,7 @@ export default function CommunityScreen({ navigation }: any) {
       .catch(function (error) {
         console.log(error);
       });
-  }, [category]);
+  }, [category, isFocused]);
 
   const gotoCreate = () => {
     navigation.navigate("Create");

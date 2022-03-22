@@ -11,7 +11,7 @@ import {
   ToastAndroid,
   TextInput,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
 import { Divider, ProfileIcon } from "../../CommonComponent";
 import Carousel, {
   ParallaxImage,
@@ -20,6 +20,7 @@ import Carousel, {
 import axiosInstance from "../../axiosInstance";
 import { StackActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { theme } from "../../color";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -134,8 +135,73 @@ export default function DetailScreen({ navigation, route }: any) {
       },
     ]);
   };
+
+  // 댓글 기능
   const [comment, setComment] = useState<string>("");
   const onChangeComment = (e: string) => setComment(e);
+  const [commentCount, setCommentCount] = useState<number>(); // 댓글 개수
+  const [commentList, setCommentList] = useState([]); // 댓글 리스트
+  const [newComment, setNewComment] = useState<string>(); // 수정된 댓글
+  const onChangeNewComment = (e: string) => setNewComment(e);
+  const [commentEditorVisible, setCommentEditorVisible] = useState(false); // 글 수정 모달창
+
+  useEffect(() => {
+    axiosInstance
+      .get(`/auth/comment?pid=${route.params.id}`)
+      .then(function (response) {
+        setCommentList(response.data);
+        setCommentCount(response.data.length);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+  const createComment = () => {
+    axiosInstance
+      .post(`/auth/comment`, {
+        content: comment,
+        pid: route.params.id,
+        uid: email,
+      })
+      .then(function (response) {
+        ToastAndroid.show("Submitted Successfully!", ToastAndroid.SHORT);
+        setComment("");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const editComment = (id: number) => {
+    axiosInstance
+      .put(`/auth/comment?id=${id}`, {
+        content: newComment,
+      })
+      .then(function (response) {
+        ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
+        setCommentEditorVisible(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const deleteComment = (id: number) => {
+    Alert.alert("Warning", "Do you want to delete a comment?", [
+      { text: "No", style: "cancel" },
+      {
+        text: "Yes",
+        onPress: () => {
+          axiosInstance
+            .delete(`/auth/comment?id=${id}`)
+            .then(function (response) {
+              ToastAndroid.show("Deleted Successfully!", ToastAndroid.SHORT);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+      },
+    ]);
+  };
 
   return (
     <ScrollView>
@@ -218,24 +284,77 @@ export default function DetailScreen({ navigation, route }: any) {
               color="black"
               style={{ marginRight: 5 }}
             />
-            <Text>{/*{route.params.comments}*/} Comments</Text>
+            <Text>{commentCount} Comments</Text>
           </View>
         </View>
         <Text style={styles.date}>{route.params.createdDate}</Text>
         <View style={styles.commentInputArea}>
           <TextInput
+            multiline
             placeholder="Comment"
             value={comment}
             onChangeText={onChangeComment}
             style={styles.commentInput}
           />
-          <TouchableOpacity>
-            <Text style={{ flex: 1, color: "blue" }}>Submit</Text>
+          <TouchableOpacity onPress={createComment}>
+            <Entypo name="direction" size={30} color="black" />
           </TouchableOpacity>
         </View>
-        <Text>
-          <Text style={{ fontWeight: "bold" }}>Nickname</Text>Comment
-        </Text>
+        {commentList.map((comment, index) => (
+          <View style={styles.commentArea} key={index}>
+            <Text style={{ fontWeight: "bold", flex: 2 }}>
+              {comment.uid.nickName}
+            </Text>
+            <Text style={{ flex: 6, marginHorizontal: 10 }}>
+              {comment.content}
+            </Text>
+            {comment.uid.email == email ? (
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <TouchableOpacity onPress={() => setCommentEditorVisible(true)}>
+                  <MaterialIcons name="edit" size={20} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => deleteComment(comment.id)}>
+                  <MaterialIcons name="delete" size={20} color="black" />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={{ flex: 1 }}></View>
+            )}
+
+            <Modal
+              animationType="fade"
+              transparent={true}
+              statusBarTranslucent={true}
+              visible={commentEditorVisible}
+              onRequestClose={() =>
+                setCommentEditorVisible(!commentEditorVisible)
+              }
+            >
+              <View style={styles.commentOverlay}>
+                <View style={styles.commentModalView}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setCommentEditorVisible(!commentEditorVisible)
+                    }
+                    style={{ alignSelf: "flex-end" }}
+                  >
+                    <Ionicons name="close" size={24} color="black" />
+                  </TouchableOpacity>
+                  <TextInput
+                    multiline
+                    placeholder={comment.content}
+                    value={newComment}
+                    onChangeText={onChangeNewComment}
+                    style={styles.commentModalInput}
+                  />
+                  <TouchableOpacity onPress={() => editComment(comment.id)}>
+                    <Text style={styles.saveBtn}>Save</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
@@ -314,7 +433,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    // padding: 20,
     alignItems: "center",
   },
   modalText: {
@@ -325,13 +443,47 @@ const styles = StyleSheet.create({
   },
   commentInputArea: {
     flex: 1,
-    marginVertical: 10,
-    flexDirection: "column",
-  },
-  commentInput: {
-    flex: 1,
     borderWidth: 1,
     borderRadius: 10,
     padding: 5,
+    marginVertical: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  commentInput: {
+    flex: 1,
+    marginRight: 10,
+  },
+  commentArea: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  commentOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  commentModalView: {
+    width: SCREEN_WIDTH * 0.8,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+  },
+  commentModalInput: {
+    paddingHorizontal: 10,
+    borderBottomWidth: 2,
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  saveBtn: {
+    fontSize: 16,
+    backgroundColor: theme.devideBg,
+    padding: 10,
+    borderRadius: 20,
+    marginTop: 20,
   },
 });

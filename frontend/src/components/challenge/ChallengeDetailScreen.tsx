@@ -30,27 +30,22 @@ const emojiCollection = [
   {
     emoji: "😆",
     name: "emoticon1",
-    id: 0,
   },
   {
     emoji: "😍",
     name: "emoticon2",
-    id: 1,
   },
   {
     emoji: "🥳",
     name: "emoticon3",
-    id: 2,
   },
   {
     emoji: "👍",
     name: "emoticon4",
-    id: 3,
   },
   {
     emoji: "❤️",
     name: "emoticon5",
-    id: 4,
   },
 ];
 
@@ -64,6 +59,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   const [cheeringId, setCheeringId] = useState();
   const [emojiListShow, setEmojiListShow] = useState(false);
   const [emojiCount, setEmojiCount] = useState({});
+  const [myEmojiCount, setMyEmojiCount] = useState({});
   const [emojiClicked, setEmojiClicked] = useState<boolean>(false);
 
   // 게시글 상세 정보 가져오기
@@ -95,7 +91,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // 게시글의 이모티콘 데이터 가져오기
   const getEmojiData = () => {
     axiosInstance
-      .get(`/auth/emoticon?challengeId=${challengeId}`)
+      .get(`/auth/emoticon/count?challengeId=${challengeId}`)
       .then(function (response) {
         setEmojiCount(response.data);
       })
@@ -104,10 +100,38 @@ export default function ChallengeDetail({ route, navigation }: any) {
       });
   };
 
+  // 게시글에 대한 사용자의 이모티콘 데이터 가져오기
+  const getMyEmojiData = () => {
+    axiosInstance
+      .get(`/auth/emoticon/my?challengeId=${challengeId}&email=${userEmail}`)
+      .then(function (response) {
+        console.log(response.data);
+        setMyEmojiCount(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  // 내 이모지 선택여부 확인
+  const checkMyEmoji = () => {
+    const myEmojiData = Object.values(myEmojiCount);
+    console.log(myEmojiData);
+    myEmojiData.map((data) => {
+      data != 0 ? setEmojiClicked(true) : null;
+    });
+  };
+
   useEffect(() => {
     getPostData();
     getCheeringData();
     getEmojiData();
+    getMyEmojiData();
+    checkMyEmoji();
+
+    console.log("start====================");
+    console.log(emojiCount);
+    console.log(myEmojiCount);
   }, []);
 
   // 챌린지 편집, 삭제 모달
@@ -169,20 +193,21 @@ export default function ChallengeDetail({ route, navigation }: any) {
       });
   };
 
-  // 이모티콘 클릭 시 설정
-  const handleEmojiClicked = (emoji) => {
-    setEmojiClicked(true);
-
+  // 이모티콘 등록
+  const postEmoji = (emojiName) => {
     let emojiCountSample = emojiCount;
-    let emojiName = emoji.name;
+    let myEmojiCountSample = myEmojiCount;
+
     emojiCountSample[emojiName]++;
+    myEmojiCountSample[emojiName] = 1;
     setEmojiCount(emojiCountSample);
+    setMyEmojiCount(myEmojiCountSample);
     setEmojiListShow(false);
 
     axiosInstance
       .post(`/auth/emoticon`, {
         challengeId: challengeId,
-        email: authorEmail,
+        email: userEmail,
         emoticonName: emojiName,
       })
       .then(function (response) {
@@ -191,6 +216,39 @@ export default function ChallengeDetail({ route, navigation }: any) {
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  // 이모티콘 삭제
+  const deleteEmoji = (emojiName) => {
+    let emojiCountSample = emojiCount;
+    let myEmojiCountSample = myEmojiCount;
+
+    emojiCountSample[emojiName]--;
+    myEmojiCountSample[emojiName] = 0;
+    setEmojiCount(emojiCountSample);
+    setMyEmojiCount(myEmojiCountSample);
+
+    axiosInstance
+      .delete(`/auth/emoticon`, {
+        data: {
+          challengeId: challengeId,
+          email: userEmail,
+          emoticonName: emojiName,
+        },
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  // 이모티콘 클릭 시 설정
+  const handleEmojiClicked = (emoji) => {
+    let emojiName = emoji.name;
+    setEmojiClicked(true);
+    myEmojiCount[emojiName] > 0 ? deleteEmoji(emojiName) : postEmoji(emojiName);
   };
 
   // 이모티콘 관련 view
@@ -215,6 +273,17 @@ export default function ChallengeDetail({ route, navigation }: any) {
                 <Text style={{ fontSize: 24, marginHorizontal: 5 }}>
                   {emoji.emoji}
                 </Text>
+                {console.log(myEmojiCount)}
+                {myEmojiCount[emoji.name] > 0 ? (
+                  <View
+                    style={{
+                      position: "absolute",
+                      width: 35,
+                      height: 35,
+                      backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    }}
+                  ></View>
+                ) : null}
               </TouchableOpacity>
             ))}
           </View>
