@@ -11,6 +11,6 @@ public interface EmoticonRepository extends JpaRepository<Emoticon,Long> {
     Optional<Emoticon> findByUidAndChallengeIdAndEmoticonName(User user, Challenge challenge, String emoticonName);
     Optional<Emoticon> deleteByUidAndChallengeIdAndEmoticonName(User user, Challenge challenge, String emoticonName);
     List<Emoticon> findByChallengeIdAndEmoticonName(Challenge challenge, String emoticonName);
-    List<Emoticon> findByCreatedDateAndUid(String createdDate, Challenge challenge);
+    List<Emoticon> findByChallengeIdAndUidAndEmoticonName(Challenge challenge, User user, String emoticonName);
 }
 
