@@ -37,8 +37,9 @@ const rank: string[] = [
 export default function ChallengScreen({ navigation }) {
   const [postData, setPostData] = useState([]);
   const [rankingData, setRankingData] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-  const [userNickName, setUserNickName] = React.useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [userNickName, setUserNickName] = useState("");
+  const [userCheering, setUserCheering] = useState(0);
 
   const getRankingList = () => {
     axiosInstance
@@ -88,7 +89,7 @@ export default function ChallengScreen({ navigation }) {
     axiosInstance
       .get(`/auth/cheering/cnt?userEmail=${email}`)
       .then(function (response) {
-        console.log(response.data);
+        setUserCheering(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -182,7 +183,7 @@ export default function ChallengScreen({ navigation }) {
         style={styles.rankingScrollView}
       >
         <Ranking
-          data={{ Aaaa: 2 }}
+          data={{ Aaaa: userCheering }}
           rank={userNickName}
           imagePath={null}
           isUser={true}

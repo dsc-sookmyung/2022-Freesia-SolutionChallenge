@@ -185,7 +185,9 @@ export default function ChallengeDetail({ route, navigation }: any) {
         email: authorEmail,
         emoticonName: emojiName,
       })
-      .then(function (response) {})
+      .then(function (response) {
+        console.log(response.data);
+      })
       .catch(function (error) {
         console.log(error);
       });
