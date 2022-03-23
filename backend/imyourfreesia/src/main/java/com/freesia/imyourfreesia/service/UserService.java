@@ -5,6 +5,7 @@ import com.freesia.imyourfreesia.domain.user.GoalMsgRepository;
 import com.freesia.imyourfreesia.domain.user.User;
 import com.freesia.imyourfreesia.domain.user.UserRepository;
 import com.freesia.imyourfreesia.dto.mypage.GoalMsgUpdateRequestDto;
+import com.freesia.imyourfreesia.dto.mypage.UserPasswordUpdateRequestDto;
 import com.freesia.imyourfreesia.dto.mypage.UserResponseDto;
 import com.freesia.imyourfreesia.dto.mypage.UserUpdateRequestDto;
 import com.freesia.imyourfreesia.service.auth.AuthService;
@@ -51,6 +52,16 @@ public class UserService {
             goalMsg.setUserId(user);
             goalMsgRepository.save(goalMsg);
         }
+        return user.getId();
+    }
+
+    /* 유저 비밀번호 수정 */
+    @Transactional
+    public Long updatePw(String email, UserPasswordUpdateRequestDto requestDto) throws Exception{
+        User user = userRepository.findByEmail(email);
+
+        user.pwUpdate(requestDto.getPassword());
+
         return user.getId();
     }
 }
