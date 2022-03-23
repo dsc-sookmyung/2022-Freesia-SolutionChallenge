@@ -5,6 +5,7 @@ import com.freesia.imyourfreesia.dto.challenge.ChallengeListResponseDto;
 import com.freesia.imyourfreesia.dto.community.CommunityListResponseDto;
 import com.freesia.imyourfreesia.dto.likes.LikesListResponseDto;
 import com.freesia.imyourfreesia.dto.mypage.GoalMsgUpdateRequestDto;
+import com.freesia.imyourfreesia.dto.mypage.UserPasswordUpdateRequestDto;
 import com.freesia.imyourfreesia.dto.mypage.UserResponseDto;
 import com.freesia.imyourfreesia.dto.mypage.UserUpdateRequestDto;
 import com.freesia.imyourfreesia.service.ChallengeService;
@@ -65,6 +66,19 @@ public class MyPageController {
 
         return ResponseEntity.ok()
                 .body(userService.update(email, requestDto, goalMsgUpdateRequestDto, multipart));
+    }
+
+    /* 유저 비밀번호 수정 */
+    @ApiOperation(value="유저 비밀번호 수정", notes="유저 비밀번호 수정 API")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "email", value = "유저 email"),
+            @ApiImplicitParam(name = "UserPasswordUpdateRequestDto", value = "유저 비밀번호 수정 Dto")
+    })
+    @PutMapping("/user/pw")
+    public ResponseEntity<Long> updateUserPw(@RequestParam String email,
+                                             @RequestBody UserPasswordUpdateRequestDto requestDto)throws Exception{
+        return ResponseEntity.ok()
+                .body(userService.updatePw(email, requestDto));
     }
 
     /* 마이페이지 챌린지 조회 */

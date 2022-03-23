@@ -61,4 +61,9 @@ public class User extends BaseTimeEntity {
         this.profileImg = profileImg;
         return this;
     }
+
+    public User pwUpdate(String password){
+        this.password = password;
+        return this;
+    }
 }
