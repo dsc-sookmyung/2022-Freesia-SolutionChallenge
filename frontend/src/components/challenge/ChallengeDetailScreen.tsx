@@ -116,7 +116,6 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // 내 이모지 선택여부 확인
   const checkMyEmoji = () => {
     const myEmojiData = Object.values(myEmojiCount);
-    console.log(myEmojiData);
     myEmojiData.map((data) => {
       data != 0 ? setEmojiClicked(true) : null;
     });
@@ -129,9 +128,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
     getMyEmojiData();
     checkMyEmoji();
 
-    console.log("start====================");
-    console.log(emojiCount);
-    console.log(myEmojiCount);
+    console.log(postData.filePath);
   }, []);
 
   // 챌린지 편집, 삭제 모달
@@ -273,7 +270,6 @@ export default function ChallengeDetail({ route, navigation }: any) {
                 <Text style={{ fontSize: 24, marginHorizontal: 5 }}>
                   {emoji.emoji}
                 </Text>
-                {console.log(myEmojiCount)}
                 {myEmojiCount[emoji.name] > 0 ? (
                   <View
                     style={{
