@@ -48,7 +48,10 @@ export default function ProfileScreen({ navigation }: any) {
   };
 
   const gotoSetting = () => {
-    navigation.navigate('SettingScreen');
+    navigation.navigate('SettingScreen', {
+      nickname: nickname,
+      goalMsg: goalMsg
+    });
   };
 
   const tabList = [
