@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons, EvilIcons } from '@expo/vector-icons';
-import MyChallengeList from "./MyChallengeList";
-import MyCommunityList from "./MyCommunityList";
-import MyBookmarkList from "./MyBookmarkList";
 import { theme } from "../../color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
-import { CommonActions, useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { screenWidth } from "../../CommonComponent";
+
+const numColumns = 3;
+
+const PostItem = ({ item }) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={styles.postView}
+    >
+      <Image source={{ uri: item.filePath }} style={styles.image} />
+    </TouchableOpacity>
+  );
+};
 
 export default function ProfileScreen({ navigation }: any) {
 
@@ -24,16 +35,27 @@ export default function ProfileScreen({ navigation }: any) {
 
   // 사용자 정보 조회
   const isFocused = useIsFocused();
-  useEffect(() => {
+  const getUser = () => {
     axiosInstance.get(`/api/user?email=${email}`)
       .then(function (response) {
-        setProfileImg(response.data.profileImg);
         setNickname(response.data.nickName);
         setGoalMsg(response.data.goalMsg);
         setDays(response.data.days);
       }).catch(function (error) {
         console.log(error);
       });
+  };
+  const getProfileImg = () => {
+    axiosInstance.get(`/api/user/image?email=${email}`)
+      .then(function (response) {
+        setProfileImg(`data:image/png;base64,${response.data}`);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getUser();
+    getProfileImg();
   }, [isFocused]);
 
   // 토큰이 없으면 로그인 알림 출력
@@ -54,17 +76,83 @@ export default function ProfileScreen({ navigation }: any) {
     });
   };
 
-  const tabList = [
-    { name: "challenge", content: <MyChallengeList /> },
-    { name: "community", content: <MyCommunityList /> },
-    { name: "bookmark", content: <MyBookmarkList /> },
-  ];
+  const tabList = ["challenge", "community", "bookmark"];
   const [activeTab, setActiveTab] = useState(0);
   const changeTab = (tabIndex: number) => setActiveTab(tabIndex);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    axiosInstance.get(`/api/mypage/${tabList[activeTab]}?email=${email}`)
+      .then(function (response) {
+        setPosts(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  }, [activeTab]);
+
+  const TabContent = () => {
+    switch (tabList[activeTab]) {
+      case "challenge":
+        return (
+          <View style={styles.innerContainer}>
+            <FlatList
+              data={posts}
+              renderItem={PostItem}
+              keyExtractor={(item) => item.id}
+              numColumns={numColumns}
+            />
+          </View>
+        );
+        break;
+      case "community":
+        return (
+          <ScrollView style={styles.innerContainer}>
+            {posts.slice(0).reverse().map((post, index) =>
+              <View key={index}>
+                <TouchableOpacity style={styles.list}>
+                  <View>
+                    <Text style={styles.category}>{post.category}</Text>
+                  </View>
+                  <View style={styles.contentArea}>
+                    <Text style={styles.title}>{post.title}</Text>
+                    <Text numberOfLines={2}>{post.content}</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.date}>{post.createdDate}</Text>
+                  </View>
+                </TouchableOpacity>
+                <View style={{ width: "100%", height: 2, backgroundColor: theme.devideBg }}></View>
+              </View>
+            )}
+          </ScrollView>
+        );
+        break;
+      case "bookmark":
+        return (
+          <ScrollView style={styles.innerContainer}>
+            {posts.slice(0).reverse().map((post, index) =>
+              <View key={index}>
+                <TouchableOpacity style={styles.list}>
+                  <View>
+                    <Text style={styles.category}>{post.pcategory}</Text>
+                  </View>
+                  <View style={styles.contentArea}>
+                    <Text style={styles.title}>{post.ptitle}</Text>
+                    <Text numberOfLines={2}>{post.pcontent}</Text>
+                  </View>
+                </TouchableOpacity>
+                <View style={{ width: "100%", height: 2, backgroundColor: theme.devideBg }}></View>
+              </View>
+            )}
+          </ScrollView>
+        );
+        break;
+    }
+  };
+
 
   return (
     <View style={styles.container}>
-
       <View style={styles.userInfo}>
         <View style={styles.profileArea}>
           <View style={styles.nicknameArea}>
@@ -90,11 +178,11 @@ export default function ProfileScreen({ navigation }: any) {
         <View style={styles.tab}>
           {tabList.map((tab, index) => (
             <TouchableOpacity key={index} onPress={() => changeTab(index)} activeOpacity={1}>
-              <Text style={{ ...styles.tabName, color: activeTab === index ? "black" : theme.grey, borderBottomWidth: activeTab === index ? 2 : null }}>{tab.name}</Text>
+              <Text style={{ ...styles.tabName, color: activeTab === index ? "black" : theme.grey, borderBottomWidth: activeTab === index ? 2 : null }}>{tab}</Text>
             </TouchableOpacity>
           ))}
         </View>
-        {tabList[activeTab].content}
+        <TabContent />
       </View>
 
     </View>
@@ -150,5 +238,35 @@ const styles = StyleSheet.create({
   tabName: {
     fontSize: 16,
     paddingVertical: 7,
+  },
+  innerContainer: {
+    flex: 1,
+  },
+  list: {
+    padding: 10,
+  },
+  category: {
+    fontSize: 12,
+    color: theme.grey,
+  },
+  contentArea: {
+    marginBottom: 10,
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  date: {
+    color: "grey",
+  },
+  postView: {
+    backgroundColor: "#eeeeee",
+    width: (screenWidth * 0.96) / numColumns,
+    height: (screenWidth * 0.96) / numColumns,
+    margin: (screenWidth * 0.04) / (numColumns * 2),
+  },
+  image: {
+    width: "100%",
+    height: "100%",
   },
 })

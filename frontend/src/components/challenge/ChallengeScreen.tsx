@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   RefreshControl,
+  Alert,
 } from "react-native";
 import {
   Divider,
@@ -18,6 +19,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import axiosInstance from "../../axiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 
 const numColumns = 3;
 
@@ -35,6 +37,9 @@ const rank: string[] = [
 ];
 
 export default function ChallengScreen({ navigation }) {
+  const [token, setToken] = useState<string>("");
+  AsyncStorage.getItem('token').then(response => setToken(response));
+
   const [postData, setPostData] = useState([]);
   const [rankingData, setRankingData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -96,12 +101,13 @@ export default function ChallengScreen({ navigation }) {
       });
   };
 
+  const isFocused = useIsFocused();
   useEffect(() => {
     getPostList();
     getRankingList();
     getUserInfo();
     getUserCheeringNum();
-  }, []);
+  }, [isFocused]);
 
   const ProfileIcon = ({ imagePath, isUser }) => {
     if (imagePath == null)
@@ -209,9 +215,13 @@ export default function ChallengScreen({ navigation }) {
       />
 
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("PostChallengeScreen", { isCreate: true })
-        }
+        onPress={() => {
+          if (!token) {
+            Alert.alert('Warning', 'You can use it after login.');
+          } else {
+            navigation.navigate("PostChallengeScreen", { isCreate: true });
+          }
+        }}
         activeOpacity={0.8}
         style={styles.writePost}
       >

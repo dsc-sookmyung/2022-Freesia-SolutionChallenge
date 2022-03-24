@@ -61,6 +61,8 @@ export default function ChallengeDetail({ route, navigation }: any) {
   const [emojiCount, setEmojiCount] = useState({});
   const [myEmojiCount, setMyEmojiCount] = useState({});
   const [emojiClicked, setEmojiClicked] = useState<boolean>(false);
+  const [token, setToken] = useState<string>("");
+  AsyncStorage.getItem('token').then(response => setToken(response));
 
   // 게시글 상세 정보 가져오기
   const getPostData = () => {
@@ -361,10 +363,11 @@ export default function ChallengeDetail({ route, navigation }: any) {
       <View style={styles.post}>
         <View style={styles.postTop}>
           <Text style={styles.postTitle}>{postData.title}</Text>
-          <View style={styles.emojiContainer}>
-            <ShowEmojiCount />
-            <EmojiContainer />
-          </View>
+          {token ?
+            <View style={styles.emojiContainer}>
+              <ShowEmojiCount />
+              <EmojiContainer />
+            </View> : null}
         </View>
         <Divider />
         <Text>{postData.contents}</Text>

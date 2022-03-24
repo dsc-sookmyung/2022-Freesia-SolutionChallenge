@@ -6,16 +6,21 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Alert,
 } from "react-native";
 import { Ionicons, AntDesign, EvilIcons } from "@expo/vector-icons";
 import { theme } from "../../color";
 import axiosInstance from "../../axiosInstance";
 import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { defaultFont as Text } from "../../CommonComponent";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function CommunityScreen({ navigation }: any) {
+  const [token, setToken] = useState<string>("");
+  AsyncStorage.getItem('token').then(response => setToken(response));
+
   const [posts, setPosts] = useState([]);
   const [category, setCategory] = useState<string>("worries");
 
@@ -32,7 +37,11 @@ export default function CommunityScreen({ navigation }: any) {
   }, [category, isFocused]);
 
   const gotoCreate = () => {
-    navigation.navigate("Create");
+    if (!token) {
+      Alert.alert('Warning', 'You can use it after login.');
+    } else {
+      navigation.navigate("Create");
+    };
   };
 
   const gotoDetail = (item) => {

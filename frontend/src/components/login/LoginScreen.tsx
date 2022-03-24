@@ -80,24 +80,22 @@ export default function Login({ navigation }: any) {
   return (
     <View style={{ ...styles.login, ...mainStyle.mainView }}>
       <Text style={styles.loginTitle}>Login</Text>
-      <View style={styles.loginForm}>
-        <View style={styles.inputForm}>
-          <Text style={styles.text}>ID</Text>
-          <TextInput
-            value={id}
-            onChangeText={onChangeId}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.inputForm}>
-          <Text style={styles.text}>Password</Text>
-          <TextInput
-            value={pw}
-            onChangeText={onChangePw}
-            style={styles.textInput}
-            secureTextEntry={true}
-          />
-        </View>
+      <View style={styles.inputForm}>
+        <Text style={styles.text}>ID</Text>
+        <TextInput
+          value={id}
+          onChangeText={onChangeId}
+          style={styles.textInput}
+        />
+      </View>
+      <View style={styles.inputForm}>
+        <Text style={styles.text}>Password</Text>
+        <TextInput
+          value={pw}
+          onChangeText={onChangePw}
+          style={styles.textInput}
+          secureTextEntry={true}
+        />
       </View>
       <TouchableOpacity onPress={() => login()}>
         <View
@@ -153,16 +151,9 @@ const styles = StyleSheet.create({
   },
   loginForm: {
     position: "relative",
-  } /* 
-  inputArea: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: 30,
-    marginBottom: 10,
-  }, */,
+  },
   text: {
-    position: "absolute",
-    right: 330,
+    flex: 1,
     fontSize: 20,
   },
   inputForm: {
@@ -170,6 +161,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textInput: {
+    flex: 2,
     width: 300,
     elevation: 2,
     borderRadius: 50,

@@ -67,6 +67,8 @@ export default function DetailScreen({ navigation, route }: any) {
   const [writer, setWriter] = useState<string>(""); // 글쓴 사람 이메일
   const [email, setEmail] = useState<string>(""); // 로그인한 유저 이메일
   AsyncStorage.getItem("email").then((response) => setEmail(response));
+  const [token, setToken] = useState<string>("");
+  AsyncStorage.getItem('token').then(response => setToken(response));
   const [index, setIndex] = useState(0);
   const [fileId, setFileId] = useState([]);
   const [entries, setEntries] = useState([]);
@@ -84,9 +86,9 @@ export default function DetailScreen({ navigation, route }: any) {
   }, []);
   useEffect(() => {
     fileId.map((id) => {
-      axiosInstance.get(`/image/${id}`)
+      axiosInstance.get(`community/image/?id=${id}`)
         .then(function (response) {
-          entries.push(`data:image/png;base64,${response.data}`);
+          entries.push(`data:image/png;base64,${response.data};`);
         }).catch(function (error) {
           console.log(error);
         });
@@ -107,31 +109,35 @@ export default function DetailScreen({ navigation, route }: any) {
   const [focused, setFocused] = useState(false);
   const iconName: string = focused ? "flower" : "flower-outline";
   const likeEvent = () => {
-    if (focused == false) {
-      axiosInstance
-        .post(`/api/likes`, {
-          pid: route.params.id,
-          uid: email,
-        })
-        .then(function (response) {
-          ToastAndroid.show("Like this Post!", ToastAndroid.SHORT);
-          setFocused(!focused);
-          setLikes((prevCount: number) => prevCount + 1);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    if (!token) {
+      Alert.alert('Warning', 'You can use it after login.');
     } else {
-      axiosInstance
-        .delete(`/api/likes?id=${route.params.id}`)
-        .then(function (response) {
-          ToastAndroid.show("Canceled", ToastAndroid.SHORT);
-          setFocused(!focused);
-          setLikes((prevCount: number) => prevCount - 1);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      if (focused == false) {
+        axiosInstance
+          .post(`/api/likes`, {
+            pid: route.params.id,
+            uid: email,
+          })
+          .then(function (response) {
+            ToastAndroid.show("Like this Post!", ToastAndroid.SHORT);
+            setFocused(!focused);
+            setLikes((prevCount: number) => prevCount + 1);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        axiosInstance
+          .delete(`/api/likes?id=${route.params.id}`)
+          .then(function (response) {
+            ToastAndroid.show("Canceled", ToastAndroid.SHORT);
+            setFocused(!focused);
+            setLikes((prevCount: number) => prevCount - 1);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     }
   };
   const showModal = () => {
@@ -276,8 +282,6 @@ export default function DetailScreen({ navigation, route }: any) {
           <Ionicons name="menu-outline" size={40} color="black" />
         </TouchableOpacity>
       </View>
-
-      {/* <Image source={{ uri: `data:image/png;base64,${test}` }} style={{ width: 50, height: 50 }} /> */}
 
       <Carousel
         ref={carouselRef}

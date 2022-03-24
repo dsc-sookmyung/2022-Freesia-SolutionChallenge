@@ -162,11 +162,11 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   signUpForm: {
-    width: "85%",
     justifyContent: "center",
     alignItems: "flex-end",
   },
   text: {
+    flex: 1,
     fontSize: 20,
   },
   addImage: {
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textInput: {
-    width: "70%",
+    flex: 1,
     elevation: 2,
     borderRadius: 50,
     backgroundColor: "white",

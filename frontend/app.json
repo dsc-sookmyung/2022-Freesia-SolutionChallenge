@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "frontend",
+    "name": "I'm your freesia",
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "freesia",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app_icon.png",
     "splash": {
       "image": "./assets/landing.png",
       "resizeMode": "contain",
