@@ -1,6 +1,8 @@
 package com.freesia.imyourfreesia.domain.community;
 
 import com.freesia.imyourfreesia.domain.BaseTimeEntity;
+import com.freesia.imyourfreesia.domain.comment.Comment;
+import com.freesia.imyourfreesia.domain.likes.Likes;
 import com.freesia.imyourfreesia.domain.user.User;
 import lombok.*;
 
@@ -33,6 +35,12 @@ public class Community extends BaseTimeEntity {
     @OneToMany(mappedBy = "community", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Photo> image = new ArrayList<>();
 
+    @OneToMany(mappedBy = "pid", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<Likes> like = new ArrayList<>();
+
+    @OneToMany(mappedBy = "pid", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<Comment> comment = new ArrayList<>();
+
     @Column(nullable = false)
     private String category;
 
@@ -60,5 +68,19 @@ public class Community extends BaseTimeEntity {
 
         if(photo.getCommunity() != this)
             photo.setCommunity(this);
+    }
+
+    public void addLike(Likes likes) {
+        this.like.add(likes);
+
+        if(likes.getPid() != this)
+            likes.setPid(this);
+    }
+
+    public void addComment(Comment comment) {
+        this.comment.add(comment);
+
+        if(comment.getPid() != this)
+            comment.setPid(this);
     }
 }

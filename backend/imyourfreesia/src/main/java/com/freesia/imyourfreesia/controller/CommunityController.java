@@ -167,10 +167,11 @@ public class CommunityController {
 
     // 이미지 ByteArray 조회
     @GetMapping(
-            value = "/image/{id}",
+            value = "/community/image",
             produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
     )
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) throws IOException {
+    @ApiOperation(value="커뮤니티 이미지 ByteArray 조회", notes="커뮤니티 이미지 ByteArray 조회 API")
+    public ResponseEntity<byte[]> getImage(@RequestParam Long id) throws IOException {
         PhotoDto photoDto = photoService.findByFileId(id);
         String absolutePath
                 = new File("").getAbsolutePath() + File.separator + File.separator;

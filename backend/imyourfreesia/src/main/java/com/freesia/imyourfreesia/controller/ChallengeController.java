@@ -11,12 +11,18 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,6 +153,24 @@ public class ChallengeController {
     public ResponseEntity<?> deleteChallenge(@RequestParam Long id){
         challengeService.deleteChallenge(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /* 챌린지 이미지 ByteArray 조회 */
+    @GetMapping(
+            value = "/api/challenge/image",
+            produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
+    )
+    public ResponseEntity<byte[]> getImage(@RequestParam Long id) throws IOException {
+        ChallengePhotoDto photoDto = challengePhotoService.findByImageId(id);
+        String absolutePath
+                = new File("").getAbsolutePath() + File.separator + File.separator;
+        String path = photoDto.getFilePath();
+
+        InputStream imageStream = new FileInputStream(absolutePath + path);
+        byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+        imageStream.close();
+
+        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
     }
 
 }

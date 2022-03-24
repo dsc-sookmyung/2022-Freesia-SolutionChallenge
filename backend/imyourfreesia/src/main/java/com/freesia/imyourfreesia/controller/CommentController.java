@@ -28,7 +28,7 @@ public class CommentController {
     @PostMapping("/api/comment")
     public ResponseEntity<Long> saveCmt(@RequestBody CommentSaveRequestDto requestDto){
         return ResponseEntity.ok()
-                .body(commentService.save(requestDto).getId());
+                .body(commentService.save(requestDto));
     }
 
     /* 댓글 조회 */

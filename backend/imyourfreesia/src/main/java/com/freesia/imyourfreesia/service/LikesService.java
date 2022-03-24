@@ -2,6 +2,7 @@ package com.freesia.imyourfreesia.service;
 
 import com.freesia.imyourfreesia.domain.community.Community;
 import com.freesia.imyourfreesia.domain.community.CommunityRepository;
+import com.freesia.imyourfreesia.domain.community.Photo;
 import com.freesia.imyourfreesia.domain.likes.Likes;
 import com.freesia.imyourfreesia.domain.likes.LikesRepository;
 import com.freesia.imyourfreesia.domain.user.User;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +28,7 @@ public class LikesService {
 
     /* 좋아요 설정 */
     @Transactional
-    public Likes likes(LikesSaveRequestDto requestDto){
+    public Long likes(LikesSaveRequestDto requestDto){
         User user = userRepository.findByEmail(requestDto.getUid());
         Community community = communityRepository.findById(requestDto.getPid())
                 .orElseThrow(IllegalArgumentException::new);
@@ -34,7 +36,17 @@ public class LikesService {
         Likes likes = new Likes();
         likes.setUid(user);
         likes.setPid(community);
-        return likesRepository.save(likes);
+
+        List<Likes> likesList = new ArrayList<>();
+        likesList.add(likes);
+
+        if(!likesList.isEmpty()) {
+            for(Likes like: likesList) {
+                community.addLike(likesRepository.save(like));
+            }
+        }
+
+        return likesRepository.save(likes).getId();
     }
 
     /* 좋아요 해제 */

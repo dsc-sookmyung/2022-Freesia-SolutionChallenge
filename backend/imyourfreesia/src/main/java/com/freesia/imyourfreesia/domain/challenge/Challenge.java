@@ -1,6 +1,8 @@
 package com.freesia.imyourfreesia.domain.challenge;
 
 import com.freesia.imyourfreesia.domain.BaseTimeEntity;
+import com.freesia.imyourfreesia.domain.emoticon.Emoticon;
+import com.freesia.imyourfreesia.domain.likes.Likes;
 import com.freesia.imyourfreesia.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,6 +42,9 @@ public class Challenge extends BaseTimeEntity {
     )
     private List<ChallengePhoto> image = new ArrayList<>();
 
+    @OneToMany(mappedBy = "challengeId", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<Emoticon> emoticons = new ArrayList<>();
+
     @Builder
     public Challenge(User uid, String title, String contents){
         this.uid = uid;
@@ -62,6 +67,14 @@ public class Challenge extends BaseTimeEntity {
 
         if(challengePhoto.getChallenge() != this){
             challengePhoto.setChallenge(this);
+        }
+    }
+
+    public void addEmoticon(Emoticon emoticon){
+        this.emoticons.add(emoticon);
+
+        if(emoticon.getChallengeId() != this){
+            emoticon.setChallengeId(this);
         }
     }
 }

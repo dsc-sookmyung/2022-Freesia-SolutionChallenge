@@ -23,7 +23,7 @@ public class UserService {
 
     /* 유저 정보 조회 */
     @Transactional(readOnly = true)
-    public UserResponseDto findByEmail(String email){
+    public UserResponseDto findByEmail(String email) throws Exception {
         User user = userRepository.findByEmail(email);
         GoalMsg goalMsg = goalMsgRepository.findByUserId(user);
 

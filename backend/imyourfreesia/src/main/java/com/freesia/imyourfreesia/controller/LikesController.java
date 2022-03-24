@@ -25,7 +25,7 @@ public class LikesController {
     @PostMapping("/api/likes")
     public ResponseEntity<Long> likes(@RequestBody LikesSaveRequestDto requestDto){
         return ResponseEntity.ok()
-                .body(likesService.likes(requestDto).getId());
+                .body(likesService.likes(requestDto));
     }
 
     /* 좋아요 해제 */

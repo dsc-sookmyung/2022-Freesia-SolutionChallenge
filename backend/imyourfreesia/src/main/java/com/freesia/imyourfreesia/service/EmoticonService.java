@@ -4,6 +4,7 @@ import com.freesia.imyourfreesia.domain.challenge.Challenge;
 import com.freesia.imyourfreesia.domain.challenge.ChallengeRepository;
 import com.freesia.imyourfreesia.domain.emoticon.Emoticon;
 import com.freesia.imyourfreesia.domain.emoticon.EmoticonRepository;
+import com.freesia.imyourfreesia.domain.likes.Likes;
 import com.freesia.imyourfreesia.domain.user.User;
 import com.freesia.imyourfreesia.domain.user.UserRepository;
 import com.freesia.imyourfreesia.dto.emoticon.EmoticonRequestDto;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,13 +32,20 @@ public class EmoticonService {
         Challenge challenge = challengeRepository.findById(emoticonRequestDto.getChallengeId()).orElseThrow(IllegalArgumentException::new);
 
         if (emoticonRepository.findByUidAndChallengeIdAndEmoticonName(user, challenge, emoticonRequestDto.getEmoticonName()).isEmpty()) {
-            Emoticon emoticon = emoticonRequestDto.toEntity();
-            emoticon.setUser(user);
-            emoticon.setChallenge(challenge);
+            Emoticon emoticons = emoticonRequestDto.toEntity();
+            emoticons.setUser(user);
+            emoticons.setChallenge(challenge);
 
-            emoticonRepository.save(emoticon);
+            List<Emoticon> emoticonList = new ArrayList<>();
+            emoticonList.add(emoticons);
 
-            return "이모티콘 등록 완료. 이모티콘 아이디 : " + emoticonRepository.save(emoticon).getId();
+            if(!emoticonList.isEmpty()) {
+                for(Emoticon emoticon: emoticonList) {
+                    challenge.addEmoticon(emoticonRepository.save(emoticon));
+                }
+            }
+
+            return "이모티콘 등록 완료. 이모티콘 아이디 : " + emoticonRepository.save(emoticons).getId();
 
         } else {
             return "이모티콘 등록 실패 (이미 존재합니다.)";

@@ -4,6 +4,7 @@ import com.freesia.imyourfreesia.domain.comment.Comment;
 import com.freesia.imyourfreesia.domain.comment.CommentRepository;
 import com.freesia.imyourfreesia.domain.community.Community;
 import com.freesia.imyourfreesia.domain.community.CommunityRepository;
+import com.freesia.imyourfreesia.domain.likes.Likes;
 import com.freesia.imyourfreesia.domain.user.User;
 import com.freesia.imyourfreesia.domain.user.UserRepository;
 import com.freesia.imyourfreesia.dto.challenge.ChallengeListResponseDto;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,17 +28,27 @@ public class CommentService {
 
     /* 댓글 저장 */
     @Transactional
-    public Comment save(CommentSaveRequestDto requestDto){
+    public Long save(CommentSaveRequestDto requestDto){
         //옵셔널이 아니라서 orElseThrow 처리x
         //옵셔널로 변경하면 로그인부분 건드려야 해서 일단 냅둠
         User user = userRepository.findByEmail(requestDto.getUid());
         Community community = communityRepository.findById(requestDto.getPid())
                 .orElseThrow(IllegalArgumentException::new);
 
-        Comment comment = requestDto.toEntity();
-        comment.setUid(user);
-        comment.setPid(community);
-        return commentRepository.save(comment);
+        Comment comments = requestDto.toEntity();
+        comments.setUid(user);
+        comments.setPid(community);
+
+        List<Comment> commentList = new ArrayList<>();
+        commentList.add(comments);
+
+        if(!commentList.isEmpty()) {
+            for(Comment comment: commentList) {
+                community.addComment(commentRepository.save(comments));
+            }
+        }
+
+        return commentRepository.save(comments).getId();
     }
 
     /* 댓글 조회 */

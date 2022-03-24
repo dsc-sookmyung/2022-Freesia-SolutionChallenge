@@ -2,8 +2,13 @@ package com.freesia.imyourfreesia.dto.mypage;
 
 import com.freesia.imyourfreesia.domain.user.GoalMsg;
 import com.freesia.imyourfreesia.domain.user.User;
+import javassist.bytecode.ByteArray;
 import lombok.Getter;
+import org.apache.commons.io.IOUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -15,12 +20,11 @@ public class UserResponseDto {
     private String password;
     private String email;
     private String nickName;
-    private String profileImg;
     private String goalMsg;
     private LocalDate goalMsg_modifiedDate;
     private int days;
 
-    public UserResponseDto(User entity, GoalMsg goalMsg){
+    public UserResponseDto(User entity, GoalMsg goalMsg) throws Exception {
 
         this.id = entity.getId();
         this.username = entity.getUsername();
@@ -28,7 +32,6 @@ public class UserResponseDto {
         this.password = entity.getPassword();
         this.email = entity.getEmail();
         this.nickName = entity.getNickName();
-        this.profileImg = entity.getProfileImg();
 
         if(goalMsg!=null){
             this.goalMsg = goalMsg.getGoalMsg();

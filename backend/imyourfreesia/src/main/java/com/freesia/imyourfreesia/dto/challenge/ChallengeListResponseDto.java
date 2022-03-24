@@ -14,7 +14,7 @@ public class ChallengeListResponseDto {
     private User uid;
     private String title;
     private String contents;
-    private String filePath;
+    private Long filePathId;
     private LocalDate createdDate;
     private LocalDate modifiedDate;
 
@@ -28,9 +28,10 @@ public class ChallengeListResponseDto {
         String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
 
         if(!entity.getImage().isEmpty()){
-            this.filePath = absolutePath + entity.getImage().get(0).getFilePath();
+            //this.filePath = absolutePath + entity.getImage().get(0).getFilePath();
+            this.filePathId = entity.getImage().get(0).getId();
         }else{
-            this.filePath = "";
+            this.filePathId = null;
         }
 
         this.createdDate = entity.getCreatedDate();

@@ -1,26 +1,34 @@
 package com.freesia.imyourfreesia.controller;
 
+import com.freesia.imyourfreesia.domain.user.User;
+import com.freesia.imyourfreesia.domain.user.UserRepository;
 import com.freesia.imyourfreesia.dto.auth.GeneralAuthVO;
 import com.freesia.imyourfreesia.dto.challenge.ChallengeListResponseDto;
+import com.freesia.imyourfreesia.dto.challenge.ChallengePhotoDto;
 import com.freesia.imyourfreesia.dto.community.CommunityListResponseDto;
+import com.freesia.imyourfreesia.dto.community.PhotoDto;
 import com.freesia.imyourfreesia.dto.likes.LikesListResponseDto;
 import com.freesia.imyourfreesia.dto.mypage.GoalMsgUpdateRequestDto;
 import com.freesia.imyourfreesia.dto.mypage.UserPasswordUpdateRequestDto;
 import com.freesia.imyourfreesia.dto.mypage.UserResponseDto;
 import com.freesia.imyourfreesia.dto.mypage.UserUpdateRequestDto;
-import com.freesia.imyourfreesia.service.ChallengeService;
-import com.freesia.imyourfreesia.service.CommunityService;
-import com.freesia.imyourfreesia.service.LikesService;
-import com.freesia.imyourfreesia.service.UserService;
+import com.freesia.imyourfreesia.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Api(tags={"MyPage API"})
@@ -33,6 +41,8 @@ public class MyPageController {
     private final CommunityService communityService;
     private final LikesService likesService;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final ChallengePhotoService challengePhotoService;
 
     /* 유저 정보 조회 */
     @ApiOperation(value="유저 정보 조회", notes="유저 정보 조회 API")
@@ -41,6 +51,23 @@ public class MyPageController {
     public ResponseEntity<UserResponseDto> loadUser(@RequestParam String email) throws Exception{
         return ResponseEntity.ok()
                 .body(userService.findByEmail(email));
+    }
+
+    /* 이미지 ByteArray 조회 */
+    @ApiOperation(value="유저 프로필 이미지 ByteArray 조회", notes="유저 프로필 이미지 ByteArray 조회 API")
+    @GetMapping(
+            value = "/user/image",
+            produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
+    )
+    public ResponseEntity<byte[]> getUserImage(@RequestParam String email) throws IOException {
+
+        User user = userRepository.findByEmail(email);
+
+        InputStream imageStream = new FileInputStream(user.getProfileImg());
+        byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+        imageStream.close();
+
+        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
     }
 
     /* 유저 정보 수정 */
