@@ -156,8 +156,10 @@ public class ChallengeController {
     }
 
     /* 챌린지 이미지 ByteArray 조회 */
+    @ApiOperation(value="챌린지 이미지 ByteArray 조회", notes="챌린지 이미지 ByteArray 조회 API")
+    @ApiImplicitParam(name = "id", value = "챌린지 이미지 id", example = "1")
     @GetMapping(
-            value = "/api/challenge/image",
+            value = "/challenge/image",
             produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
     )
     public ResponseEntity<byte[]> getImage(@RequestParam Long id) throws IOException {
