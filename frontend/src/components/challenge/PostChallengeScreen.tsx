@@ -19,7 +19,11 @@ export default function PostChallengeScreen({ route, navigation }) {
   const [isCreate, setIsCreate] = useState<Boolean>(
     route.params.isCreate == null ? null : route.params.isCreate
   );
-  let images = route.params.data;
+  const [postImage, setPostImage] = useState(null);
+  let images;
+  route.params.data == undefined
+    ? (images = null)
+    : (images = route.params.data);
   const [challengeId, setChallengeId] = useState();
   const [title, setTitle] = useState<string>("");
   const [contents, setContents] = useState<string>("");
@@ -29,21 +33,8 @@ export default function PostChallengeScreen({ route, navigation }) {
     isCreate == false ? setTitle(route.params.postData.title) : null;
     isCreate == false ? setContents(route.params.postData.contents) : null;
     isCreate == false ? setChallengeId(route.params.postData.id) : null;
+    isCreate == false ? setPostImage(route.params.postData.filePath) : null;
   }, []);
-
-  /* const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setImages([...images, result.uri]);
-    }
-    console.log(images);
-  }; */
 
   const createFormData = async () => {
     const email = await AsyncStorage.getItem("email");
@@ -51,14 +42,25 @@ export default function PostChallengeScreen({ route, navigation }) {
     body.append("title", title);
     body.append("contents", contents);
     body.append("uid", email);
-    images.map((image: any, index: number) => {
-      let files: any = {
-        uri: image.uri,
-        type: "image/png",
-        name: `${index}.png`,
-      };
-      body.append("files", files);
-    });
+    images == null
+      ? postImage == null
+        ? null
+        : postImage.map((image: any, index: number) => {
+            let files: any = {
+              uri: image,
+              type: "image/png",
+              name: `${index}.png`,
+            };
+            body.append("files", files);
+          })
+      : images.map((image: any, index: number) => {
+          let files: any = {
+            uri: image.uri,
+            type: "image/png",
+            name: `${index}.png`,
+          };
+          body.append("files", files);
+        });
 
     isCreate == false ? body.append("id", challengeId) : null;
 

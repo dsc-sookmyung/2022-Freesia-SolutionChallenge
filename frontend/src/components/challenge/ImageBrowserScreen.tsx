@@ -7,7 +7,11 @@ import { theme } from "../../color";
 
 export default function ImageBrowserScreen({ navigation }: any) {
   const onSuccess = async (data: any) => {
-    navigation.navigate("PostChallengeScreen", { data, isCreate: null });
+    navigation.navigate("PostChallengeScreen", {
+      data,
+      isCreate: null,
+      imageChanged: true,
+    });
   };
 
   const widgetErrors = useMemo(

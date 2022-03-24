@@ -7,10 +7,10 @@ import * as Location from "expo-location";
 import MapScreen from "../components/map/MapScreen";
 import Geocoder from "react-native-geocoding";
 
-import { screenWidth } from "../CommonComponent";
+import { screenWidth, apiKey } from "../CommonComponent";
 import { theme } from "../color";
 
-Geocoder.init("AIzaSyAPEIGEf12unqTi_6if8i_okJEdgCPIeFY");
+Geocoder.init(apiKey);
 
 export default function MapStackScreen() {
   const [latLon, setLatLon] = useState({ lat: 0, lon: 0 });

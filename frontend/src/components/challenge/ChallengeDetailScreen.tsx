@@ -134,6 +134,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // 챌린지 편집, 삭제 모달
   const handleEdit = () =>
     navigation.navigate("PostChallengeScreen", { postData, isCreate: false });
+
   const handleDelete = () => {
     console.log("delete");
     axiosInstance
