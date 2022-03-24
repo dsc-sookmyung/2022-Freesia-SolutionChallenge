@@ -11,10 +11,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,15 +76,13 @@ public class CommunityController {
     public CommunityResponseDto view(@RequestParam Long id) throws Exception{
 
         List<PhotoResponseDto> photoResponseDtoList = photoService.findAllByCommunity(id);
-        List<String> filePath = new ArrayList<>();
-
-        String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
+        List<Long> fileId = new ArrayList<>();
 
         for (PhotoResponseDto photoResponseDto : photoResponseDtoList) {
-            filePath.add(absolutePath+photoResponseDto.getFilePath());
+            fileId.add(photoResponseDto.getFileId());
         }
 
-        return communityService.findById(id, filePath);
+        return communityService.findById(id, fileId);
     }
 
     // 게시글 수정
@@ -158,6 +163,24 @@ public class CommunityController {
         }
 
         return communityListResponseDtoList;
+    }
+
+    // 이미지 ByteArray 조회
+    @GetMapping(
+            value = "/image/{id}",
+            produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
+    )
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) throws IOException {
+        PhotoDto photoDto = photoService.findByFileId(id);
+        String absolutePath
+                = new File("").getAbsolutePath() + File.separator + File.separator;
+        String path = photoDto.getFilePath();
+
+        InputStream imageStream = new FileInputStream(absolutePath + path);
+        byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+        imageStream.close();
+
+        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
     }
 
 }

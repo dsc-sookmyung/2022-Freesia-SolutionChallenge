@@ -34,12 +34,12 @@ public class CommunityResponseDto {
     private String content;
 
     @ApiModelProperty(example = "게시글 이미지")
-    private List<String> filePath;
+    private List<Long> fileId;
 
     @ApiModelProperty(example = "카테고리")
     private String category;
 
-    public CommunityResponseDto(Community community, List<String> filePath){
+    public CommunityResponseDto(Community community, List<Long> fileId){
         this.id = community.getId();
         this.uid = community.getUid().getId();
         this.createdDate = community.getCreatedDate();
@@ -47,7 +47,7 @@ public class CommunityResponseDto {
         this.nickName = community.getUid().getNickName();
         this.title = community.getTitle();
         this.content = community.getContent();
-        this.filePath = filePath;
+        this.fileId = fileId;
         this.category = community.getCategory();
     }
 }

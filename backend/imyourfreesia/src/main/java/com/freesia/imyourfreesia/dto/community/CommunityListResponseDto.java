@@ -30,7 +30,7 @@ public class CommunityListResponseDto {
     private String content;
 
     @ApiModelProperty(example = "게시글 썸네일 이미지")
-    private String thumbnailImagePath;
+    private Long thumbnailImageId;
 
     @ApiModelProperty(example = "카테고리")
     private String category;
@@ -50,12 +50,10 @@ public class CommunityListResponseDto {
         this.content = community.getContent();
         this.category = community.getCategory();
 
-        String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
-
         if(!community.getImage().isEmpty())
-            this.thumbnailImagePath = absolutePath + community.getImage().get(0).getFilePath();
+            this.thumbnailImageId = community.getImage().get(0).getId();
         else
-            this.thumbnailImagePath = "null";
+            this.thumbnailImageId = null;
 
         this.createdDate = community.getCreatedDate();
         this.modifiedDate = community.getModifiedDate();
