@@ -22,6 +22,11 @@ public class AuthController {
     @Autowired
     private final AuthService authService;
 
+    @GetMapping("/health_check")
+    public ResponseEntity<?> healthCheck() {
+        return ResponseEntity.ok().build();
+    }
+
     @ApiOperation(value = "구글 로그인", notes = "구글 로그인 API")
     @PostMapping("/google")
     public TokenDto googleLogin(@RequestBody GoogleLoginReqDto googleLoginReqDto) throws Exception {
