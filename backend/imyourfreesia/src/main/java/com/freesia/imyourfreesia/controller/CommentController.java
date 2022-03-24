@@ -1,6 +1,5 @@
 package com.freesia.imyourfreesia.controller;
 
-import com.freesia.imyourfreesia.domain.comment.Comment;
 import com.freesia.imyourfreesia.dto.comment.CommentListResponseDto;
 import com.freesia.imyourfreesia.dto.comment.CommentSaveRequestDto;
 import com.freesia.imyourfreesia.dto.comment.CommentUpdateRequestDto;
@@ -18,7 +17,6 @@ import java.util.List;
 @Api(tags={"Comment API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
 
@@ -27,7 +25,7 @@ public class CommentController {
     /* 댓글 등록 */
     @ApiOperation(value="댓글 등록", notes="댓글 등록 API")
     @ApiImplicitParam(name = "CommentSaveRequestDto", value = "댓글 등록 dto")
-    @PostMapping("/comment")
+    @PostMapping("/api/comment")
     public ResponseEntity<Long> saveCmt(@RequestBody CommentSaveRequestDto requestDto){
         return ResponseEntity.ok()
                 .body(commentService.save(requestDto).getId());
@@ -41,12 +39,6 @@ public class CommentController {
         return ResponseEntity.ok()
                 .body(commentService.findAllByPid(pid));
     }
-    /*
-    public ResponseEntity<List<Comment>> loadCmt(@RequestParam Long pid){
-        return ResponseEntity.ok()
-                .body(commentService.findAllByPid(pid));
-    }*/
-
 
     /* 댓글 수정 */
     @ApiOperation(value="댓글 수정", notes="댓글 수정 API")
@@ -54,7 +46,7 @@ public class CommentController {
             @ApiImplicitParam(name = "id", value = "댓글 id", dataType="Long", paramType="query", example = "1"),
             @ApiImplicitParam(name = "CommentUpdateRequestDto", value = "댓글 수정 Dto")
     })
-    @PutMapping("/comment")
+    @PutMapping("/api/comment")
     public ResponseEntity<Long> updateCmt(@RequestParam Long id,
                                              @RequestBody CommentUpdateRequestDto requestDto){
         return ResponseEntity.ok()
@@ -64,7 +56,7 @@ public class CommentController {
     /* 댓글 삭제 */
     @ApiOperation(value="댓글 삭제", notes="댓글 삭제 API")
     @ApiImplicitParam(name = "id", value = "댓글 id", dataType="Long", paramType="query", example = "1")
-    @DeleteMapping("/comment")
+    @DeleteMapping("/api/comment")
     public ResponseEntity<?> delete(@RequestParam Long id){
         commentService.delete(id);
         return ResponseEntity.noContent().build();

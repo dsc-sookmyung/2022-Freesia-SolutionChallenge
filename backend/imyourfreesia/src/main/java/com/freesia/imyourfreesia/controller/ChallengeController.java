@@ -23,7 +23,6 @@ import java.util.List;
 @Api(tags={"Challenge API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ChallengeController {
     private final ChallengeService challengeService;
@@ -33,7 +32,7 @@ public class ChallengeController {
     /* 챌린지 등록 */
     @ApiOperation(value="챌린지 등록", notes="챌린지 등록 API")
     @ApiImplicitParam(name = "ChallengeSaveVO", value = "챌린지 저장 vo")
-    @PostMapping("/challenge")
+    @PostMapping("/api/challenge")
     public ResponseEntity<Long> saveChallenge(ChallengeSaveVO challengeSaveVO) throws Exception{
 
         ChallengeSaveRequestDto requestDto
@@ -90,7 +89,7 @@ public class ChallengeController {
              @ApiImplicitParam(name = "id", value = "챌린지 id", example = "1"),
              @ApiImplicitParam(name = "ChallengeSaveVO", value = "챌린지 저장 VO")
      })
-    @PutMapping("/challenge")
+    @PutMapping("/api/challenge")
     public ResponseEntity<Long> updateChallenge(@RequestParam Long id,
                                                      ChallengeSaveVO challengeSaveVO) throws Exception {
         ChallengeUpdateRequestDto requestDto =
@@ -144,40 +143,10 @@ public class ChallengeController {
     /* 챌린지 삭제 */
     @ApiOperation(value="챌린지 삭제", notes="챌린지 삭제 API")
     @ApiImplicitParam(name = "id", value = "챌린지 id", example = "1")
-    @DeleteMapping("/challenge")
+    @DeleteMapping("/api/challenge")
     public ResponseEntity<?> deleteChallenge(@RequestParam Long id){
         challengeService.deleteChallenge(id);
         return ResponseEntity.noContent().build();
     }
-
-    /* 챌린지별 이미지 전체 조회
-    @ApiOperation(value="챌린지별 이미지 전체 조회", notes="챌린지별 이미지 전체 조회 API")
-    @ApiImplicitParam(name = "id", value = "챌린지 id")
-    @GetMapping("/challenge/img/list")
-    public ResponseEntity<List<ChallengePhotoDto>> getChallengeImg(@RequestParam Long id) throws IOException {
-        List<ChallengePhotoResponseDto> photoResponseDtoList
-                = challengePhotoService.findAllByChallenge(id);
-
-        List<Long> imageId = new ArrayList<>();
-
-        for(ChallengePhotoResponseDto photoResponseDto : photoResponseDtoList)
-            imageId.add(photoResponseDto.getImageId());
-
-        List<ChallengePhotoDto> photoList = challengePhotoService.imageList(id);
-
-        return ResponseEntity.ok()
-                .body(photoList);
-    }*/
-
-    /* 챌린지 이미지 개별 조회 (썸네일)
-    @ApiOperation(value="챌린지 이미지 개별 조회(썸네일)", notes="챌린지별 이미지 개별 조회(썸네일) API")
-    @ApiImplicitParam(name = "thumnailId", value = "썸네일 id(thumnailId)")
-    @GetMapping("/challenge/img")
-    public ResponseEntity<ChallengePhotoDto> getChallengeThumnail(@RequestParam Long thumnailId) throws IOException {
-        ChallengePhotoDto photoDto = challengePhotoService.findByImageId(thumnailId);
-
-        return ResponseEntity.ok()
-                .body(photoDto);
-    }*/
 
 }

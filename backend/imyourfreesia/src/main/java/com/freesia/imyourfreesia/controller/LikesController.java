@@ -15,7 +15,6 @@ import java.util.List;
 @Api(tags={"Likes API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class LikesController {
     private final LikesService likesService;
@@ -23,7 +22,7 @@ public class LikesController {
     /* 좋아요 설정 */
     @ApiOperation(value="좋아요 설정", notes="좋아요 설정 API")
     @ApiImplicitParam(name = "LikeSaveRequestDto", value = "좋아요 설정 dto")
-    @PostMapping("/likes")
+    @PostMapping("/api/likes")
     public ResponseEntity<Long> likes(@RequestBody LikesSaveRequestDto requestDto){
         return ResponseEntity.ok()
                 .body(likesService.likes(requestDto).getId());
@@ -32,7 +31,7 @@ public class LikesController {
     /* 좋아요 해제 */
     @ApiOperation(value="좋아요 해제", notes="좋아요 해제 API")
     @ApiImplicitParam(name = "id", value = "좋아요 id", dataType="Long", paramType="query", example = "1")
-    @DeleteMapping("/likes")
+    @DeleteMapping("/api/likes")
     public ResponseEntity<?> unLikes(@RequestParam Long id){
         likesService.unLikes(id);
         return ResponseEntity.noContent().build();

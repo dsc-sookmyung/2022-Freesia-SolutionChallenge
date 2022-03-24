@@ -16,7 +16,6 @@ import java.util.Map;
 @Api(tags={"Cheering API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CheeringController {
     private final CheeringService cheeringService;
@@ -24,7 +23,7 @@ public class CheeringController {
     /* 응원 설정 */
     @ApiOperation(value="응원 설정", notes="응원 설정 API")
     @ApiImplicitParam(name = "CheeringSaveRequestDto", value = "응원 설정 Dto")
-    @PostMapping("/cheering")
+    @PostMapping("/api/cheering")
     public ResponseEntity<Cheering> Cheering(@RequestBody CheeringSaveRequestDto requestDto){
         return ResponseEntity.ok()
                 .body(cheeringService.cheering(requestDto));
@@ -33,7 +32,7 @@ public class CheeringController {
     /* 응원 해제 */
     @ApiOperation(value="응원 해제", notes="응원 해제 API")
     @ApiImplicitParam(name = "id", value = "응원 id", example = "1")
-    @DeleteMapping("/cheering")
+    @DeleteMapping("/api/cheering")
     public ResponseEntity<?> UnCheering(@RequestParam Long id){
         cheeringService.unCheering(id);
         return ResponseEntity.noContent().build();
@@ -46,7 +45,6 @@ public class CheeringController {
     public Long countCheering(@RequestParam String userEmail){
         return cheeringService.countByYourEmail(userEmail);
     }
-
 
     /* 응원 일주일 개수 조회 */
     @ApiOperation(value="응원 일주일 개수 조회", notes="응원 일주일 개수 조회 API")
@@ -64,14 +62,14 @@ public class CheeringController {
     }
 
     /* 내가 응원한 유저 아이디 조회 */
-    @GetMapping("/cheering/mycheer/list")
+    @GetMapping("/api/cheering/mycheer/list")
     public ResponseEntity<List<Cheering>> getMyCheerList(@RequestParam String userEmail){
         return ResponseEntity.ok()
                 .body(cheeringService.findByMyEmail(userEmail));
     }
 
     /* 상대방 응원 여부 */
-    @GetMapping("/cheering/mycheer")
+    @GetMapping("/api/cheering/mycheer")
     public ResponseEntity<Boolean> getMyCheer(@RequestParam String myEmail, String yourEmail){
         return ResponseEntity.ok()
                 .body(cheeringService.findByMyEmailAndYourEmail(myEmail,yourEmail));
