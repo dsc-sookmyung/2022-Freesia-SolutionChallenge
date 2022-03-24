@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Dimensions, Image, Modal, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Alert, Dimensions, Image, Modal, RefreshControl, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { theme } from "../../color";
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,12 +8,28 @@ import * as ImagePicker from "expo-image-picker";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export default function SettingScreen({ navigation }: any) {
+export default function SettingScreen({ route, navigation }: any) {
+
+  // 새로고침
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    axiosInstance.get(`/auth/user?email=${email}`)
+      .then(function (response) {
+        setProfileImg(response.data.profileImg);
+        // setNickname(response.data.nickName);
+        // setGoalMsg(response.data.goalMsg);
+        setLoginId(response.data.loginId);
+        setRefreshing(false);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [profileImg, setProfileImg] = useState<string>();
-  const [nickname, setNickname] = useState<string>();
-  const [goalMsg, setGoalMsg] = useState<string>();
+  const [nickname, setNickname] = useState<string>(route.params.nickname);
+  const [goalMsg, setGoalMsg] = useState<string>(route.params.goalMsg);
   const [loginId, setLoginId] = useState<string>();
   const [newPassword, setNewPassword] = useState<string>();
 
@@ -26,9 +42,9 @@ export default function SettingScreen({ navigation }: any) {
     axiosInstance.get(`/auth/user?email=${email}`)
       .then(function (response) {
         setProfileImg(response.data.profileImg);
-        setNickname(response.data.nickName);
-        setGoalMsg(response.data.goalMsg);
-        // setLoginId(response.data.loginId);
+        // setNickname(response.data.nickName);
+        // setGoalMsg(response.data.goalMsg);
+        setLoginId(response.data.loginId);
       }).catch(function (error) {
         console.log(error);
       });
@@ -77,28 +93,19 @@ export default function SettingScreen({ navigation }: any) {
   // 비밀번호 변경
   const onChangeNewPassword = (e: string) => setNewPassword(e);
   const changePassword = () => {
-    let body = new FormData();
-    let img: any = {
-      uri: profileImg,
-      type: 'image/png',
-      name: 'profile.png'
-    };
-    body.append('profileImg', img);
-    body.append('nickName', nickname);
-    body.append('goalMsg', goalMsg);
-    body.append('password', newPassword);
-
-    axiosInstance.put(`/auth/user?email=${email}`, body, {
-      headers: { 'content-type': `multipart/form-data` },
-      transformRequest: (data, headers) => {
-        return body;
-      },
+    axiosInstance.put(`/auth/user/pw?email=${email}`, {
+      password: newPassword
     }).then(function (response) {
       ToastAndroid.show("Saved", ToastAndroid.SHORT);
-      navigation.navigate('ProfileScreen');
+      setModalVisible(false);
     }).catch(function (error) {
       console.log(error);
     });
+  };
+
+  // 고객센터
+  const gotoCustomerService = () => {
+    navigation.navigate('CustomerService');
   };
 
   // 로그아웃
@@ -131,7 +138,7 @@ export default function SettingScreen({ navigation }: any) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 
       <Modal
         animationType="fade"
@@ -187,17 +194,17 @@ export default function SettingScreen({ navigation }: any) {
         </TouchableOpacity>
       </View>
       <View style={styles.menu}>
-        <TouchableOpacity>
-          <Text style={styles.menuItem}>고객센터</Text>
+        <TouchableOpacity onPress={gotoCustomerService}>
+          <Text style={styles.menuItem}>Customer Service</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={logout}>
-          <Text style={styles.menuItem}>로그아웃</Text>
+          <Text style={styles.menuItem}>Logout</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={deleteAccount}>
-          <Text style={styles.menuItem}>회원탈퇴</Text>
+          <Text style={styles.menuItem}>Delete Account</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
