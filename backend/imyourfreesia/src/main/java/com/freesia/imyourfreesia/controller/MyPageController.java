@@ -26,7 +26,7 @@ import java.util.List;
 @Api(tags={"MyPage API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class MyPageController {
     private final ChallengeService challengeService;

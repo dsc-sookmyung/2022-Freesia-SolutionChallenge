@@ -21,7 +21,6 @@ import java.util.List;
 @Api(tags={"Community API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommunityController {
 
@@ -30,7 +29,7 @@ public class CommunityController {
     private final PhotoRepository photoRepository;
 
     // 게시글 저장
-    @PostMapping(value = "/community", consumes = {"multipart/form-data"})
+    @PostMapping(value = "/api/community", consumes = {"multipart/form-data"})
     @ApiOperation(value="커뮤니티 글 저장 (사용 X / 포스트맨 이용)", notes="커뮤니티 글 저장 API")
     public Long save(
             CommunityFileVO communityFileVO) throws Exception{
@@ -82,7 +81,7 @@ public class CommunityController {
     }
 
     // 게시글 수정
-    @PutMapping("/community")
+    @PutMapping("/api/community")
     @ApiOperation(value="커뮤니티 글 수정 (사용 X / 포스트맨 이용)", notes="게시글 글 수정 API")
     public Long update(
             @RequestParam(value = "id") Long id,
@@ -136,7 +135,7 @@ public class CommunityController {
     }
 
     // 게시글 삭제
-    @DeleteMapping("/community")
+    @DeleteMapping("/api/community")
     @ApiOperation(value="커뮤니티 글 삭제", notes="게시글 글 삭제 API")
     @ApiImplicitParam(name = "id", value = "게시글 id", example = "1")
     public Long delete(@RequestParam Long id){
@@ -145,7 +144,7 @@ public class CommunityController {
     }
 
     // 카테고리에 따른 내 게시글 가져오기
-    @GetMapping("/community/my")
+    @GetMapping("/api/community/my")
     @ApiOperation(value="커뮤니티 내 글 조회", notes="커뮤니티 내 글 조회 API")
     @ApiImplicitParam(name = "email", value = "사용자 이메일")
     public List<CommunityListResponseDto> my(@RequestParam String email) throws Exception{

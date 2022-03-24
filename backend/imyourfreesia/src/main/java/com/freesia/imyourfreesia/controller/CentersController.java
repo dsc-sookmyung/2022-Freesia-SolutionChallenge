@@ -14,7 +14,6 @@ import java.util.List;
 @Api(tags={"Centers API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CentersController {
     private final CentersRepository centersRepository;

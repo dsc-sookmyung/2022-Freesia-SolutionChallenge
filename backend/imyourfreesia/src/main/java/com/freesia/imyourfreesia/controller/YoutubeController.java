@@ -17,7 +17,6 @@ import java.util.List;
 @Api(tags={"Youtube API"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class YoutubeController {
     private final YoutubeService youtubeService;
