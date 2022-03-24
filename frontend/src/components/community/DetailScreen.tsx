@@ -10,6 +10,8 @@ import {
   Alert,
   ToastAndroid,
   TextInput,
+  RefreshControl,
+  Image,
 } from "react-native";
 import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
 import { Divider, ProfileIcon } from "../../CommonComponent";
@@ -39,28 +41,62 @@ const renderItem = ({ item, index }, parallaxProps) => {
 };
 
 export default function DetailScreen({ navigation, route }: any) {
+  // 새로고침
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    axiosInstance
+      .get(`/likes/cnt?pid=${route.params.id}`)
+      .then(function (response) {
+        setLikes(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    axiosInstance
+      .get(`/comment?pid=${route.params.id}`)
+      .then(function (response) {
+        setCommentList(response.data);
+        setCommentCount(response.data.length);
+        setRefreshing(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
   const [writer, setWriter] = useState<string>(""); // 글쓴 사람 이메일
   const [email, setEmail] = useState<string>(""); // 로그인한 유저 이메일
   AsyncStorage.getItem("email").then((response) => setEmail(response));
   const [index, setIndex] = useState(0);
+  const [fileId, setFileId] = useState([]);
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
   useEffect(() => {
     axiosInstance
-      .get(`/auth/community?id=${route.params.id}`)
+      .get(`/community?id=${route.params.id}`)
       .then(function (response) {
-        setEntries(response.data.filePath);
+        setFileId(response.data.fileId);
         setWriter(response.data.email);
       })
       .catch(function (error) {
         console.log(error);
       });
   }, []);
+  useEffect(() => {
+    fileId.map((id) => {
+      axiosInstance.get(`/image/${id}`)
+        .then(function (response) {
+          entries.push(`data:image/png;base64,${response.data}`);
+        }).catch(function (error) {
+          console.log(error);
+        });
+    })
+  }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const [likes, setLikes] = useState(0);
   useEffect(() => {
     axiosInstance
-      .get(`/auth/likes/cnt?pid=${route.params.id}`)
+      .get(`/likes/cnt?pid=${route.params.id}`)
       .then(function (response) {
         setLikes(response.data);
       })
@@ -73,7 +109,7 @@ export default function DetailScreen({ navigation, route }: any) {
   const likeEvent = () => {
     if (focused == false) {
       axiosInstance
-        .post(`/auth/likes`, {
+        .post(`/api/likes`, {
           pid: route.params.id,
           uid: email,
         })
@@ -87,7 +123,7 @@ export default function DetailScreen({ navigation, route }: any) {
         });
     } else {
       axiosInstance
-        .delete(`/auth/likes?id=${route.params.id}`)
+        .delete(`/api/likes?id=${route.params.id}`)
         .then(function (response) {
           ToastAndroid.show("Canceled", ToastAndroid.SHORT);
           setFocused(!focused);
@@ -123,7 +159,7 @@ export default function DetailScreen({ navigation, route }: any) {
         onPress: () => {
           setModalVisible(!modalVisible);
           axiosInstance
-            .delete(`/auth/community?id=${route.params.id}`)
+            .delete(`/api/community?id=${route.params.id}`)
             .then(function (response) {
               ToastAndroid.show("Deleted Successfully!", ToastAndroid.SHORT);
               navigation.dispatch(StackActions.popToTop);
@@ -147,7 +183,7 @@ export default function DetailScreen({ navigation, route }: any) {
 
   useEffect(() => {
     axiosInstance
-      .get(`/auth/comment?pid=${route.params.id}`)
+      .get(`/comment?pid=${route.params.id}`)
       .then(function (response) {
         setCommentList(response.data);
         setCommentCount(response.data.length);
@@ -158,7 +194,7 @@ export default function DetailScreen({ navigation, route }: any) {
   }, []);
   const createComment = () => {
     axiosInstance
-      .post(`/auth/comment`, {
+      .post(`/api/comment`, {
         content: comment,
         pid: route.params.id,
         uid: email,
@@ -173,7 +209,7 @@ export default function DetailScreen({ navigation, route }: any) {
   };
   const editComment = (id: number) => {
     axiosInstance
-      .put(`/auth/comment?id=${id}`, {
+      .put(`/api/comment?id=${id}`, {
         content: newComment,
       })
       .then(function (response) {
@@ -191,7 +227,7 @@ export default function DetailScreen({ navigation, route }: any) {
         text: "Yes",
         onPress: () => {
           axiosInstance
-            .delete(`/auth/comment?id=${id}`)
+            .delete(`/api/comment?id=${id}`)
             .then(function (response) {
               ToastAndroid.show("Deleted Successfully!", ToastAndroid.SHORT);
             })
@@ -204,7 +240,7 @@ export default function DetailScreen({ navigation, route }: any) {
   };
 
   return (
-    <ScrollView>
+    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <Modal
         animationType="fade"
         transparent={true}
@@ -240,6 +276,8 @@ export default function DetailScreen({ navigation, route }: any) {
           <Ionicons name="menu-outline" size={40} color="black" />
         </TouchableOpacity>
       </View>
+
+      {/* <Image source={{ uri: `data:image/png;base64,${test}` }} style={{ width: 50, height: 50 }} /> */}
 
       <Carousel
         ref={carouselRef}

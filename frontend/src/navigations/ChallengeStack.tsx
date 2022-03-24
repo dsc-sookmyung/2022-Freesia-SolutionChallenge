@@ -17,7 +17,7 @@ export default function ChallengeStackScreen() {
   const GalleryBtn = () => {
     const navigation = useNavigation();
     return (
-      <TouchableOpacity onPress={() => navigation.navigate("ImageBrowser")}>
+      <TouchableOpacity onPress={() => navigation.navigate("ImageBrowser")} style={{ marginRight: 20 }}>
         <Ionicons name="camera" size={24} color="black" />
       </TouchableOpacity>
     );

@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  Alert,
   Dimensions,
   Image,
   ToastAndroid,
@@ -13,12 +12,9 @@ import {
 } from "react-native";
 import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
-import { StackActions } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-
-import axiosInstance from "../../axiosInstance";
-import { ipAddress } from "../../CommonComponent";
+import { BASE_URL } from "../../CommonComponent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -66,7 +62,7 @@ export default function SignupScreen({ navigation }: any) {
     console.log(body);
     // 서버에 전송
     axios
-      .post(`http://${ipAddress}:8080/api/generalJoin`, body, {
+      .post(`${BASE_URL}/generalJoin`, body, {
         headers: { "content-type": `multipart/form-data` },
         transformRequest: (data, headers) => {
           return body;
@@ -78,11 +74,8 @@ export default function SignupScreen({ navigation }: any) {
       .catch(function (error) {
         console.log(error);
       });
-    // access token으로 서버에서 유저 정보 받아옴
-    // nickname == null 이면 회원가입 창으로 이동
     navigation.navigate("Login");
     ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
-    //navigation.dispatch(StackActions.popToTop);
   };
 
   return (

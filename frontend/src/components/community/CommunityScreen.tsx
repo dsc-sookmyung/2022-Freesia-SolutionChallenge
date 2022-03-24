@@ -22,7 +22,7 @@ export default function CommunityScreen({ navigation }: any) {
   const isFocused = useIsFocused();
   useEffect(() => {
     axiosInstance
-      .get(`/auth/communities?category=${category}`)
+      .get(`/communities?category=${category}`)
       .then(function (response) {
         setPosts(response.data);
       })

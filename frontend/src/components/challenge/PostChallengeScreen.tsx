@@ -71,33 +71,33 @@ export default function PostChallengeScreen({ route, navigation }) {
     console.log(body);
     isCreate == false
       ? axiosInstance
-          .put(`/auth/challenge`, body, {
-            headers: { "content-type": `multipart/form-data` },
-            transformRequest: (data, headers) => {
-              return body;
-            },
-          })
-          .then(function (response) {
-            ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
-            navigation.navigate("ChallengeDetailScreen", { challengeId });
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
+        .put(`/api/challenge`, body, {
+          headers: { "content-type": `multipart/form-data` },
+          transformRequest: (data, headers) => {
+            return body;
+          },
+        })
+        .then(function (response) {
+          ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
+          navigation.navigate("ChallengeDetailScreen", { challengeId });
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
       : axiosInstance
-          .post(`/auth/challenge`, body, {
-            headers: { "content-type": `multipart/form-data` },
-            transformRequest: (data, headers) => {
-              return body;
-            },
-          })
-          .then(function (response) {
-            ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
-            navigation.navigate("ChallengeScreen");
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        .post(`/api/challenge`, body, {
+          headers: { "content-type": `multipart/form-data` },
+          transformRequest: (data, headers) => {
+            return body;
+          },
+        })
+        .then(function (response) {
+          ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
+          navigation.navigate("ChallengeScreen");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
   };
 
   const handleTitleChange = (payload) => setTitle(payload);
@@ -108,15 +108,15 @@ export default function PostChallengeScreen({ route, navigation }) {
       <ScrollView horizontal>
         {images
           ? images.map((image: any, index: number) => {
-              return (
-                <View style={{ flexDirection: "column" }} key={index}>
-                  <Image
-                    style={{ height: 100, width: 100 }}
-                    source={{ uri: image.uri }}
-                  />
-                </View>
-              );
-            })
+            return (
+              <View style={{ flexDirection: "column" }} key={index}>
+                <Image
+                  style={{ height: 100, width: 100 }}
+                  source={{ uri: image.uri }}
+                />
+              </View>
+            );
+          })
           : null}
       </ScrollView>
       <View style={styles.titleInputView}>

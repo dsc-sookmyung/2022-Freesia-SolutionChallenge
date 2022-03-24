@@ -12,7 +12,7 @@ export default function MyBookmarkList({ navigation }: any) {
 
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    axiosInstance.get(`/auth/mypage/bookmark?email=${email}`)  // 북마크 조회
+    axiosInstance.get(`/api/mypage/bookmark?email=${email}`)  // 북마크 조회
       .then(function (response) {
         setPosts(response.data);
       }).catch(function (error) {

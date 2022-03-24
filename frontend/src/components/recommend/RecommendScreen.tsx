@@ -8,10 +8,8 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-
 import YoutubePlayer from "react-native-youtube-iframe";
-
-import { ipAddress } from "../../CommonComponent";
+import { BASE_URL } from "../../CommonComponent";
 
 export default function RecommendScreen() {
   const height = Dimensions.get("window").height;
@@ -19,7 +17,7 @@ export default function RecommendScreen() {
 
   const getYoutubeData = async () => {
     try {
-      const response = await fetch(`http://${ipAddress}:8080/api/youtube`, {
+      const response = await fetch(`${BASE_URL}/youtube`, {
         method: "GET",
       });
       const json = await response.json();

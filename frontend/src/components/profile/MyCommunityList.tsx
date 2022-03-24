@@ -12,7 +12,7 @@ export default function MyCommunityList({ navigation }: any) {
 
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    axiosInstance.get(`/auth/mypage/community?email=${email}`)  // 내가 쓴 커뮤니티 글 조회
+    axiosInstance.get(`/api/mypage/community?email=${email}`)  // 내가 쓴 커뮤니티 글 조회
       .then(function (response) {
         setPosts(response.data);
       }).catch(function (error) {

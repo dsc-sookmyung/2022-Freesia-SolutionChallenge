@@ -25,7 +25,7 @@ export default function MyChallengeList() {
 
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    axiosInstance.get(`/auth/mypage/challenge?email=${email}`)  // 내가 쓴 챌린지 글 조회
+    axiosInstance.get(`/api/mypage/challenge?email=${email}`)  // 내가 쓴 챌린지 글 조회
       .then(function (response) {
         setPosts(response.data);
       }).catch(function (error) {

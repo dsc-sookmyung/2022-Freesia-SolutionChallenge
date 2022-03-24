@@ -14,8 +14,7 @@ import { StackActions } from "@react-navigation/native";
 import axios from "axios";
 import axiosInstance from "../../axiosInstance";
 import { theme } from "../../color";
-
-import { mainStyle, Divider, ipAddress } from "../../CommonComponent";
+import { mainStyle, Divider, BASE_URL } from "../../CommonComponent";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -33,7 +32,7 @@ export default function Login({ navigation }: any) {
 
     axios
       .post(
-        `http://${ipAddress}:8080/api/generalLogin?loginId=${id}&password=${pw}`
+        `${BASE_URL}/generalLogin?loginId=${id}&password=${pw}`
       )
       .then(function (response) {
         AsyncStorage.setItem("token", response.data.token); // 로컬에 토큰 저장
@@ -59,7 +58,7 @@ export default function Login({ navigation }: any) {
       const { authentication } = response;
       // 서버에 전송
       axios
-        .post(`http://${ipAddress}:8080/api/google`, {
+        .post(`${BASE_URL}/google`, {
           accessToken: authentication.accessToken,
         })
         .then(function (response) {

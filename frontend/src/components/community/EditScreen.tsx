@@ -26,7 +26,7 @@ export default function EditScreen({ navigation, route }: any) {
       body.append('files', files);
     });
 
-    axiosInstance.put(`/auth/community`, body, {
+    axiosInstance.put(`/api/community`, body, {
       headers: { 'content-type': 'multipart/form-data' },
       transformRequest: (data, headers) => {
         return body;

@@ -25,7 +25,7 @@ export default function ProfileScreen({ navigation }: any) {
   // 사용자 정보 조회
   const isFocused = useIsFocused();
   useEffect(() => {
-    axiosInstance.get(`/auth/user?email=${email}`)
+    axiosInstance.get(`/api/user?email=${email}`)
       .then(function (response) {
         setProfileImg(response.data.profileImg);
         setNickname(response.data.nickName);

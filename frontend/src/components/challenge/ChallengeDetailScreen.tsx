@@ -65,7 +65,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // 게시글 상세 정보 가져오기
   const getPostData = () => {
     axiosInstance
-      .get(`/auth/challenge?id=${challengeId}`)
+      .get(`/challenge?id=${challengeId}`)
       .then(function (response) {
         setPostData(response.data);
       })
@@ -79,7 +79,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
     const email = await AsyncStorage.getItem("email");
     setUserEmail(email);
     axiosInstance
-      .get(`/auth/cheering/mycheer?myEmail=${email}&yourEmail=${authorEmail}`)
+      .get(`/api/cheering/mycheer?myEmail=${email}&yourEmail=${authorEmail}`)
       .then(function (response) {
         setCheering(response.data);
       })
@@ -91,7 +91,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // 게시글의 이모티콘 데이터 가져오기
   const getEmojiData = () => {
     axiosInstance
-      .get(`/auth/emoticon/count?challengeId=${challengeId}`)
+      .get(`/emoticon/count?challengeId=${challengeId}`)
       .then(function (response) {
         setEmojiCount(response.data);
       })
@@ -103,7 +103,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // 게시글에 대한 사용자의 이모티콘 데이터 가져오기
   const getMyEmojiData = () => {
     axiosInstance
-      .get(`/auth/emoticon/my?challengeId=${challengeId}&email=${userEmail}`)
+      .get(`/api/emoticon/my?challengeId=${challengeId}&email=${userEmail}`)
       .then(function (response) {
         console.log(response.data);
         setMyEmojiCount(response.data);
@@ -137,7 +137,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   const handleDelete = () => {
     console.log("delete");
     axiosInstance
-      .delete(`/auth/challenge?id=${challengeId}`)
+      .delete(`/api/challenge?id=${challengeId}`)
       .then(function (response) {
         navigation.navigate("ChallengeScreen");
       })
@@ -155,7 +155,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // 게시글 작성자 이메일로 cheering id 찾기
   const getCheeringId = () => {
     axiosInstance
-      .get(`/auth/cheering/mycheer/list?userEmail=${userEmail}`)
+      .get(`/api/cheering/mycheer/list?userEmail=${userEmail}`)
       .then(function (response) {
         const cheering = response.data.find(isCheeringId);
         setCheeringId(cheering.id);
@@ -169,7 +169,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   const deleteCheering = () => {
     getCheeringId();
     axiosInstance
-      .delete(`/auth/cheering?id=${cheeringId}`)
+      .delete(`/api/cheering?id=${cheeringId}`)
       .then(function (response) {
         setCheering(false);
       })
@@ -181,7 +181,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // cheering 설정
   const postCheering = () => {
     axiosInstance
-      .post(`/auth/cheering`, { myEmail: userEmail, yourEmail: authorEmail })
+      .post(`/api/cheering`, { myEmail: userEmail, yourEmail: authorEmail })
       .then(function (response) {
         setCheering(true);
       })
@@ -202,7 +202,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
     setEmojiListShow(false);
 
     axiosInstance
-      .post(`/auth/emoticon`, {
+      .post(`/api/emoticon`, {
         challengeId: challengeId,
         email: userEmail,
         emoticonName: emojiName,
@@ -226,7 +226,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
     setMyEmojiCount(myEmojiCountSample);
 
     axiosInstance
-      .delete(`/auth/emoticon`, {
+      .delete(`/api/emoticon`, {
         data: {
           challengeId: challengeId,
           email: userEmail,

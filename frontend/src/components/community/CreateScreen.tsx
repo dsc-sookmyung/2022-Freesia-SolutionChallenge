@@ -49,7 +49,7 @@ export default function CreateScreen({ route, navigation }: any) {
       });
 
       axiosInstance
-        .post(`/auth/community`, body, {
+        .post(`/api/community`, body, {
           headers: { "content-type": `multipart/form-data` },
           transformRequest: (data, headers) => {
             return body;
@@ -83,15 +83,15 @@ export default function CreateScreen({ route, navigation }: any) {
         <ScrollView horizontal>
           {images
             ? images.map((image: any, index: number) => {
-                return (
-                  <View style={{ flexDirection: "column" }} key={index}>
-                    <Image
-                      style={{ height: 100, width: 100 }}
-                      source={{ uri: image.uri }}
-                    />
-                  </View>
-                );
-              })
+              return (
+                <View style={{ flexDirection: "column" }} key={index}>
+                  <Image
+                    style={{ height: 100, width: 100 }}
+                    source={{ uri: image.uri }}
+                  />
+                </View>
+              );
+            })
             : null}
         </ScrollView>
 

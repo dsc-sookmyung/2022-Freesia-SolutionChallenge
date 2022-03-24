@@ -14,7 +14,7 @@ export default function SettingScreen({ route, navigation }: any) {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    axiosInstance.get(`/auth/user?email=${email}`)
+    axiosInstance.get(`/api/user?email=${email}`)
       .then(function (response) {
         setProfileImg(response.data.profileImg);
         // setNickname(response.data.nickName);
@@ -39,7 +39,7 @@ export default function SettingScreen({ route, navigation }: any) {
 
   // 사용자 정보 조회
   useEffect(() => {
-    axiosInstance.get(`/auth/user?email=${email}`)
+    axiosInstance.get(`/api/user?email=${email}`)
       .then(function (response) {
         setProfileImg(response.data.profileImg);
         // setNickname(response.data.nickName);
@@ -77,7 +77,7 @@ export default function SettingScreen({ route, navigation }: any) {
     body.append('nickName', nickname);
     body.append('goalMsg', goalMsg);
 
-    axiosInstance.put(`/auth/user?email=${email}`, body, {
+    axiosInstance.put(`/api/user?email=${email}`, body, {
       headers: { 'content-type': `multipart/form-data` },
       transformRequest: (data, headers) => {
         return body;
@@ -93,7 +93,7 @@ export default function SettingScreen({ route, navigation }: any) {
   // 비밀번호 변경
   const onChangeNewPassword = (e: string) => setNewPassword(e);
   const changePassword = () => {
-    axiosInstance.put(`/auth/user/pw?email=${email}`, {
+    axiosInstance.put(`/api/user/pw?email=${email}`, {
       password: newPassword
     }).then(function (response) {
       ToastAndroid.show("Saved", ToastAndroid.SHORT);

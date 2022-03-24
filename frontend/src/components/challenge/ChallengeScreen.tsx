@@ -43,7 +43,7 @@ export default function ChallengScreen({ navigation }) {
 
   const getRankingList = () => {
     axiosInstance
-      .get(`/auth/cheering/ranking`)
+      .get(`/cheering/ranking`)
       .then(function (response) {
         setRankingData(response.data);
       })
@@ -63,7 +63,7 @@ export default function ChallengScreen({ navigation }) {
 
   const getPostList = () => {
     axiosInstance
-      .get(`/auth/challenge/list`)
+      .get(`/challenge/list`)
       .then(function (response) {
         setPostData(response.data);
       })
@@ -75,7 +75,7 @@ export default function ChallengScreen({ navigation }) {
   const getUserInfo = async () => {
     const email = await AsyncStorage.getItem("email");
     axiosInstance
-      .get(`/auth/user?email=${email}`)
+      .get(`/api/user?email=${email}`)
       .then(function (response) {
         setUserNickName(response.data.nickName);
       })
@@ -87,7 +87,7 @@ export default function ChallengScreen({ navigation }) {
   const getUserCheeringNum = async () => {
     const email = await AsyncStorage.getItem("email");
     axiosInstance
-      .get(`/auth/cheering/cnt?userEmail=${email}`)
+      .get(`/api/cheering/cnt?userEmail=${email}`)
       .then(function (response) {
         setUserCheering(response.data);
       })

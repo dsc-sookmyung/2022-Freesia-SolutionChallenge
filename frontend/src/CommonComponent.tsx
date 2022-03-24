@@ -5,7 +5,8 @@ import getFonts from "./getFonts";
 
 export const screenPadding = 20;
 export const screenWidth = Dimensions.get("window").width - screenPadding * 2;
-export const ipAddress = "172.30.1.25";
+export const ipAddress = "192.168.0.9";
+export const BASE_URL = `http://${ipAddress}:8080`;
 
 export const mainStyle = StyleSheet.create({
   mainView: {
@@ -57,7 +58,7 @@ export function defaultFont(props) {
       <AppLoading
         startAsync={LoadFonts}
         onFinish={() => setIsReady(true)}
-        onError={() => {}}
+        onError={() => { }}
       />
     );
   }
