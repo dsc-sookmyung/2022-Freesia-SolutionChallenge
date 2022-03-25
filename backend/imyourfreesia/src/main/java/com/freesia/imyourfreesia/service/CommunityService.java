@@ -59,9 +59,19 @@ public class CommunityService {
         return new CommunityResponseDto(community, fileId);
     }
 
-    // 게시글 수정
+    // 게시글 수정 - 사진 없을 때
     @Transactional
-    public Long update(Long id, CommunityUpdateRequestDto communityUpdateRequestDto, List<MultipartFile> files) throws Exception {
+    public Long update(Long id, CommunityUpdateRequestDto communityUpdateRequestDto) throws Exception {
+        Community community = communityRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id="+id));
+
+        community.update(communityUpdateRequestDto.getTitle(), communityUpdateRequestDto.getContent(), community.getCategory());
+
+        return id;
+    }
+
+    // 게시글 수정 - 사진 있을 때
+    @Transactional
+    public Long updateWithImage(Long id, CommunityUpdateRequestDto communityUpdateRequestDto, List<MultipartFile> files) throws Exception {
         Community community = communityRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id="+id));
 
         List<Photo> photoList = fileHandler.parseFileInfo(files);
@@ -77,6 +87,7 @@ public class CommunityService {
 
         return id;
     }
+
 
     // 게시글 삭제
     @Transactional

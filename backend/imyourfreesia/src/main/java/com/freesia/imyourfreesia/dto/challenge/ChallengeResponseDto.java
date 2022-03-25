@@ -15,20 +15,20 @@ public class ChallengeResponseDto {
     private String title;
     private String contents;
     //private List<Long> imageId;
-    private List<String> filePath;
+    private List<Long> filePathId;
     private LocalDate createdDate;
     private LocalDate modifiedDate;
     // private String createdDate;
     // private String modifiedDate;
 
 
-    public ChallengeResponseDto(Challenge entity, List<String> filePath){
+    public ChallengeResponseDto(Challenge entity, List<Long> filePath){
         this.id = entity.getId();
         this.uid = entity.getUid();
         this.title = entity.getTitle();
         this.contents = entity.getContents();
         //this.imageId = imageId;
-        this.filePath = filePath;
+        this.filePathId = filePath;
         this.createdDate =entity.getCreatedDate();
         this.modifiedDate = entity.getModifiedDate();
     }

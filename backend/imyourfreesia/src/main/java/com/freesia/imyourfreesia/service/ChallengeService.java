@@ -61,15 +61,24 @@ public class ChallengeService {
 
     /* 챌린지 상세 조회 */
     @Transactional(readOnly = true)
-    public ChallengeResponseDto findById(Long id, List<String> filePath){
+    public ChallengeResponseDto findById(Long id, List<Long> filePath){
         Challenge challenge = challengeRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
         return new ChallengeResponseDto(challenge, filePath);
     }
 
-    /* 챌린지 수정 */
+    /* 챌린지 수정 - 사진 없을 때 */
     @Transactional
-    public Challenge updateChallenge(Long id, ChallengeUpdateRequestDto requestDto, List<MultipartFile> files) throws Exception{
+    public Challenge updateChallenge(Long id, ChallengeUpdateRequestDto requestDto) throws Exception{
+        Challenge challenge = challengeRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+
+        return challenge.update(requestDto.getTitle(),requestDto.getContents());
+    }
+
+    /* 챌린지 수정 - 사진 있을 때 */
+    @Transactional
+    public Challenge updateChallengeImage(Long id, ChallengeUpdateRequestDto requestDto, List<MultipartFile> files) throws Exception{
         Challenge challenge = challengeRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 

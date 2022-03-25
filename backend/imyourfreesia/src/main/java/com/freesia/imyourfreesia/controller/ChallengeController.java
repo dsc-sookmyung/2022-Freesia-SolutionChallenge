@@ -80,11 +80,12 @@ public class ChallengeController {
         List<ChallengePhotoResponseDto> photoResponseDtoList =
                 challengePhotoService.findAllByChallenge(id);
 
-        List<String> filePath = new ArrayList<>();
-        String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
+        List<Long> filePath = new ArrayList<>();
+        //String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
 
         for(ChallengePhotoResponseDto photoResponseDto : photoResponseDtoList)
-            filePath.add(absolutePath + photoResponseDto.getFilePath());
+            //filePath.add(absolutePath + photoResponseDto.getFilePath());
+            filePath.add(photoResponseDto.getFilePathId());
 
         return ResponseEntity.ok()
                 .body(challengeService.findById(id, filePath));
@@ -105,46 +106,53 @@ public class ChallengeController {
                         .contents(challengeSaveVO.getContents())
                         .build();
 
-        List<ChallengePhoto> dbPhotoList = challengePhotoRepository.findAllByChallengeId(id);
-        List<MultipartFile> multipartList = challengeSaveVO.getFiles();
-        List<MultipartFile> addFileList = new ArrayList<>();
+         if(challengeSaveVO.getFiles() != null) {
+             List<ChallengePhoto> dbPhotoList = challengePhotoRepository.findAllByChallengeId(id);
+             List<MultipartFile> multipartList = challengeSaveVO.getFiles();
+             List<MultipartFile> addFileList = new ArrayList<>();
 
-        if(CollectionUtils.isEmpty(dbPhotoList)){
-            if(!CollectionUtils.isEmpty(multipartList)){
-                for(MultipartFile multipartFile : multipartList)
-                    addFileList.add(multipartFile);
-            }
-        }else{
-            if (CollectionUtils.isEmpty(multipartList)) {
-                for(ChallengePhoto dbPhoto : dbPhotoList)
-                    challengePhotoService.deletePhoto(dbPhoto.getId());
-            }else{
-                List<String> dbOriginNameList = new ArrayList<>();
+             if(CollectionUtils.isEmpty(dbPhotoList)){
+                 if(!CollectionUtils.isEmpty(multipartList)){
+                     for(MultipartFile multipartFile : multipartList)
+                         addFileList.add(multipartFile);
+                 }
+             }else {
+                 if (CollectionUtils.isEmpty(multipartList)) {
+                     for (ChallengePhoto dbPhoto : dbPhotoList)
+                         challengePhotoService.deletePhoto(dbPhoto.getId());
+                 } else {
+                     List<String> dbOriginNameList = new ArrayList<>();
 
-                for(ChallengePhoto dbPhoto : dbPhotoList){
-                    ChallengePhotoDto dbPhotoDto = challengePhotoService.findByImageId(dbPhoto.getId());
-                    String dbOrigFileName = dbPhotoDto.getOrigFileName();
+                     for (ChallengePhoto dbPhoto : dbPhotoList) {
+                         ChallengePhotoDto dbPhotoDto = challengePhotoService.findByImageId(dbPhoto.getId());
+                         String dbOrigFileName = dbPhotoDto.getOrigFileName();
 
-                    if(!multipartList.contains(dbOrigFileName)){
-                        challengePhotoService.deletePhoto(dbPhoto.getId());
-                    }else{
-                        dbOriginNameList.add(dbOrigFileName);
-                    }
+                         if (!multipartList.contains(dbOrigFileName)) {
+                             challengePhotoService.deletePhoto(dbPhoto.getId());
+                         } else {
+                             dbOriginNameList.add(dbOrigFileName);
+                         }
 
-                    for (MultipartFile multipartFile : multipartList) {
+                         for (MultipartFile multipartFile : multipartList) {
 
-                        String multipartOrigName = multipartFile.getOriginalFilename();
-                        if(!dbOriginNameList.contains(multipartOrigName)){
-                            addFileList.add(multipartFile);
-                        }
-                    }
-                }
+                             String multipartOrigName = multipartFile.getOriginalFilename();
+                             if (!dbOriginNameList.contains(multipartOrigName)) {
+                                 addFileList.add(multipartFile);
+                             }
+                         }
+                     }
 
-            }
-        }
+                 }
+             }
 
-        return ResponseEntity.ok()
-                .body(challengeService.updateChallenge(id, requestDto, addFileList).getId());
+             return ResponseEntity.ok()
+                     .body(challengeService.updateChallengeImage(id, requestDto, addFileList).getId());
+         }
+
+        else {
+             return ResponseEntity.ok()
+                     .body(challengeService.updateChallenge(id, requestDto).getId());
+         }
     }
 
     /* 챌린지 삭제 */

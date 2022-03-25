@@ -100,44 +100,50 @@ public class CommunityController {
                         .category(communityFileVO.getCategory())
                         .build();
 
-        List<Photo> dbPhotoList = photoRepository.findAllByCommunityId(id);
-        List<MultipartFile> multipartList = communityFileVO.getFiles();
-        List<MultipartFile> addFileList = new ArrayList<>();
+        if(communityFileVO.getFiles() != null) {
+            List<Photo> dbPhotoList = photoRepository.findAllByCommunityId(id);
+            List<MultipartFile> multipartList = communityFileVO.getFiles();
+            List<MultipartFile> addFileList = new ArrayList<>();
 
-        if(CollectionUtils.isEmpty(dbPhotoList)) {
-            if(!CollectionUtils.isEmpty(multipartList)) {
-                for (MultipartFile multipartFile : multipartList)
-                    addFileList.add(multipartFile);
-            }
-        }
-        else {
-            if(CollectionUtils.isEmpty(multipartList)) {
-                for(Photo dbPhoto : dbPhotoList)
-                    photoService.delete(dbPhoto.getId());
+            if(CollectionUtils.isEmpty(dbPhotoList)) {
+                if(!CollectionUtils.isEmpty(multipartList)) {
+                    for (MultipartFile multipartFile : multipartList)
+                        addFileList.add(multipartFile);
+                }
             }
             else {
-                List<String> dbOriginNameList = new ArrayList<>();
-
-                for(Photo dbPhoto : dbPhotoList) {
-                    PhotoDto dbPhotoDto = photoService.findByFileId(dbPhoto.getId());
-                    String dbOrigFileName = dbPhotoDto.getOrigFileName();
-
-                    if(!multipartList.contains(dbOrigFileName))
+                if(CollectionUtils.isEmpty(multipartList)) {
+                    for(Photo dbPhoto : dbPhotoList)
                         photoService.delete(dbPhoto.getId());
-                    else
-                        dbOriginNameList.add(dbOrigFileName);
                 }
+                else {
+                    List<String> dbOriginNameList = new ArrayList<>();
 
-                for (MultipartFile multipartFile : multipartList) {
-                    String multipartOrigName = multipartFile.getOriginalFilename();
-                    if(!dbOriginNameList.contains(multipartOrigName)){
-                        addFileList.add(multipartFile);
+                    for(Photo dbPhoto : dbPhotoList) {
+                        PhotoDto dbPhotoDto = photoService.findByFileId(dbPhoto.getId());
+                        String dbOrigFileName = dbPhotoDto.getOrigFileName();
+
+                        if(!multipartList.contains(dbOrigFileName))
+                            photoService.delete(dbPhoto.getId());
+                        else
+                            dbOriginNameList.add(dbOrigFileName);
+                    }
+
+                    for (MultipartFile multipartFile : multipartList) {
+                        String multipartOrigName = multipartFile.getOriginalFilename();
+                        if(!dbOriginNameList.contains(multipartOrigName)){
+                            addFileList.add(multipartFile);
+                        }
                     }
                 }
             }
+
+            return communityService.updateWithImage(id, communityUpdateRequestDto, addFileList);
         }
 
-        return communityService.update(id, communityUpdateRequestDto, addFileList);
+        else {
+            return communityService.update(id, communityUpdateRequestDto);
+        }
     }
 
     // 게시글 삭제
