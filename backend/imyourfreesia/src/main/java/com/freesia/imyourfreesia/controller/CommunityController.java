@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Api(tags={"Community API"})
@@ -171,7 +172,7 @@ public class CommunityController {
             produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
     )
     @ApiOperation(value="커뮤니티 이미지 ByteArray 조회", notes="커뮤니티 이미지 ByteArray 조회 API")
-    public ResponseEntity<byte[]> getImage(@RequestParam Long id) throws IOException {
+    public ResponseEntity<String> getImage(@RequestParam Long id) throws IOException {
         PhotoDto photoDto = photoService.findByFileId(id);
         String absolutePath
                 = new File("").getAbsolutePath() + File.separator + File.separator;
@@ -179,9 +180,10 @@ public class CommunityController {
 
         InputStream imageStream = new FileInputStream(absolutePath + path);
         byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+        String encodedString = Base64.getEncoder().encodeToString(imageByteArray);
         imageStream.close();
 
-        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
+        return new ResponseEntity<>(encodedString, HttpStatus.OK);
     }
 
 }

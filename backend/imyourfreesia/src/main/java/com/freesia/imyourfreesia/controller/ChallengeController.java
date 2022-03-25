@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Api(tags={"Challenge API"})
@@ -162,7 +163,7 @@ public class ChallengeController {
             value = "/challenge/image",
             produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
     )
-    public ResponseEntity<byte[]> getImage(@RequestParam Long id) throws IOException {
+    public ResponseEntity<String> getImage(@RequestParam Long id) throws IOException {
         ChallengePhotoDto photoDto = challengePhotoService.findByImageId(id);
         String absolutePath
                 = new File("").getAbsolutePath() + File.separator + File.separator;
@@ -170,9 +171,10 @@ public class ChallengeController {
 
         InputStream imageStream = new FileInputStream(absolutePath + path);
         byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+        String encodedString = Base64.getEncoder().encodeToString(imageByteArray);
         imageStream.close();
 
-        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
+        return new ResponseEntity<>(encodedString, HttpStatus.OK);
     }
 
 }

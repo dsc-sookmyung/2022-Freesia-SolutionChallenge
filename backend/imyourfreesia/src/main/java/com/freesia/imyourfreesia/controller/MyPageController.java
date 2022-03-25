@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 
 @Api(tags={"MyPage API"})
@@ -59,15 +60,18 @@ public class MyPageController {
             value = "/user/image",
             produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
     )
-    public ResponseEntity<byte[]> getUserImage(@RequestParam String email) throws IOException {
+    public ResponseEntity<String> getUserImage(@RequestParam String email) throws IOException {
 
         User user = userRepository.findByEmail(email);
 
         InputStream imageStream = new FileInputStream(user.getProfileImg());
         byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+
+        String encodedString = Base64.getEncoder().encodeToString(imageByteArray);
+
         imageStream.close();
 
-        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
+        return new ResponseEntity<>(encodedString, HttpStatus.OK);
     }
 
     /* 유저 정보 수정 */
