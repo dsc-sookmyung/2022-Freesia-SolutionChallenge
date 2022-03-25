@@ -42,6 +42,7 @@ public class CheeringService {
         return cheeringRepository.countByYourEmail(userEmail);
     }
 
+    /* 응원 랭킹 Top 10 조회 */
     @Transactional
     public List<Map.Entry<String, Long>> ranking() {
 
@@ -50,7 +51,7 @@ public class CheeringService {
         Map<String, Long> countList = new HashMap<>();
 
         for(User user: userList) {
-            countList.put(user.getEmail(), countByCreatedDateBetweenAndYourEmail(user.getEmail()));
+            countList.put(user.getNickName(), countByCreatedDateBetweenAndYourEmail(user.getEmail()));
         }
 
         List<Map.Entry<String, Long>> ranking_list = new ArrayList<Map.Entry<String, Long>>(countList.entrySet());
