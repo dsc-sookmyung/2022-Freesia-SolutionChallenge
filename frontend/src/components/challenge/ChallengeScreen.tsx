@@ -92,7 +92,7 @@ export default function ChallengScreen({ navigation }) {
   const getUserCheeringNum = async () => {
     const email = await AsyncStorage.getItem("email");
     axiosInstance
-      .get(`/api/cheering/cnt?userEmail=${email}`)
+      .get(`/cheering/cnt?userEmail=${email}`)
       .then(function (response) {
         setUserCheering(response.data);
       })

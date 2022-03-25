@@ -6,6 +6,7 @@ import SettingScreen from "../components/profile/SettingScreen";
 import LoginScreen from "../components/login/LoginScreen";
 import SignupScreen from "../components/login/SignupScreen";
 import CustomerServiceScreen from "../components/profile/CustomerServiceScreen";
+import SocialSignupScreen from "../components/login/SocialSignupScreen";
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,11 @@ export default function ProfileStack() {
       <Stack.Screen
         name="Signup"
         component={SignupScreen}
+        options={{ title: "Sign Up" }}
+      />
+      <Stack.Screen
+        name="SocialSignup"
+        component={SocialSignupScreen}
         options={{ title: "Sign Up" }}
       />
       <Stack.Screen

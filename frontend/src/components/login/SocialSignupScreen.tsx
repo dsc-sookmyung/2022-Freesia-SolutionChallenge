@@ -14,6 +14,8 @@ import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { StackActions } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axiosInstance from "../../axiosInstance";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -35,12 +37,36 @@ export default function SocialSignupScreen({ navigation }: any) {
   };
   const onChangeNickname = (e: string) => setNickname(e);
   const onChangeGoal = (e: string) => setGoal(e);
-  const save = () => {
-    // 서버에 전송axiosInstance
 
-    ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
-    navigation.dispatch(StackActions.popToTop);
+  // localStorage에 저장된 이메일 불러오기
+  const [email, setEmail] = useState<string>("");
+  AsyncStorage.getItem('email').then(response => setEmail(response));
+
+  // 회원정보 수정
+  const save = () => {
+    let body = new FormData();
+    let img: any = {
+      uri: profileImage,
+      type: 'image/png',
+      name: 'profile.png'
+    };
+    body.append('profileImg', img);
+    body.append('nickName', nickname);
+    body.append('goalMsg', goal);
+
+    axiosInstance.put(`/api/user?email=${email}`, body, {
+      headers: { 'content-type': `multipart/form-data` },
+      transformRequest: (data, headers) => {
+        return body;
+      },
+    }).then(function (response) {
+      ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
+      navigation.dispatch(StackActions.popToTop);
+    }).catch(function (error) {
+      console.log(error);
+    });
   };
+
   return (
     <View style={styles.container}>
       <View

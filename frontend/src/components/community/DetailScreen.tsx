@@ -45,6 +45,15 @@ export default function DetailScreen({ navigation, route }: any) {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    fileId.map((id) => {
+      axiosInstance.get(`community/image/?id=${id}`)
+        .then(function (response) {
+          imagePath.push(response.data);
+          entries.push(`data:image/png;base64,${response.data};`);
+        }).catch(function (error) {
+          console.log(error);
+        });
+    })
     axiosInstance
       .get(`/likes/cnt?pid=${route.params.id}`)
       .then(function (response) {
@@ -72,6 +81,7 @@ export default function DetailScreen({ navigation, route }: any) {
   const [index, setIndex] = useState(0);
   const [fileId, setFileId] = useState([]);
   const [entries, setEntries] = useState([]);
+  const [imagePath, setImagePath] = useState([]);
   const carouselRef = useRef(null);
   useEffect(() => {
     axiosInstance
@@ -88,6 +98,7 @@ export default function DetailScreen({ navigation, route }: any) {
     fileId.map((id) => {
       axiosInstance.get(`community/image/?id=${id}`)
         .then(function (response) {
+          imagePath.push(response.data);
           entries.push(`data:image/png;base64,${response.data};`);
         }).catch(function (error) {
           console.log(error);
@@ -153,6 +164,7 @@ export default function DetailScreen({ navigation, route }: any) {
       id: route.params.id,
       category: route.params.category,
       images: entries,
+      imagePath: imagePath,
       title: route.params.title,
       content: route.params.content,
     });

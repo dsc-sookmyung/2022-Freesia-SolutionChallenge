@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity, View, TextInput, Image,
 import { Ionicons } from '@expo/vector-icons';
 import axiosInstance from "../../axiosInstance";
 import { StackActions } from "@react-navigation/native";
+import base64 from 'react-native-base64'
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -17,14 +18,6 @@ export default function EditScreen({ navigation, route }: any) {
     body.append('title', title);
     body.append('content', content);
     body.append('id', route.params.id);
-    route.params.images.map((image: any, index: number) => {
-      let files: any = {
-        uri: image,
-        type: 'image/png',
-        name: `${index}.png`
-      };
-      body.append('files', files);
-    });
 
     axiosInstance.put(`/api/community`, body, {
       headers: { 'content-type': 'multipart/form-data' },

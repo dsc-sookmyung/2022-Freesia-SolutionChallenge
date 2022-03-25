@@ -69,6 +69,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
     axiosInstance
       .get(`/challenge?id=${challengeId}`)
       .then(function (response) {
+        console.log(response.data)
         setPostData(response.data);
       })
       .catch(function (error) {

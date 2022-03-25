@@ -53,6 +53,20 @@ export default function Login({ navigation }: any) {
       "47936525334-nbb6as274m9vd73h4ejlaiddoe160jtj.apps.googleusercontent.com",
   });
 
+  // 사용자 정보 조회
+  const [nickname, setNickname] = useState<string>();
+  const [email, setEmail] = useState<string>("");
+  AsyncStorage.getItem('email').then(response => setEmail(response));
+
+  const getUser = async () => {
+    await axiosInstance.get(`/api/user?email=${email}`)
+      .then(function (response) {
+        setNickname(response.data.nickName);
+      }).catch(function (error) {
+        console.log(error);
+      });
+  };
+
   React.useEffect(() => {
     if (response?.type === "success") {
       const { authentication } = response;
@@ -69,7 +83,12 @@ export default function Login({ navigation }: any) {
         .catch(function (error) {
           console.log(error);
         });
-      navigation.dispatch(StackActions.popToTop());
+      getUser();
+      if (nickname == null) {
+        navigation.navigate('SocialSignup');
+      } else {
+        navigation.dispatch(StackActions.popToTop());
+      };
     }
   }, [response]);
 

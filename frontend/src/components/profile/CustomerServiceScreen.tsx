@@ -7,9 +7,9 @@ export default function CustomerServiceScreen({ navigation }: any) {
 
   const developers = [
     { "profile": "https://avatars.githubusercontent.com/u/61882016?v=4", "name": "Kim Minji", "position": "front-end", "github": "1914386", "email": "sml07113@gmail.com" },
-    { "profile": "https://avatars.githubusercontent.com/u/72160826?v=4", "name": "Seo Myojin", "position": "front-end", "github": "nrj022", "email": "@" },
-    { "profile": "https://avatars.githubusercontent.com/u/87821678?v=4", "name": "Kim Gagyung", "position": "back-end", "github": "GaGa-Kim", "email": "@" },
-    { "profile": "http://cdn.shopify.com/s/files/1/1419/7120/products/Freesia_Single_Yellow.SHUT.jpg?v=1571439561", "name": "Choi Gahui", "position": "back-end", "github": "cutehumanS2", "email": "@" },
+    { "profile": "https://avatars.githubusercontent.com/u/72160826?v=4", "name": "Seo Myojin", "position": "front-end", "github": "nrj022", "email": "nrj022@sookmyung.ac.kr" },
+    { "profile": "https://avatars.githubusercontent.com/u/87821678?v=4", "name": "Kim Ga Gyeong", "position": "back-end", "github": "GaGa-Kim", "email": "wn8925@sookmyung.ac.kr" },
+    { "profile": "http://cdn.shopify.com/s/files/1/1419/7120/products/Freesia_Single_Yellow.SHUT.jpg?v=1571439561", "name": "Choi Ga Hui", "position": "back-end", "github": "cutehumanS2", "email": "cherrycoke@sookmyung.ac.kr" },
   ];
 
   const openForm = () => {
