@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ToastAndroid,
   TextInput,
+  Alert,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
@@ -24,6 +25,28 @@ export default function Login({ navigation }: any) {
   const [pw, setPw] = useState<string>("");
   const onChangeId = (e: string) => setId(e);
   const onChangePw = (e: string) => setPw(e);
+
+  const idNotCompleteAlert = () => {
+    Alert.alert("", "Please Enter Your Id", [{ text: "OK" }]);
+  };
+
+  const pwNotCompleteAlert = () => {
+    Alert.alert("", "Please Enter Your Password", [{ text: "OK" }]);
+  };
+
+  const loginFailAlert = () => {
+    Alert.alert("Login Failed", "Please Check Your Id and Password", [
+      { text: "OK" },
+    ]);
+  };
+
+  const checkFormComplete = () => {
+    id == "" ? (pw == "" ? idNotCompleteAlert() : null) : null;
+    pw == "" ? pwNotCompleteAlert() : null;
+
+    id != "" && pw != "" ? login() : null;
+  };
+
   const login = () => {
     let body = {
       loginId: id,
@@ -31,18 +54,19 @@ export default function Login({ navigation }: any) {
     };
 
     axios
-      .post(
-        `${BASE_URL}/generalLogin?loginId=${id}&password=${pw}`
-      )
+      .post(`${BASE_URL}/generalLogin?loginId=${id}&password=${pw}`)
       .then(function (response) {
         AsyncStorage.setItem("token", response.data.token); // 로컬에 토큰 저장
         AsyncStorage.setItem("email", response.data.email); // 로컬에 이메일 저장
       })
+      .then(() => {
+        ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
+        navigation.dispatch(StackActions.popToTop);
+      })
       .catch(function (error) {
+        loginFailAlert();
         console.log(error);
       });
-    ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
-    navigation.dispatch(StackActions.popToTop);
   };
 
   // 구글 로그인
@@ -56,13 +80,15 @@ export default function Login({ navigation }: any) {
   // 사용자 정보 조회
   const [nickname, setNickname] = useState<string>();
   const [email, setEmail] = useState<string>("");
-  AsyncStorage.getItem('email').then(response => setEmail(response));
+  AsyncStorage.getItem("email").then((response) => setEmail(response));
 
   const getUser = async () => {
-    await axiosInstance.get(`/api/user?email=${email}`)
+    await axiosInstance
+      .get(`/api/user?email=${email}`)
       .then(function (response) {
         setNickname(response.data.nickName);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -85,10 +111,10 @@ export default function Login({ navigation }: any) {
         });
       getUser();
       if (nickname == null) {
-        navigation.navigate('SocialSignup');
+        navigation.navigate("SocialSignup");
       } else {
         navigation.dispatch(StackActions.popToTop());
-      };
+      }
     }
   }, [response]);
 
@@ -98,60 +124,53 @@ export default function Login({ navigation }: any) {
 
   return (
     <View style={{ ...styles.login, ...mainStyle.mainView }}>
-      <Text style={styles.loginTitle}>Login</Text>
-      <View style={styles.inputForm}>
-        <Text style={styles.text}>ID</Text>
-        <TextInput
-          value={id}
-          onChangeText={onChangeId}
-          style={styles.textInput}
-        />
-      </View>
-      <View style={styles.inputForm}>
-        <Text style={styles.text}>Password</Text>
-        <TextInput
-          value={pw}
-          onChangeText={onChangePw}
-          style={styles.textInput}
-          secureTextEntry={true}
-        />
-      </View>
-      <TouchableOpacity onPress={() => login()}>
+      <Text style={styles.loginTitle}>LOGIN</Text>
+      <TextInput
+        placeholder="Id"
+        value={id}
+        onChangeText={onChangeId}
+        style={mainStyle.textInput}
+      />
+      <TextInput
+        placeholder="Password"
+        value={pw}
+        onChangeText={onChangePw}
+        style={mainStyle.textInput}
+        secureTextEntry={true}
+      />
+      <TouchableOpacity onPress={() => checkFormComplete()}>
         <View
           style={{
-            ...styles.socialLogin,
-            backgroundColor: theme.headerBg,
-            marginVertical: 20,
+            ...mainStyle.buttonContainer,
           }}
         >
-          <Text style={{ ...styles.socialLoginTitle, color: "black" }}>
-            Login
-          </Text>
+          <Text style={{ ...mainStyle.buttonTitle }}>LOGIN</Text>
         </View>
       </TouchableOpacity>
-      <Text>If you don't have an account?</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-        <Text style={{ textDecorationLine: "underline" }}>Sign Up</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row" }}>
+        <Text>Don't have an account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+          <Text style={styles.signupText}>SIGN UP</Text>
+        </TouchableOpacity>
+      </View>
 
-      <Divider />
+      <View style={styles.orDivider}>
+        <Divider />
+        <Text style={styles.orText}>OR</Text>
+        <Divider />
+      </View>
       {/* <Text style={styles.loginTitle}>Social Login</Text> */}
-      <TouchableOpacity>
-        <View style={{ ...styles.socialLogin, backgroundColor: "#FFE500" }}>
-          <Text style={{ ...styles.socialLoginTitle, color: "#684848" }}>
-            KaKao Login
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => promptAsync()}>
-        <View style={{ ...styles.socialLogin, backgroundColor: "#309CFF" }}>
-          <Text style={styles.socialLoginTitle}>Google Login</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <View style={{ ...styles.socialLogin, backgroundColor: "#03CF5D" }}>
-          <Text style={styles.socialLoginTitle}>Naver Login</Text>
-        </View>
+      <TouchableOpacity
+        style={{
+          ...mainStyle.buttonContainer,
+          backgroundColor: "#309CFF",
+          marginVertical: 0,
+        }}
+        onPress={() => promptAsync()}
+      >
+        <Text style={{ ...mainStyle.buttonTitle, color: "white" }}>
+          GOOGLE LOGIN
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -165,38 +184,15 @@ const styles = StyleSheet.create({
   },
   loginTitle: {
     fontSize: 25,
+    color: "black",
     fontWeight: "700",
     marginBottom: 20,
   },
-  loginForm: {
-    position: "relative",
-  },
-  text: {
-    flex: 1,
-    fontSize: 20,
-  },
-  inputForm: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  textInput: {
-    flex: 2,
-    width: 300,
-    elevation: 2,
-    borderRadius: 50,
-    backgroundColor: "white",
-    margin: 15,
-  },
-  socialLogin: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 300,
-    height: 40,
-    borderRadius: 20,
-    marginVertical: 6,
-  },
-  socialLoginTitle: {
-    color: "white",
-    fontSize: 18,
+  orDivider: { flexDirection: "row", marginVertical: 20 },
+  orText: { marginHorizontal: 20, color: "lightgrey" },
+  signupText: {
+    marginLeft: 8,
+    color: "black",
+    fontWeight: "bold",
   },
 });
