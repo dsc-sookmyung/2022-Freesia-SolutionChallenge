@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Ionicons, EvilIcons } from '@expo/vector-icons';
+import {
+  Alert,
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { theme } from "../../color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
 import { useIsFocused } from "@react-navigation/native";
-import { screenWidth } from "../../CommonComponent";
+import { screenWidth, ProfileIcon } from "../../CommonComponent";
 
 const numColumns = 3;
 
 const PostItem = ({ item }) => {
   return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      style={styles.postView}
-    >
+    <TouchableOpacity activeOpacity={0.8} style={styles.postView}>
       <Image source={{ uri: item.filePath }} style={styles.image} />
     </TouchableOpacity>
   );
 };
 
 export default function ProfileScreen({ navigation }: any) {
-
   const [profileImg, setProfileImg] = useState<string>();
   const [nickname, setNickname] = useState<string>();
   const [goalMsg, setGoalMsg] = useState<string>();
@@ -30,26 +35,30 @@ export default function ProfileScreen({ navigation }: any) {
   // localStorage에 저장된 이메일, 토큰 불러오기
   const [token, setToken] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  AsyncStorage.getItem('token').then(response => setToken(response));
-  AsyncStorage.getItem('email').then(response => setEmail(response));
+  AsyncStorage.getItem("token").then((response) => setToken(response));
+  AsyncStorage.getItem("email").then((response) => setEmail(response));
 
   // 사용자 정보 조회
   const isFocused = useIsFocused();
   const getUser = () => {
-    axiosInstance.get(`/api/user?email=${email}`)
+    axiosInstance
+      .get(`/api/user?email=${email}`)
       .then(function (response) {
         setNickname(response.data.nickName);
         setGoalMsg(response.data.goalMsg);
         setDays(response.data.days);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
   };
   const getProfileImg = () => {
-    axiosInstance.get(`/api/user/image?email=${email}`)
+    axiosInstance
+      .get(`/api/user/image?email=${email}`)
       .then(function (response) {
         setProfileImg(`data:image/png;base64,${response.data}`);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -60,20 +69,20 @@ export default function ProfileScreen({ navigation }: any) {
 
   // 토큰이 없으면 로그인 알림 출력
   if (!token) {
-    Alert.alert('Warning', 'You can use it after login.', [
+    Alert.alert("Warning", "You can use it after login.", [
       {
         onPress: () => {
-          navigation.navigate('Login');
-        }
+          navigation.navigate("Login");
+        },
       },
     ]);
-  };
+  }
 
   const gotoSetting = () => {
-    navigation.navigate('SettingScreen', {
+    navigation.navigate("SettingScreen", {
       email: email,
       nickname: nickname,
-      goalMsg: goalMsg
+      goalMsg: goalMsg,
     });
   };
 
@@ -83,10 +92,12 @@ export default function ProfileScreen({ navigation }: any) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    axiosInstance.get(`/api/mypage/${tabList[activeTab]}?email=${email}`)
+    axiosInstance
+      .get(`/api/mypage/${tabList[activeTab]}?email=${email}`)
       .then(function (response) {
         setPosts(response.data);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
   }, [activeTab]);
@@ -99,6 +110,7 @@ export default function ProfileScreen({ navigation }: any) {
             <FlatList
               data={posts}
               renderItem={PostItem}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(item) => item.id}
               numColumns={numColumns}
             />
@@ -108,60 +120,83 @@ export default function ProfileScreen({ navigation }: any) {
       case "community":
         return (
           <ScrollView style={styles.innerContainer}>
-            {posts.slice(0).reverse().map((post, index) =>
-              <View key={index}>
-                <TouchableOpacity style={styles.list}>
-                  <View>
-                    <Text style={styles.category}>{post.category}</Text>
-                  </View>
-                  <View style={styles.contentArea}>
-                    <Text style={styles.title}>{post.title}</Text>
-                    <Text numberOfLines={2}>{post.content}</Text>
-                  </View>
-                  <View>
-                    <Text style={styles.date}>{post.createdDate}</Text>
-                  </View>
-                </TouchableOpacity>
-                <View style={{ width: "100%", height: 2, backgroundColor: theme.devideBg }}></View>
-              </View>
-            )}
+            {posts
+              .slice(0)
+              .reverse()
+              .map((post, index) => (
+                <View key={index}>
+                  <TouchableOpacity style={styles.list}>
+                    <View>
+                      <Text style={styles.category}>{post.category}</Text>
+                    </View>
+                    <View style={styles.contentArea}>
+                      <Text style={styles.title}>{post.title}</Text>
+                      <Text numberOfLines={2}>{post.content}</Text>
+                    </View>
+                    <View>
+                      <Text style={styles.date}>{post.createdDate}</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      width: "100%",
+                      height: 2,
+                      backgroundColor: theme.devideBg,
+                    }}
+                  ></View>
+                </View>
+              ))}
           </ScrollView>
         );
         break;
       case "bookmark":
         return (
           <ScrollView style={styles.innerContainer}>
-            {posts.slice(0).reverse().map((post, index) =>
-              <View key={index}>
-                <TouchableOpacity style={styles.list}>
-                  <View>
-                    <Text style={styles.category}>{post.pcategory}</Text>
-                  </View>
-                  <View style={styles.contentArea}>
-                    <Text style={styles.title}>{post.ptitle}</Text>
-                    <Text numberOfLines={2}>{post.pcontent}</Text>
-                  </View>
-                </TouchableOpacity>
-                <View style={{ width: "100%", height: 2, backgroundColor: theme.devideBg }}></View>
-              </View>
-            )}
+            {posts
+              .slice(0)
+              .reverse()
+              .map((post, index) => (
+                <View key={index}>
+                  <TouchableOpacity style={styles.list}>
+                    <View>
+                      <Text style={styles.category}>{post.pcategory}</Text>
+                    </View>
+                    <View style={styles.contentArea}>
+                      <Text style={styles.title}>{post.ptitle}</Text>
+                      <Text numberOfLines={2}>{post.pcontent}</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      width: "100%",
+                      height: 2,
+                      backgroundColor: theme.devideBg,
+                    }}
+                  ></View>
+                </View>
+              ))}
           </ScrollView>
         );
         break;
     }
   };
 
-
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
         <View style={styles.profileArea}>
           <View style={styles.nicknameArea}>
-            {profileImg ?
-              <Image source={{ uri: profileImg }} style={{ width: 60, height: 60, borderRadius: 30 }} />
-              : <EvilIcons name="user" size={70} color="black" />
-            }
-            <Text style={styles.nickname}>{nickname == null ? "내용을 입력하세요" : nickname}</Text>
+            {profileImg ? (
+              <Image
+                source={{ uri: profileImg }}
+                style={{ width: 60, height: 60, borderRadius: 30 }}
+              />
+            ) : (
+              <ProfileIcon imagePath={null} size={70} />
+            )}
+            <Text style={styles.nickname}>
+              {nickname == null ? "내용을 입력하세요" : nickname}
+            </Text>
           </View>
           <TouchableOpacity onPress={gotoSetting}>
             <Ionicons name="settings-outline" size={30} color="black" />
@@ -178,16 +213,27 @@ export default function ProfileScreen({ navigation }: any) {
       <View style={styles.myList}>
         <View style={styles.tab}>
           {tabList.map((tab, index) => (
-            <TouchableOpacity key={index} onPress={() => changeTab(index)} activeOpacity={1}>
-              <Text style={{ ...styles.tabName, color: activeTab === index ? "black" : theme.grey, borderBottomWidth: activeTab === index ? 2 : null }}>{tab}</Text>
+            <TouchableOpacity
+              style={{ width: "30%" }}
+              key={index}
+              onPress={() => changeTab(index)}
+              activeOpacity={1}
+            >
+              <Text
+                style={{
+                  ...styles.tabName,
+                  color: activeTab === index ? "black" : theme.grey,
+                  borderBottomWidth: activeTab === index ? 2 : null,
+                }}
+              >
+                {tab}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
         <TabContent />
       </View>
-
     </View>
-
   );
 }
 
@@ -198,7 +244,7 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 30,
   },
   profileArea: {
     flex: 2,
@@ -211,7 +257,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   nickname: {
-    marginLeft: 10,
+    marginLeft: 20,
     fontSize: 20,
     fontWeight: "bold",
   },
@@ -237,8 +283,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   tabName: {
+    textAlign: "center",
     fontSize: 16,
-    paddingVertical: 7,
+    paddingVertical: 8,
   },
   innerContainer: {
     flex: 1,
@@ -262,12 +309,12 @@ const styles = StyleSheet.create({
   },
   postView: {
     backgroundColor: "#eeeeee",
-    width: (screenWidth * 0.96) / numColumns,
-    height: (screenWidth * 0.96) / numColumns,
+    width: screenWidth / numColumns,
+    height: screenWidth / numColumns,
     margin: (screenWidth * 0.04) / (numColumns * 2),
   },
   image: {
     width: "100%",
     height: "100%",
   },
-})
+});

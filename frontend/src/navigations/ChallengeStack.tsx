@@ -8,6 +8,7 @@ import PostChallengeScreen from "../components/challenge/PostChallengeScreen";
 import ChallengeDetailScreen from "../components/challenge/ChallengeDetailScreen";
 import EditChallengeScreen from "../components/challenge/EditChallengeScreen";
 import ImageBrowserScreen from "../components/challenge/ImageBrowserScreen";
+import ProcessData from "../components/challenge/ProcessData";
 
 import { theme } from "../color";
 
@@ -17,7 +18,10 @@ export default function ChallengeStackScreen() {
   const GalleryBtn = () => {
     const navigation = useNavigation();
     return (
-      <TouchableOpacity onPress={() => navigation.navigate("ImageBrowser")} style={{ marginRight: 20 }}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("ImageBrowser")}
+        style={{ marginRight: 20 }}
+      >
         <Ionicons name="camera" size={24} color="black" />
       </TouchableOpacity>
     );
@@ -52,6 +56,11 @@ export default function ChallengeStackScreen() {
       />
       <ChallengeStack.Screen
         name="EditChallengeScreen"
+        component={EditChallengeScreen}
+        options={{ title: "Edit Post" }}
+      />
+      <ChallengeStack.Screen
+        name="ProcessData"
         component={EditChallengeScreen}
         options={{ title: "Edit Post" }}
       />

@@ -7,10 +7,17 @@ import {
   ToastAndroid,
   TextInput,
   ScrollView,
+  Text,
+  Alert,
 } from "react-native";
-import { StackActions } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
+import {
+  Divider,
+  mainStyle,
+  screenHeight,
+  screenWidth,
+  screenPadding,
+} from "../../CommonComponent";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
@@ -23,27 +30,17 @@ export default function PostChallengeScreen({ route, navigation }) {
   const [challengeId, setChallengeId] = useState();
   const [title, setTitle] = useState<string>("");
   const [contents, setContents] = useState<string>("");
+  const [filePath, setFilePath] = useState([]);
+  const [isNewImg, setIsNewImg] = useState(route.params.isNew);
 
   useEffect(() => {
     // Create이 아닌 경우 포스트 데이터 가져옴
     isCreate == false ? setTitle(route.params.postData.title) : null;
     isCreate == false ? setContents(route.params.postData.contents) : null;
+    isCreate == false ? setFilePath(route.params.postImg) : null;
     isCreate == false ? setChallengeId(route.params.postData.id) : null;
+    return;
   }, []);
-
-  /* const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setImages([...images, result.uri]);
-    }
-    console.log(images);
-  }; */
 
   const createFormData = async () => {
     const email = await AsyncStorage.getItem("email");
@@ -51,53 +48,62 @@ export default function PostChallengeScreen({ route, navigation }) {
     body.append("title", title);
     body.append("contents", contents);
     body.append("uid", email);
-    images.map((image: any, index: number) => {
-      let files: any = {
-        uri: image.uri,
-        type: "image/png",
-        name: `${index}.png`,
-      };
-      body.append("files", files);
-    });
+    isNewImg
+      ? images.map((image: any, index: number) => {
+          let files: any = {
+            uri: image.uri,
+            type: "image/png",
+            name: `${index}.png`,
+          };
+          body.append("files", files);
+        })
+      : null;
 
     isCreate == false ? body.append("id", challengeId) : null;
 
     return body;
   };
 
+  const postFailedAlert = () => {
+    Alert.alert(
+      "Post Failed",
+      "Please make sure you have completed all forms",
+      [{ text: "OK" }]
+    );
+  };
+
   const sendPost = async () => {
     let body = await createFormData();
-
-    console.log(body);
     isCreate == false
       ? axiosInstance
-        .put(`/api/challenge`, body, {
-          headers: { "content-type": `multipart/form-data` },
-          transformRequest: (data, headers) => {
-            return body;
-          },
-        })
-        .then(function (response) {
-          ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
-          navigation.navigate("ChallengeDetailScreen", { challengeId });
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
+          .put(`/api/challenge`, body, {
+            headers: { "content-type": `multipart/form-data` },
+            transformRequest: (data, headers) => {
+              return body;
+            },
+          })
+          .then(function (response) {
+            ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
+            navigation.navigate("ChallengeDetailScreen", { challengeId });
+          })
+          .catch(function (error) {
+            postFailedAlert();
+            console.log(error);
+          })
       : axiosInstance
-        .post(`/api/challenge`, body, {
-          headers: { "content-type": `multipart/form-data` },
-          transformRequest: (data, headers) => {
-            return body;
-          },
-        })
-        .then(function (response) {
-          ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
-          navigation.navigate("ChallengeScreen");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+          .post(`/api/challenge`, body, {
+            headers: { "content-type": `multipart/form-data` },
+            transformRequest: (data, headers) => {
+              return body;
+            },
+          })
+          .then(function (response) {
+            ToastAndroid.show("Created Successfully!", ToastAndroid.SHORT);
+            navigation.navigate("ChallengeScreen");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
   };
 
   const handleTitleChange = (payload) => setTitle(payload);
@@ -105,19 +111,43 @@ export default function PostChallengeScreen({ route, navigation }) {
 
   return (
     <View style={{ ...mainStyle.mainView, paddingTop: 20 }}>
-      <ScrollView horizontal>
-        {images
-          ? images.map((image: any, index: number) => {
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        style={{ maxHeight: screenWidth }}
+      >
+        {images ? (
+          images.map((image: any, index: number) => {
             return (
-              <View style={{ flexDirection: "column" }} key={index}>
-                <Image
-                  style={{ height: 100, width: 100 }}
-                  source={{ uri: image.uri }}
-                />
-              </View>
+              <Image
+                key={index}
+                style={{
+                  height: screenWidth,
+                  width: screenWidth,
+                }}
+                source={{ uri: image.uri }}
+              />
             );
           })
-          : null}
+        ) : isNewImg ? (
+          <View style={styles.noImageView}>
+            <Text>Please add some images</Text>
+          </View>
+        ) : (
+          filePath.map((image: any, index: number) => {
+            return (
+              <Image
+                key={index}
+                style={{
+                  height: screenWidth,
+                  width: screenWidth,
+                }}
+                source={{ uri: image }}
+              />
+            );
+          })
+        )}
       </ScrollView>
       <View style={styles.titleInputView}>
         <TextInput
@@ -177,6 +207,13 @@ const styles = StyleSheet.create({
   inputTitle: {
     fontWeight: "700",
     marginRight: 15,
+  },
+  noImageView: {
+    height: screenWidth,
+    width: screenWidth,
+    backgroundColor: "lightgrey",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

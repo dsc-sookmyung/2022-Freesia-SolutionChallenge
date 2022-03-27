@@ -7,8 +7,9 @@ import { theme } from "./color";
 export const screenPadding = 20;
 export const screenWidth = Dimensions.get("window").width - screenPadding * 2;
 export const screenHeight = Dimensions.get("window").height;
-export const ipAddress = "192.168.49.98";
-export const BASE_URL = `https://iamyourfreesia.site`;
+export const ipAddress = "172.30.1.35";
+//export const BASE_URL = `https://iamyourfreesia.site`;
+export const BASE_URL = `http://172.30.1.35:8080`;
 
 export const mainStyle = StyleSheet.create({
   mainView: {
@@ -53,21 +54,21 @@ export const Divider = () => (
   ></View>
 );
 
-export const ProfileIcon = ({ imagePath }) => {
+export const ProfileIcon = ({ imagePath, size }) => {
   if (imagePath == null) imagePath = require("../assets/profile_default.jpg");
   return (
     <View
       style={{
-        width: 50,
-        height: 50,
-        borderRadius: 25,
+        width: size,
+        height: size,
+        borderRadius: 100,
         margin: 5,
         backgroundColor: "grey",
         overflow: "hidden",
         elevation: 2,
       }}
     >
-      <Image style={{ width: 50, height: 50 }} source={imagePath}></Image>
+      <Image style={{ width: size, height: size }} source={imagePath}></Image>
     </View>
   );
 };

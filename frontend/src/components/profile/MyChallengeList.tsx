@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { screenWidth } from "../../CommonComponent";
 import axiosInstance from "../../axiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,27 +14,25 @@ const numColumns = 3;
 
 const PostItem = ({ item }) => {
   return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      style={styles.postView}
-    >
+    <TouchableOpacity activeOpacity={0.8} style={styles.postView}>
       <Image source={{ uri: item.filePath }} style={styles.image} />
     </TouchableOpacity>
   );
 };
 
 export default function MyChallengeList() {
-
   // localStorage에 저장된 이메일 불러오기
   const [email, setEmail] = useState<string>("");
-  AsyncStorage.getItem('email').then(response => setEmail(response));
+  AsyncStorage.getItem("email").then((response) => setEmail(response));
 
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    axiosInstance.get(`/api/mypage/challenge?email=${email}`)  // 내가 쓴 챌린지 글 조회
+    axiosInstance
+      .get(`/api/mypage/challenge?email=${email}`) // 내가 쓴 챌린지 글 조회
       .then(function (response) {
         setPosts(response.data);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
   }, []);
@@ -38,11 +42,12 @@ export default function MyChallengeList() {
       <FlatList
         data={posts}
         renderItem={PostItem}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
       />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -59,4 +64,4 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-})
+});

@@ -38,15 +38,16 @@ export default function MapScreen({
   cityKr,
 }) {
   const [centerInfo, setCenterInfo] = useState([]);
-  const [geocoding, setGeocoding] = useState(false);
   const [isOnlyCenter, setIsOnlyCenter] = useState(true);
 
   const cardWidth = screenWidth - 70;
 
+  const baseUrl = `https://iamyourfreesia.site`;
+
   // 센터 정보 GET, 위도 경도 Geocoding
   const getCenterInfo = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/center?address=${cityKr}`, {
+      const response = await fetch(`${baseUrl}/center?address=${cityKr}`, {
         method: "GET",
       });
       const json = await response.json();
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
     bottom: 28,
     left: 28,
     padding: 10,
-    borderRadius: 30,
+    borderRadius: 10,
     backgroundColor: theme.pointCol,
   },
   linkText: {
@@ -228,7 +229,6 @@ const styles = StyleSheet.create({
   },
   centerCard: {
     marginHorizontal: screenPadding,
-
     height: screenHeight / 5,
     backgroundColor: "white",
     borderRadius: 15,

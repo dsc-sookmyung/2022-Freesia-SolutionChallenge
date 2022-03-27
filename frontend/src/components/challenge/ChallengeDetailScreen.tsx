@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Text,
   View,
@@ -13,8 +13,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Divider, ProfileIcon, mainStyle } from "../../CommonComponent";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import axiosInstance from "../../axiosInstance";
+import { useIsFocused } from "@react-navigation/native";
+import Carousel, {
+  ParallaxImage,
+  Pagination,
+} from "react-native-snap-carousel";
 
-const screenWidth = Dimensions.get("window").width;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 // 임시 데이터
 const postInfo = {
@@ -62,15 +67,52 @@ export default function ChallengeDetail({ route, navigation }: any) {
   const [myEmojiCount, setMyEmojiCount] = useState({});
   const [emojiClicked, setEmojiClicked] = useState<boolean>(false);
   const [token, setToken] = useState<string>("");
-  AsyncStorage.getItem('token').then(response => setToken(response));
+  const [postImg, setPostImg] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [imgCount, setImgCount] = useState(0);
+  const [profileImg, setProfileImg] = useState(null);
+  const [refresh, setRefresh] = useState(false);
+  AsyncStorage.getItem("token").then((response) => setToken(response));
 
   // 게시글 상세 정보 가져오기
   const getPostData = () => {
     axiosInstance
       .get(`/challenge?id=${challengeId}`)
       .then(function (response) {
-        console.log(response.data)
         setPostData(response.data);
+        setImgCount(response.data.filePathId.length);
+        getPostImg(response.data.filePathId);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  // 게시글 이미지 가져오기
+  const getPostImg = (filePathId) => {
+    filePathId.map((file, idx) =>
+      axiosInstance
+        .get(`/challenge/image?id=${file}`)
+        .then(function (response) {
+          idx == 0
+            ? setPostImg([...postImg, `data:image/png;base64,${response.data}`])
+            : null;
+          postImg.length <= imgCount && imgCount != 0 && idx != 0
+            ? setPostImg([...postImg, `data:image/png;base64,${response.data}`])
+            : null;
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+    );
+  };
+
+  // 작성자 프로필 가져오기
+  const getProfileImg = () => {
+    axiosInstance
+      .get(`/api/user/image?email=${userEmail}`)
+      .then(function (response) {
+        setProfileImg(`data:image/png;base64,${response.data}`);
       })
       .catch(function (error) {
         console.log(error);
@@ -108,7 +150,6 @@ export default function ChallengeDetail({ route, navigation }: any) {
     axiosInstance
       .get(`/api/emoticon/my?challengeId=${challengeId}&email=${userEmail}`)
       .then(function (response) {
-        console.log(response.data);
         setMyEmojiCount(response.data);
       })
       .catch(function (error) {
@@ -124,19 +165,25 @@ export default function ChallengeDetail({ route, navigation }: any) {
     });
   };
 
+  const isFocused = useIsFocused();
   useEffect(() => {
     getPostData();
     getCheeringData();
+    getProfileImg();
     getEmojiData();
     getMyEmojiData();
     checkMyEmoji();
-
-    console.log(postData.filePath);
-  }, []);
+    return;
+  }, [isFocused]);
 
   // 챌린지 편집, 삭제 모달
   const handleEdit = () =>
-    navigation.navigate("PostChallengeScreen", { postData, isCreate: false });
+    navigation.navigate("PostChallengeScreen", {
+      postData,
+      postImg,
+      isCreate: false,
+      isNew: false,
+    });
   const handleDelete = () => {
     console.log("delete");
     axiosInstance
@@ -227,6 +274,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
     myEmojiCountSample[emojiName] = 0;
     setEmojiCount(emojiCountSample);
     setMyEmojiCount(myEmojiCountSample);
+    setEmojiListShow(false);
 
     axiosInstance
       .delete(`/api/emoticon`, {
@@ -277,8 +325,8 @@ export default function ChallengeDetail({ route, navigation }: any) {
                   <View
                     style={{
                       position: "absolute",
-                      width: 35,
-                      height: 35,
+                      width: 36,
+                      height: 36,
                       backgroundColor: "rgba(255, 255, 255, 0.7)",
                     }}
                   ></View>
@@ -323,11 +371,32 @@ export default function ChallengeDetail({ route, navigation }: any) {
     </View>
   );
 
+  const renderItem = ({ item, index }, parallaxProps) => {
+    return (
+      <View style={styles.item}>
+        <ParallaxImage
+          source={{ uri: item }}
+          containerStyle={styles.imageContainer}
+          style={styles.image}
+          parallaxFactor={0}
+          {...parallaxProps}
+        />
+      </View>
+    );
+  };
+
+  const carouselRef = useRef(null);
+
   return (
     <ScrollView style={{ ...mainStyle.mainView, paddingHorizontal: 0 }}>
       <View style={styles.topBar}>
         <View style={styles.topProfile}>
-          <ProfileIcon imagePath={postInfo.profileImage} />
+          <ProfileIcon
+            imagePath={
+              profileImg == null ? postInfo.profileImage : { uri: profileImg }
+            }
+            size={50}
+          />
           <Text style={styles.nicknameText}>
             {postData.uid == null ? null : postData.uid.nickName}
           </Text>
@@ -360,15 +429,34 @@ export default function ChallengeDetail({ route, navigation }: any) {
           </TouchableOpacity>
         </Modal>
       </View>
-      <Image style={styles.detailImage} source={postInfo.image} />
+      <Carousel
+        ref={carouselRef}
+        sliderWidth={SCREEN_WIDTH}
+        sliderHeight={SCREEN_WIDTH}
+        itemWidth={SCREEN_WIDTH}
+        data={postImg}
+        renderItem={renderItem}
+        hasParallaxImages={true}
+        onSnapToItem={(index) => setIndex(index)}
+      />
+      <Pagination
+        dotsLength={imgCount}
+        activeDotIndex={index}
+        containerStyle={styles.dotContainer}
+        dotStyle={styles.dotStyle}
+        inactiveDotStyle={styles.inactiveDotStyle}
+        inactiveDotOpacity={0.4}
+        inactiveDotScale={0.6}
+      />
       <View style={styles.post}>
         <View style={styles.postTop}>
           <Text style={styles.postTitle}>{postData.title}</Text>
-          {token ?
+          {token ? (
             <View style={styles.emojiContainer}>
               <ShowEmojiCount />
               <EmojiContainer />
-            </View> : null}
+            </View>
+          ) : null}
         </View>
         <Divider />
         <Text>{postData.contents}</Text>
@@ -396,8 +484,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   detailImage: {
-    width: screenWidth,
-    height: screenWidth,
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH,
   },
   post: {
     margin: 10,
@@ -421,7 +509,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
-    width: screenWidth,
+    width: SCREEN_WIDTH,
     position: "absolute",
     bottom: 0,
     backgroundColor: "white",
@@ -431,7 +519,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontSize: 20,
-    width: screenWidth,
+    width: SCREEN_WIDTH,
     textAlign: "center",
     paddingVertical: 15,
   },
@@ -466,5 +554,27 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 20,
     elevation: 2,
+  },
+  item: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH,
+  },
+  imageContainer: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    resizeMode: "cover",
+  },
+  dotContainer: {},
+  dotStyle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "black",
+  },
+  inactiveDotStyle: {
+    backgroundColor: "grey",
   },
 });
