@@ -7,8 +7,9 @@ import {
   ScrollView,
   Dimensions,
   Alert,
+  Image,
 } from "react-native";
-import { Ionicons, AntDesign, EvilIcons } from "@expo/vector-icons";
+import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { theme } from "../../color";
 import axiosInstance from "../../axiosInstance";
 import { useIsFocused } from "@react-navigation/native";
@@ -23,6 +24,7 @@ export default function CommunityScreen({ navigation }: any) {
 
   const [posts, setPosts] = useState([]);
   const [category, setCategory] = useState<string>("worries");
+  const [profileImg, setProfileImg] = useState<string>();
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -35,6 +37,20 @@ export default function CommunityScreen({ navigation }: any) {
         console.log(error);
       });
   }, [category, isFocused]);
+
+  const getProfileImg = (email: string) => {
+    axiosInstance.get(`/api/user/image?email=${email}`)
+      .then(function (response) {
+        setProfileImg(`data:image/png;base64,${response.data}`);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    if (profileImg != null) {
+      return <Image source={{ uri: profileImg }} style={{ width: 30, height: 30, borderRadius: 15, marginRight: 5 }} />;
+    } else {
+      return <EvilIcons name="user" size={30} color="black" />;
+    }
+  };
 
   const gotoCreate = () => {
     if (!token) {
@@ -107,7 +123,10 @@ export default function CommunityScreen({ navigation }: any) {
                   style={styles.list}
                 >
                   <View style={styles.nicknameArea}>
-                    <EvilIcons name="user" size={30} color="black" />
+                    {/* {getProfileImg(post.email)} */}
+                    <View style={{ width: 30, height: 30, borderRadius: 25, elevation: 2, marginRight: 5 }}>
+                      <Image source={require("../../../assets/profile_default.jpg")} style={{ width: 30, height: 30, borderRadius: 15 }} />
+                    </View>
                     <Text style={styles.nickname}>{post.nickName}</Text>
                   </View>
                   <View style={styles.contentArea}>

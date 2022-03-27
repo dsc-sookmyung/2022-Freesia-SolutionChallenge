@@ -71,6 +71,7 @@ export default function ProfileScreen({ navigation }: any) {
 
   const gotoSetting = () => {
     navigation.navigate('SettingScreen', {
+      email: email,
       nickname: nickname,
       goalMsg: goalMsg
     });

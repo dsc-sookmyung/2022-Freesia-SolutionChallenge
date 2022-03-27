@@ -16,10 +16,13 @@ export default function SettingScreen({ route, navigation }: any) {
     setRefreshing(true);
     axiosInstance.get(`/api/user?email=${email}`)
       .then(function (response) {
-        setProfileImg(response.data.profileImg);
-        // setNickname(response.data.nickName);
-        // setGoalMsg(response.data.goalMsg);
         setLoginId(response.data.loginId);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    axiosInstance.get(`/api/user/image?email=${email}`)
+      .then(function (response) {
+        setProfileImg(`data:image/png;base64,${response.data}`);
         setRefreshing(false);
       }).catch(function (error) {
         console.log(error);
@@ -34,8 +37,7 @@ export default function SettingScreen({ route, navigation }: any) {
   const [newPassword, setNewPassword] = useState<string>();
 
   // localStorage에 저장된 이메일 불러오기
-  const [email, setEmail] = useState<string>("");
-  AsyncStorage.getItem('email').then(response => setEmail(response));
+  const [email, setEmail] = useState<string>(route.params.email);
 
   // 사용자 정보 조회
   const getUser = () => {

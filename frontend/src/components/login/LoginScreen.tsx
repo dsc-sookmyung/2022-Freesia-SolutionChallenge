@@ -83,14 +83,17 @@ export default function Login({ navigation }: any) {
   AsyncStorage.getItem("email").then((response) => setEmail(response));
 
   const getUser = async () => {
-    await axiosInstance
-      .get(`/api/user?email=${email}`)
-      .then(function (response) {
-        setNickname(response.data.nickName);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    try {
+      const response = await axiosInstance.get(`/api/user?email=${email}`);
+      setNickname(response.data.nickName);
+      if (nickname == null) {
+        navigation.navigate('SocialSignup');
+      } else {
+        navigation.dispatch(StackActions.popToTop());
+      };
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   React.useEffect(() => {
@@ -105,16 +108,11 @@ export default function Login({ navigation }: any) {
           AsyncStorage.setItem("token", response.data.token); // 로컬에 토큰 저장
           AsyncStorage.setItem("email", response.data.email); // 로컬에 이메일 저장
           ToastAndroid.show("Logged In Successfully!", ToastAndroid.SHORT);
+          getUser();
         })
         .catch(function (error) {
           console.log(error);
         });
-      getUser();
-      if (nickname == null) {
-        navigation.navigate("SocialSignup");
-      } else {
-        navigation.dispatch(StackActions.popToTop());
-      }
     }
   }, [response]);
 
