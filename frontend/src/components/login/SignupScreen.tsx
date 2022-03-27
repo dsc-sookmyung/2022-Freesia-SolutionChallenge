@@ -8,27 +8,27 @@ import {
   Dimensions,
   Image,
   ToastAndroid,
-  ScrollView,
+  Alert,
 } from "react-native";
 import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import { BASE_URL } from "../../CommonComponent";
+import { BASE_URL, mainStyle } from "../../CommonComponent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function SignupScreen({ navigation }: any) {
   const [id, setId] = useState<string>("");
   const [pw, setPw] = useState<string>("");
-  const [profileImage, setProfileImage] = useState();
+  const [profileImage, setProfileImage] = useState(null);
   const [nickname, setNickname] = useState<string>("");
   const [goal, setGoal] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
@@ -44,6 +44,33 @@ export default function SignupScreen({ navigation }: any) {
   const onChangeNickname = (e: string) => setNickname(e);
   const onChangeUsername = (e: string) => setUsername(e);
   const onChangeGoal = (e: string) => setGoal(e);
+
+  // form 작성 미완료 시 알림
+  const notCompleteAlert = () => {
+    Alert.alert("Some Informations are Missing", "Please check your form", [
+      { text: "OK" },
+    ]);
+  };
+
+  // 로그인 실패 시 알림
+  const loginFailAlert = () => {
+    Alert.alert("Sign Up Failed", "Please Try Again", [{ text: "OK" }]);
+  };
+
+  // form 모두 작성했는지 확인
+  const checkFormComplete = () => {
+    id == "" ||
+    pw == "" ||
+    nickname == "" ||
+    goal == "" ||
+    email == "" ||
+    username == "" ||
+    profileImage == null
+      ? notCompleteAlert()
+      : save();
+  };
+
+  // 회원가입
   const save = () => {
     let body = new FormData();
     body.append("email", email);
@@ -59,7 +86,6 @@ export default function SignupScreen({ navigation }: any) {
     body.append("profileImg", profileImg);
     body.append("username", username);
 
-    console.log(body);
     // 서버에 전송
     axios
       .post(`${BASE_URL}/generalJoin`, body, {
@@ -71,138 +97,110 @@ export default function SignupScreen({ navigation }: any) {
       .then(function (response) {
         console.log(response);
       })
+      .then(() => {
+        navigation.navigate("Login");
+        ToastAndroid.show("Sign Up Successfully!", ToastAndroid.SHORT);
+      })
       .catch(function (error) {
         console.log(error);
+        loginFailAlert();
       });
-    navigation.navigate("Login");
-    ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text
         style={{
-          alignItems: "center",
-          marginVertical: 20,
+          fontSize: 25,
+          color: "black",
+          fontWeight: "700",
+          marginBottom: 20,
         }}
       >
-        <TouchableOpacity onPress={pickImage} style={styles.addImage}>
-          {profileImage ? (
-            <Image
-              source={{ uri: profileImage }}
-              style={{ width: "100%", height: "100%" }}
-            />
-          ) : (
-            <Ionicons name="person" size={SCREEN_WIDTH / 5} color="white" />
-          )}
-        </TouchableOpacity>
-      </View>
+        SIGN UP
+      </Text>
+      <TouchableOpacity onPress={pickImage} style={styles.addImage}>
+        {profileImage ? (
+          <Image
+            source={{ uri: profileImage }}
+            style={{ width: "100%", height: "100%" }}
+          />
+        ) : (
+          <Ionicons name="person" size={80} color="white" />
+        )}
+      </TouchableOpacity>
 
       <View style={styles.signUpForm}>
-        <View style={styles.inputForm}>
-          <Text style={styles.text}>ID</Text>
-          <TextInput
-            value={id}
-            onChangeText={onChangeId}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.inputForm}>
-          <Text style={styles.text}>Password</Text>
-          <TextInput
-            value={pw}
-            onChangeText={onChangePw}
-            style={styles.textInput}
-            secureTextEntry={true}
-          />
-        </View>
-        <View style={styles.inputForm}>
-          <Text style={styles.text}>Email</Text>
-          <TextInput
-            value={email}
-            onChangeText={onChangeEmail}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.inputForm}>
-          <Text style={styles.text}>Username</Text>
-          <TextInput
-            value={username}
-            onChangeText={onChangeUsername}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.inputForm}>
-          <Text style={styles.text}>Nickname</Text>
-          <TextInput
-            value={nickname}
-            onChangeText={onChangeNickname}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.inputForm}>
-          <Text style={styles.text}>Goal</Text>
-          <TextInput
-            value={goal}
-            onChangeText={onChangeGoal}
-            style={styles.textInput}
-          />
-        </View>
+        <TextInput
+          value={id}
+          placeholder="Id"
+          onChangeText={onChangeId}
+          style={mainStyle.textInput}
+        />
+        <TextInput
+          value={pw}
+          placeholder="Password"
+          onChangeText={onChangePw}
+          style={mainStyle.textInput}
+          secureTextEntry={true}
+        />
+        <TextInput
+          value={email}
+          placeholder="Email"
+          onChangeText={onChangeEmail}
+          style={mainStyle.textInput}
+        />
+        <TextInput
+          value={username}
+          placeholder="Username"
+          onChangeText={onChangeUsername}
+          style={mainStyle.textInput}
+        />
+        <TextInput
+          value={nickname}
+          placeholder="Nickname"
+          onChangeText={onChangeNickname}
+          style={mainStyle.textInput}
+        />
+        <TextInput
+          value={goal}
+          placeholder="Goal"
+          onChangeText={onChangeGoal}
+          style={mainStyle.textInput}
+        />
       </View>
-      <TouchableOpacity style={styles.btnContainer} onPress={() => save()}>
-        <Text style={styles.saveBtn}>Save</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      <View style={styles.buttonView}>
+        <TouchableOpacity
+          style={mainStyle.buttonContainer}
+          onPress={() => checkFormComplete()}
+        >
+          <Text style={mainStyle.buttonTitle}>SIGN UP</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
   signUpForm: {
     justifyContent: "center",
-    alignItems: "flex-end",
-  },
-  text: {
-    flex: 1,
-    fontSize: 20,
+    alignItems: "center",
   },
   addImage: {
     justifyContent: "center",
     alignItems: "center",
-    width: SCREEN_WIDTH / 4,
-    height: SCREEN_WIDTH / 4,
+    width: 120,
+    height: 120,
     backgroundColor: "lightgrey",
     borderRadius: SCREEN_WIDTH / 8,
-    marginVertical: "10%",
+    marginVertical: 10,
     overflow: "hidden",
   },
-  inputForm: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  textInput: {
-    flex: 1,
-    elevation: 2,
-    borderRadius: 50,
-    backgroundColor: "white",
-    margin: 15,
-  },
-  btnContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  saveBtn: {
-    width: "20%",
-    backgroundColor: theme.headerBg,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    borderRadius: 20,
-    margin: 50,
-    paddingVertical: 5,
-  },
+  buttonView: { width: "100%", alignItems: "center" },
 });

@@ -10,7 +10,7 @@ import Geocoder from "react-native-geocoding";
 import { screenWidth } from "../CommonComponent";
 import { theme } from "../color";
 
-Geocoder.init("AIzaSyAPEIGEf12unqTi_6if8i_okJEdgCPIeFY");
+Geocoder.init("AIzaSyDkWII1I6vdoZEsRSIyaChx7cakIzu7sqg");
 
 export default function MapStackScreen() {
   const [latLon, setLatLon] = useState({ lat: 0, lon: 0 });

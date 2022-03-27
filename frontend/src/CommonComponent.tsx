@@ -2,9 +2,11 @@ import { useState } from "react";
 import { View, Image, Text, Dimensions, StyleSheet } from "react-native";
 import AppLoading from "expo-app-loading";
 import getFonts from "./getFonts";
+import { theme } from "./color";
 
 export const screenPadding = 20;
 export const screenWidth = Dimensions.get("window").width - screenPadding * 2;
+export const screenHeight = Dimensions.get("window").height;
 export const ipAddress = "192.168.49.98";
 export const BASE_URL = `https://iamyourfreesia.site`;
 
@@ -14,6 +16,29 @@ export const mainStyle = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     paddingHorizontal: screenPadding,
+  },
+  textInput: {
+    width: 300,
+    elevation: 2,
+    borderRadius: 50,
+    backgroundColor: "white",
+    marginVertical: 12,
+    padding: 5,
+    paddingHorizontal: 15,
+  },
+  buttonContainer: {
+    backgroundColor: theme.headerBg,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 300,
+    height: 40,
+    borderRadius: 20,
+    marginVertical: 20,
+  },
+  buttonTitle: {
+    color: "black",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
@@ -58,7 +83,7 @@ export function defaultFont(props) {
       <AppLoading
         startAsync={LoadFonts}
         onFinish={() => setIsReady(true)}
-        onError={() => { }}
+        onError={() => {}}
       />
     );
   }

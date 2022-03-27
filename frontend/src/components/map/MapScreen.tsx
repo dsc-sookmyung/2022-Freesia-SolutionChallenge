@@ -6,6 +6,7 @@ import {
   Dimensions,
   StyleSheet,
   Linking,
+  Animated,
 } from "react-native";
 
 import Geocoder from "react-native-geocoding";
@@ -18,7 +19,14 @@ import {
 import BottomSheet from "reanimated-bottom-sheet";
 import { Feather } from "@expo/vector-icons";
 
-import { BASE_URL, Divider } from "../../CommonComponent";
+import {
+  BASE_URL,
+  Divider,
+  screenHeight,
+  screenPadding,
+  screenWidth,
+} from "../../CommonComponent";
+import { theme } from "../../color";
 
 const height = Dimensions.get("window").height;
 
@@ -31,14 +39,16 @@ export default function MapScreen({
 }) {
   const [centerInfo, setCenterInfo] = useState([]);
   const [geocoding, setGeocoding] = useState(false);
+  const [isOnlyCenter, setIsOnlyCenter] = useState(true);
+
+  const cardWidth = screenWidth - 70;
+
+  // 센터 정보 GET, 위도 경도 Geocoding
   const getCenterInfo = async () => {
     try {
-      const response = await fetch(
-        `${BASE_URL}/center?address=${cityKr}`,
-        {
-          method: "GET",
-        }
-      );
+      const response = await fetch(`${BASE_URL}/center?address=${cityKr}`, {
+        method: "GET",
+      });
       const json = await response.json();
       const messages = await Promise.all(
         json.map(async (c) => {
@@ -53,6 +63,7 @@ export default function MapScreen({
           return true;
         })
       );
+      json.length > 1 ? setIsOnlyCenter(false) : setIsOnlyCenter(true);
       setCenterInfo(json);
     } catch (error) {
       console.error(error);
@@ -61,22 +72,41 @@ export default function MapScreen({
 
   useEffect(() => {
     getCenterInfo();
-    return () => setGeocoding(true);
+    return;
   }, []);
 
-  const renderHeader = () => (
+  /* const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.panelHandle} />
     </View>
-  );
+  ); */
 
+  // 센터 리스트 출력 함수
   const CenterInfo = () => (
-    <ScrollView>
+    <ScrollView
+      scrollEventThrottle={1}
+      ref={_scrollView}
+      horizontal
+      pagingEnabled
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{
+        padding: isOnlyCenter ? 0 : 20,
+        paddingVertical: 20,
+      }}
+    >
       {centerInfo.map((c, idx) => (
-        <View key={idx}>
+        <TouchableOpacity
+          activeOpacity={100}
+          key={idx}
+          style={{
+            ...styles.centerCard,
+            width: isOnlyCenter ? screenWidth : cardWidth,
+          }}
+        >
           <Text style={styles.centerName}>{c.name}</Text>
+          <Divider />
           <Text>{c.address}</Text>
-          <Text>{c.contact}</Text>
+          <Text style={{ fontWeight: "700", marginTop: 6 }}>{c.contact}</Text>
           <TouchableOpacity
             style={styles.linkView}
             onPress={() => Linking.openURL(c.websiteUrl)}
@@ -84,13 +114,12 @@ export default function MapScreen({
             <Text style={styles.linkText}>Go To Website</Text>
             <Feather name="external-link" size={15} color="black" />
           </TouchableOpacity>
-          <Divider />
-        </View>
+        </TouchableOpacity>
       ))}
     </ScrollView>
   );
 
-  const renderContent = () => (
+  /* const renderContent = () => (
     <View
       style={{
         backgroundColor: "white",
@@ -104,29 +133,41 @@ export default function MapScreen({
         <CenterInfo />
       )}
     </View>
-  );
+  ); */
 
-  const sheetRef = React.useRef(null);
+  // 마커 선택시 이동 함수
+  const handleMarkerPress = (mapEventData) => {
+    const markerId = mapEventData.nativeEvent.id;
+    const x = cardWidth * markerId;
+
+    _scrollView.current?.scrollTo({ x: x });
+  };
+
+  //const _sheetRef = React.useRef(null);
+  const _scrollView = React.useRef(null);
+
   return (
     <GestureHandlerRootView style={{ position: "relative" }}>
       <MapView
         style={{ height }}
         provider={PROVIDER_GOOGLE}
         region={{
-          latitude: latitude - 0.02,
+          latitude: latitude,
           longitude: longitude,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
         }}
       >
         <Marker
           coordinate={{ latitude: latitude, longitude: longitude }}
           image={require("../../../assets/flower_pin_s.png")}
-          title={location.city_gu}
+          title="me"
         />
         {centerInfo.map((c, idx) => (
           <Marker
             key={idx}
+            identifier={idx.toString()}
+            onPress={(e) => handleMarkerPress(e)}
             coordinate={{
               latitude: c.lat,
               longitude: c.lng,
@@ -137,31 +178,8 @@ export default function MapScreen({
         ))}
       </MapView>
       <View style={styles.buttonContainer}>
-        <View style={styles.buttonSubContainer}>
-          <TouchableOpacity onPress={() => sheetRef.current.snapTo(0)}>
-            <View
-              style={{
-                backgroundColor: "white",
-                width: 150,
-                height: 40,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 20,
-                elevation: 5,
-              }}
-            >
-              <Text>Open Center List</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <CenterInfo />
       </View>
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={["70%", "40%", "0%"]}
-        initialSnap={0}
-        renderContent={renderContent}
-        renderHeader={renderHeader}
-      />
     </GestureHandlerRootView>
   );
 }
@@ -183,13 +201,12 @@ const styles = StyleSheet.create({
   centerName: {
     fontSize: 18,
     fontWeight: "700",
-    marginVertical: 5,
   },
   buttonContainer: {
     width: "100%",
     justifyContent: "center",
     position: "absolute",
-    bottom: "25%",
+    bottom: "13%",
     zIndex: 0,
   },
   buttonSubContainer: {
@@ -198,11 +215,56 @@ const styles = StyleSheet.create({
   },
   linkView: {
     flexDirection: "row",
-    alignItems: "center",
-    marginTop: 8,
+    position: "absolute",
+    bottom: 28,
+    left: 28,
+    padding: 10,
+    borderRadius: 30,
+    backgroundColor: theme.pointCol,
   },
   linkText: {
     fontWeight: "700",
     marginRight: 4,
   },
+  centerCard: {
+    marginHorizontal: screenPadding,
+
+    height: screenHeight / 5,
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 28,
+    elevation: 6,
+  },
 });
+
+{
+  {
+    /* <View style={styles.buttonSubContainer}>
+          <TouchableOpacity onPress={() => _sheetRef.current.snapTo(0)}>
+            <View
+              style={{
+                backgroundColor: "white",
+                width: 150,
+                height: 40,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 20,
+                elevation: 5,
+              }}
+            >
+              <Text>Open Center List</Text>
+            </View>
+          </TouchableOpacity>
+        </View> */
+  }
+  /* buttonContainer: {
+    bottom:"25%"
+  } */
+  /* <BottomSheet
+        ref={_sheetRef}
+        snapPoints={["70%", "40%", "0%"]}
+        initialSnap={0}
+        renderContent={renderContent}
+        renderHeader={renderHeader}
+      /> */
+}
