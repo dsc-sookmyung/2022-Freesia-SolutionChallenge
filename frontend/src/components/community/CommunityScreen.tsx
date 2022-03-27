@@ -7,36 +7,24 @@ import {
   ScrollView,
   Dimensions,
   Alert,
+  Image,
 } from "react-native";
-import { Ionicons, AntDesign, EvilIcons } from "@expo/vector-icons";
+import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { theme } from "../../color";
 import axiosInstance from "../../axiosInstance";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ProfileIcon } from "../../CommonComponent";
 // import { defaultFont as Text } from "../../CommonComponent";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function CommunityScreen({ navigation }: any) {
   const [token, setToken] = useState<string>("");
-  AsyncStorage.getItem("token").then((response) => setToken(response));
+  AsyncStorage.getItem('token').then(response => setToken(response));
 
   const [posts, setPosts] = useState([]);
   const [category, setCategory] = useState<string>("worries");
-  const [authohrProfileImg, setAuthorProfileImg] = useState(null);
-
-  const getAuthorProfile = () => {
-    /* var imagePath;
-    axiosInstance
-      .get(`/api/user/image?email=${email.email}`)
-      .then(function (response) {
-        imagePath = `data:image/png;base64,${response.data}`;
-      })
-      .catch(function (error) {
-        console.log(error);
-      }); */
-  };
+  const [profileImg, setProfileImg] = useState<string>();
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -48,15 +36,28 @@ export default function CommunityScreen({ navigation }: any) {
       .catch(function (error) {
         console.log(error);
       });
-    getAuthorProfile();
   }, [category, isFocused]);
+
+  const getProfileImg = (email: string) => {
+    axiosInstance.get(`/api/user/image?email=${email}`)
+      .then(function (response) {
+        setProfileImg(`data:image/png;base64,${response.data}`);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    if (profileImg != null) {
+      return <Image source={{ uri: profileImg }} style={{ width: 30, height: 30, borderRadius: 15, marginRight: 5 }} />;
+    } else {
+      return <EvilIcons name="user" size={30} color="black" />;
+    }
+  };
 
   const gotoCreate = () => {
     if (!token) {
-      Alert.alert("Warning", "You can use it after login.");
+      Alert.alert('Warning', 'You can use it after login.');
     } else {
       navigation.navigate("Create");
-    }
+    };
   };
 
   const gotoDetail = (item) => {
@@ -70,37 +71,11 @@ export default function CommunityScreen({ navigation }: any) {
     });
   };
 
-  const UserIcon = (userEmail) => {
-    var imagePath = null;
-    axiosInstance
-      .get(`/api/user/image?email=${userEmail.userEmail}`)
-      .then(function (response) {
-        imagePath = `data:image/png;base64,${response.data}`;
-        setAuthorProfileImg(`data:image/png;base64,${response.data}`);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    return <ProfileIcon imagePath={imagePath} size={30} />;
-  };
-
-  {
-    /* const UserIcon = async (userEmail) => {
-    const imagePath = await getUserProfileImage(userEmail);
-    console.log(imagePath);
-    return <View></View>;
-  }; */
-  }
-
   return (
     <View style={styles.container}>
       {/* category */}
       <View style={styles.category}>
-        <TouchableOpacity
-          style={{ width: "30%", justifyContent: "center" }}
-          onPress={() => setCategory("worries")}
-        >
+        <TouchableOpacity onPress={() => setCategory("worries")}>
           <Text
             style={{
               ...styles.categoryItem,
@@ -108,13 +83,10 @@ export default function CommunityScreen({ navigation }: any) {
               borderBottomWidth: category === "worries" ? 3 : null,
             }}
           >
-            Concern
+            worries
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{ width: "30%" }}
-          onPress={() => setCategory("review")}
-        >
+        <TouchableOpacity onPress={() => setCategory("review")}>
           <Text
             style={{
               ...styles.categoryItem,
@@ -122,13 +94,10 @@ export default function CommunityScreen({ navigation }: any) {
               borderBottomWidth: category === "review" ? 3 : null,
             }}
           >
-            Review
+            review
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{ width: "30%" }}
-          onPress={() => setCategory("gathering")}
-        >
+        <TouchableOpacity onPress={() => setCategory("gathering")}>
           <Text
             style={{
               ...styles.categoryItem,
@@ -136,7 +105,7 @@ export default function CommunityScreen({ navigation }: any) {
               borderBottomWidth: category === "gathering" ? 3 : null,
             }}
           >
-            Gather
+            gathering
           </Text>
         </TouchableOpacity>
       </View>
@@ -154,7 +123,10 @@ export default function CommunityScreen({ navigation }: any) {
                   style={styles.list}
                 >
                   <View style={styles.nicknameArea}>
-                    <UserIcon userEmail={post.email} />
+                    {/* {getProfileImg(post.email)} */}
+                    <View style={{ width: 30, height: 30, borderRadius: 25, elevation: 2, marginRight: 5 }}>
+                      <Image source={require("../../../assets/profile_default.jpg")} style={{ width: 30, height: 30, borderRadius: 15 }} />
+                    </View>
                     <Text style={styles.nickname}>{post.nickName}</Text>
                   </View>
                   <View style={styles.contentArea}>
@@ -192,15 +164,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     paddingHorizontal: 20,
-    paddingTop: 8,
     borderBottomColor: theme.devideBg,
-    borderBottomWidth: 1.5,
+    borderBottomWidth: 3,
   },
   categoryItem: {
-    textAlign: "center",
-    width: "100%",
     fontSize: 20,
-    paddingBottom: 8,
+    paddingVertical: 5,
   },
   addBtn: {
     position: "absolute",
@@ -225,7 +194,6 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   date: {
-    paddingTop: 20,
     color: "grey",
   },
 });

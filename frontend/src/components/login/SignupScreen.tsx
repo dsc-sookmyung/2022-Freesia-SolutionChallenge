@@ -9,6 +9,7 @@ import {
   Image,
   ToastAndroid,
   Alert,
+  ScrollView,
 } from "react-native";
 import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
@@ -60,12 +61,12 @@ export default function SignupScreen({ navigation }: any) {
   // form 모두 작성했는지 확인
   const checkFormComplete = () => {
     id == "" ||
-    pw == "" ||
-    nickname == "" ||
-    goal == "" ||
-    email == "" ||
-    username == "" ||
-    profileImage == null
+      pw == "" ||
+      nickname == "" ||
+      goal == "" ||
+      email == "" ||
+      username == "" ||
+      profileImage == null
       ? notCompleteAlert()
       : save();
   };
@@ -108,11 +109,12 @@ export default function SignupScreen({ navigation }: any) {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
         justifyContent: "center",
         alignItems: "center",
+        paddingVertical: 20,
       }}
     >
       <Text
@@ -183,7 +185,7 @@ export default function SignupScreen({ navigation }: any) {
           <Text style={mainStyle.buttonTitle}>SIGN UP</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

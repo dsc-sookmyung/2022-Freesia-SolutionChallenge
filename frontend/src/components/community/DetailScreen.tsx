@@ -41,21 +41,54 @@ const renderItem = ({ item, index }, parallaxProps) => {
 };
 
 export default function DetailScreen({ navigation, route }: any) {
-  // 새로고침
-  const [refreshing, setRefreshing] = React.useState(false);
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
+
+  const [writer, setWriter] = useState<string>(""); // 작성자 이메일
+  const [email, setEmail] = useState<string>(""); // 로그인한 유저 이메일
+  AsyncStorage.getItem("email").then((response) => setEmail(response));
+  const [token, setToken] = useState<string>("");
+  AsyncStorage.getItem('token').then(response => setToken(response));
+  const [profileImg, setProfileImg] = useState<string>(); // 작성자 프로필 사진
+  const [index, setIndex] = useState(0);
+  const [fileId, setFileId] = useState([]);
+  const [entries, setEntries] = useState([]);
+  const carouselRef = useRef(null);
+  const [modalVisible, setModalVisible] = useState(false); // 수정/삭제 모달창
+  const [likes, setLikes] = useState(0); // 좋아요 개수
+  const [focused, setFocused] = useState(false); // 좋아요 버튼 클릭 여부
+  const iconName: string = focused ? "flower" : "flower-outline";
+  const [comment, setComment] = useState<string>(""); // 댓글
+  const onChangeComment = (e: string) => setComment(e);
+  const [commentCount, setCommentCount] = useState<number>(); // 댓글 개수
+  const [commentList, setCommentList] = useState([]); // 댓글 리스트
+  const [newComment, setNewComment] = useState<string>(); // 수정된 댓글
+  const onChangeNewComment = (e: string) => setNewComment(e);
+  const [commentEditorVisible, setCommentEditorVisible] = useState(false); // 댓글 수정 모달창
+
+  // 게시글 상세 정보 가져오기
+  const getPost = async () => {
+    try {
+      const response = await axiosInstance.get(`/community?id=${route.params.id}`);
+      setFileId(response.data.fileId);
+      setWriter(response.data.email);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 게시글 이미지 가져오기
+  const getImage = () => {
     fileId.map((id) => {
-      axiosInstance
-        .get(`community/image/?id=${id}`)
+      axiosInstance.get(`community/image/?id=${id}`)
         .then(function (response) {
-          imagePath.push(response.data);
           entries.push(`data:image/png;base64,${response.data};`);
-        })
-        .catch(function (error) {
+        }).catch(function (error) {
           console.log(error);
         });
-    });
+    })
+  };
+
+  // 좋아요 개수 가져오기
+  const getLike = () => {
     axiosInstance
       .get(`/likes/cnt?pid=${route.params.id}`)
       .then(function (response) {
@@ -64,68 +97,58 @@ export default function DetailScreen({ navigation, route }: any) {
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  // 댓글 가져오기
+  const getComment = () => {
     axiosInstance
       .get(`/comment?pid=${route.params.id}`)
       .then(function (response) {
         setCommentList(response.data);
         setCommentCount(response.data.length);
-        setRefreshing(false);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
-  const [writer, setWriter] = useState<string>(""); // 글쓴 사람 이메일
-  const [email, setEmail] = useState<string>(""); // 로그인한 유저 이메일
-  AsyncStorage.getItem("email").then((response) => setEmail(response));
-  const [token, setToken] = useState<string>("");
-  AsyncStorage.getItem("token").then((response) => setToken(response));
-  const [index, setIndex] = useState(0);
-  const [fileId, setFileId] = useState([]);
-  const [entries, setEntries] = useState([]);
-  const [imagePath, setImagePath] = useState([]);
-  const carouselRef = useRef(null);
+  };
+
   useEffect(() => {
-    axiosInstance
-      .get(`/community?id=${route.params.id}`)
+    getPost();
+    getImage();
+    getLike();
+    getComment();
+  }, []);
+
+  // 새로고침
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getImage();
+    getLike();
+    getComment();
+    setRefreshing(false);
+  }, []);
+
+  // 작성자 프로필 사진 가져오기
+  const getProfileImg = () => {
+    axiosInstance.get(`/api/user/image?email=${writer}`)
       .then(function (response) {
-        setFileId(response.data.fileId);
-        setWriter(response.data.email);
-      })
-      .catch(function (error) {
+        setProfileImg(`data:image/png;base64,${response.data}`);
+      }).catch(function (error) {
         console.log(error);
       });
-  }, []);
-  useEffect(() => {
-    fileId.map((id) => {
-      axiosInstance
-        .get(`community/image/?id=${id}`)
-        .then(function (response) {
-          imagePath.push(response.data);
-          entries.push(`data:image/png;base64,${response.data};`);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
-  }, []);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [likes, setLikes] = useState(0);
-  useEffect(() => {
-    axiosInstance
-      .get(`/likes/cnt?pid=${route.params.id}`)
-      .then(function (response) {
-        setLikes(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
-  const [focused, setFocused] = useState(false);
-  const iconName: string = focused ? "flower" : "flower-outline";
+
+    if (profileImg != null) {
+      return <Image source={{ uri: profileImg }} style={{ width: 50, height: 50, borderRadius: 25, margin: 5 }} />;
+    } else {
+      return <ProfileIcon imagePath={null} />;
+    }
+  };
+
+  // 좋아요 등록/취소
   const likeEvent = () => {
     if (!token) {
-      Alert.alert("Warning", "You can use it after login.");
+      Alert.alert('Warning', 'You can use it after login.');
     } else {
       if (focused == false) {
         axiosInstance
@@ -155,6 +178,8 @@ export default function DetailScreen({ navigation, route }: any) {
       }
     }
   };
+
+  // 수정/삭제 모달창
   const showModal = () => {
     if (email == writer) {
       setModalVisible(true);
@@ -162,17 +187,20 @@ export default function DetailScreen({ navigation, route }: any) {
       Alert.alert("Warning", "This is an author-only feature.");
     }
   };
+
+  // 수정
   const gotoEdit = () => {
     setModalVisible(!modalVisible);
     navigation.navigate("Edit", {
       id: route.params.id,
       category: route.params.category,
       images: entries,
-      imagePath: imagePath,
       title: route.params.title,
       content: route.params.content,
     });
   };
+
+  // 삭제
   const deletePost = () => {
     Alert.alert("Warning", "Do you want to delete post?", [
       { text: "No", style: "cancel" },
@@ -194,26 +222,7 @@ export default function DetailScreen({ navigation, route }: any) {
     ]);
   };
 
-  // 댓글 기능
-  const [comment, setComment] = useState<string>("");
-  const onChangeComment = (e: string) => setComment(e);
-  const [commentCount, setCommentCount] = useState<number>(); // 댓글 개수
-  const [commentList, setCommentList] = useState([]); // 댓글 리스트
-  const [newComment, setNewComment] = useState<string>(); // 수정된 댓글
-  const onChangeNewComment = (e: string) => setNewComment(e);
-  const [commentEditorVisible, setCommentEditorVisible] = useState(false); // 글 수정 모달창
-
-  useEffect(() => {
-    axiosInstance
-      .get(`/comment?pid=${route.params.id}`)
-      .then(function (response) {
-        setCommentList(response.data);
-        setCommentCount(response.data.length);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
+  // 댓글 등록
   const createComment = () => {
     axiosInstance
       .post(`/api/comment`, {
@@ -229,6 +238,8 @@ export default function DetailScreen({ navigation, route }: any) {
         console.log(error);
       });
   };
+
+  // 댓글 수정
   const editComment = (id: number) => {
     axiosInstance
       .put(`/api/comment?id=${id}`, {
@@ -242,6 +253,8 @@ export default function DetailScreen({ navigation, route }: any) {
         console.log(error);
       });
   };
+
+  // 댓글 삭제
   const deleteComment = (id: number) => {
     Alert.alert("Warning", "Do you want to delete a comment?", [
       { text: "No", style: "cancel" },
@@ -262,11 +275,7 @@ export default function DetailScreen({ navigation, route }: any) {
   };
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
+    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <Modal
         animationType="fade"
         transparent={true}
@@ -295,7 +304,7 @@ export default function DetailScreen({ navigation, route }: any) {
 
       <View style={styles.header}>
         <View style={styles.nicknameArea}>
-          <ProfileIcon imagePath={null} />
+          {getProfileImg()}
           <Text style={styles.nicknameText}>{route.params.nickName}</Text>
         </View>
         <TouchableOpacity onPress={showModal}>

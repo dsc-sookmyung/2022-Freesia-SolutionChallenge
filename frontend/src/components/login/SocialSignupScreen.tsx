@@ -9,6 +9,7 @@ import {
   Dimensions,
   Image,
   ToastAndroid,
+  ScrollView,
 } from "react-native";
 import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
@@ -16,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StackActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
+import { mainStyle } from "../../CommonComponent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -42,6 +44,27 @@ export default function SocialSignupScreen({ navigation }: any) {
   const [email, setEmail] = useState<string>("");
   AsyncStorage.getItem('email').then(response => setEmail(response));
 
+  // form 작성 미완료 시 알림
+  const notCompleteAlert = () => {
+    Alert.alert("Some Informations are Missing", "Please check your form", [
+      { text: "OK" },
+    ]);
+  };
+
+  // 로그인 실패 시 알림
+  const loginFailAlert = () => {
+    Alert.alert("Sign Up Failed", "Please Try Again", [{ text: "OK" }]);
+  };
+
+  // form 모두 작성했는지 확인
+  const checkFormComplete = () => {
+    nickname == "" ||
+      goal == "" ||
+      profileImage == null
+      ? notCompleteAlert()
+      : save();
+  };
+
   // 회원정보 수정
   const save = () => {
     let body = new FormData();
@@ -64,80 +87,70 @@ export default function SocialSignupScreen({ navigation }: any) {
       navigation.dispatch(StackActions.popToTop);
     }).catch(function (error) {
       console.log(error);
+      loginFailAlert();
     });
   };
 
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginVertical: 20,
-        }}
-      >
-        <Text style={styles.text}>Profile Image</Text>
-        <TouchableOpacity onPress={pickImage} style={styles.addImage}>
-          {profileImage ? (
-            <Image
-              source={{ uri: profileImage }}
-              style={{ width: "100%", height: "100%" }}
-            />
-          ) : (
-            <Ionicons name="add" size={50} color="black" />
-          )}
-        </TouchableOpacity>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>SIGN UP</Text>
+      <TouchableOpacity onPress={pickImage} style={styles.addImage}>
+        {profileImage ? (
+          <Image
+            source={{ uri: profileImage }}
+            style={{ width: "100%", height: "100%" }}
+          />
+        ) : (
+          <Ionicons name="person" size={80} color="white" />
+        )}
+      </TouchableOpacity>
+
+      <View style={styles.signUpForm}>
+        <TextInput
+          value={nickname}
+          placeholder="Nickname"
+          onChangeText={onChangeNickname}
+          style={mainStyle.textInput}
+        />
+        <TextInput
+          value={goal}
+          placeholder="Goal"
+          onChangeText={onChangeGoal}
+          style={mainStyle.textInput}
+        />
       </View>
 
-      <Text style={styles.text}>Nickname</Text>
-      <TextInput
-        value={nickname}
-        onChangeText={onChangeNickname}
-        style={styles.textInput}
-      />
-
-      <Text style={styles.text}>Goal</Text>
-      <TextInput
-        value={goal}
-        onChangeText={onChangeGoal}
-        style={styles.textInput}
-      />
-
-      <TouchableOpacity onPress={() => save()}>
-        <Text style={styles.saveBtn}>Save</Text>
+      <TouchableOpacity style={mainStyle.buttonContainer} onPress={() => checkFormComplete()}>
+        <Text style={mainStyle.buttonTitle}>SIGN UP</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  text: {
-    fontSize: 20,
+  title: {
+    fontSize: 25,
+    color: "black",
+    fontWeight: "700",
+    marginBottom: 20,
+  },
+  signUpForm: {
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
   addImage: {
     justifyContent: "center",
     alignItems: "center",
-    width: SCREEN_WIDTH / 4,
-    height: SCREEN_WIDTH / 4,
+    width: 120,
+    height: 120,
     backgroundColor: "lightgrey",
-    borderRadius: SCREEN_WIDTH / 8,
-  },
-  textInput: {
-    borderBottomWidth: 2,
-    marginBottom: 20,
-  },
-  saveBtn: {
-    backgroundColor: theme.headerBg,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    borderRadius: 20,
-    margin: 50,
-    paddingVertical: 5,
+    borderRadius: 60,
+    marginVertical: 10,
+    overflow: "hidden",
   },
 });
