@@ -46,14 +46,16 @@ export default function DetailScreen({ navigation, route }: any) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     fileId.map((id) => {
-      axiosInstance.get(`community/image/?id=${id}`)
+      axiosInstance
+        .get(`community/image/?id=${id}`)
         .then(function (response) {
           imagePath.push(response.data);
           entries.push(`data:image/png;base64,${response.data};`);
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
           console.log(error);
         });
-    })
+    });
     axiosInstance
       .get(`/likes/cnt?pid=${route.params.id}`)
       .then(function (response) {
@@ -77,7 +79,7 @@ export default function DetailScreen({ navigation, route }: any) {
   const [email, setEmail] = useState<string>(""); // 로그인한 유저 이메일
   AsyncStorage.getItem("email").then((response) => setEmail(response));
   const [token, setToken] = useState<string>("");
-  AsyncStorage.getItem('token').then(response => setToken(response));
+  AsyncStorage.getItem("token").then((response) => setToken(response));
   const [index, setIndex] = useState(0);
   const [fileId, setFileId] = useState([]);
   const [entries, setEntries] = useState([]);
@@ -96,14 +98,16 @@ export default function DetailScreen({ navigation, route }: any) {
   }, []);
   useEffect(() => {
     fileId.map((id) => {
-      axiosInstance.get(`community/image/?id=${id}`)
+      axiosInstance
+        .get(`community/image/?id=${id}`)
         .then(function (response) {
           imagePath.push(response.data);
           entries.push(`data:image/png;base64,${response.data};`);
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
           console.log(error);
         });
-    })
+    });
   }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -121,7 +125,7 @@ export default function DetailScreen({ navigation, route }: any) {
   const iconName: string = focused ? "flower" : "flower-outline";
   const likeEvent = () => {
     if (!token) {
-      Alert.alert('Warning', 'You can use it after login.');
+      Alert.alert("Warning", "You can use it after login.");
     } else {
       if (focused == false) {
         axiosInstance
@@ -258,7 +262,11 @@ export default function DetailScreen({ navigation, route }: any) {
   };
 
   return (
-    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Modal
         animationType="fade"
         transparent={true}

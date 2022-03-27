@@ -52,8 +52,8 @@ export default function SignupScreen({ navigation }: any) {
     ]);
   };
 
-  // 로그인 실패 시 알림
-  const loginFailAlert = () => {
+  // 회원가입 실패 시 알림
+  const signupFailAlert = () => {
     Alert.alert("Sign Up Failed", "Please Try Again", [{ text: "OK" }]);
   };
 
@@ -103,7 +103,7 @@ export default function SignupScreen({ navigation }: any) {
       })
       .catch(function (error) {
         console.log(error);
-        loginFailAlert();
+        signupFailAlert();
       });
   };
 
