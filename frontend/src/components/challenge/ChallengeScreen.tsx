@@ -97,6 +97,7 @@ export default function ChallengScreen({ navigation }) {
   const [rankingData, setRankingData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [userNickName, setUserNickName] = useState("");
+  const [userProfileImg, setUserProfileImg] = useState<string>();
   const [userCheering, setUserCheering] = useState(0);
   const [mainImg, setMainImg] = useState([]);
 
@@ -143,6 +144,18 @@ export default function ChallengScreen({ navigation }) {
       });
   };
 
+  const getUserProfileImg = async () => {
+    const email = await AsyncStorage.getItem("email");
+    axiosInstance
+      .get(`/api/user/image?email=${email}`)
+      .then(function (response) {
+        setUserProfileImg(`data:image/png;base64,${response.data}`);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   const getUserCheeringNum = async () => {
     const email = await AsyncStorage.getItem("email");
     axiosInstance
@@ -160,6 +173,7 @@ export default function ChallengScreen({ navigation }) {
     getPostList();
     getRankingList();
     getUserInfo();
+    getUserProfileImg();
     getUserCheeringNum();
     return;
   }, [isFocused]);
@@ -237,7 +251,7 @@ export default function ChallengScreen({ navigation }) {
           })
         }
       >
-        <Image style={styles.postView} source={null} />
+        <Image style={styles.postView} source={require("../../../assets/sample/sample7.jpg")} />
       </TouchableOpacity>
     );
   };
@@ -276,7 +290,7 @@ export default function ChallengScreen({ navigation }) {
           ranking={-1}
           data={{ Aaaa: userCheering }}
           nickname={userNickName}
-          imagePath={null}
+          imagePath={{ uri: userProfileImg }}
           isUser={true}
         />
         {rankingDataSample.map((r, idx) => (

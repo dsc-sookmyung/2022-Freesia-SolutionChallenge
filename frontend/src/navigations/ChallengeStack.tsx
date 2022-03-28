@@ -9,7 +9,7 @@ import ChallengeDetailScreen from "../components/challenge/ChallengeDetailScreen
 import EditChallengeScreen from "../components/challenge/EditChallengeScreen";
 import ImageBrowserScreen from "../components/challenge/ImageBrowserScreen";
 import ProcessData from "../components/challenge/ProcessData";
-
+import UserProfileScreen from "../components/challenge/UserProfileScreen";
 import { theme } from "../color";
 
 export default function ChallengeStackScreen() {
@@ -68,6 +68,11 @@ export default function ChallengeStackScreen() {
         name="ImageBrowser"
         component={ImageBrowserScreen}
         options={{ title: null }}
+      />
+      <ChallengeStack.Screen
+        name="UserProfile"
+        component={UserProfileScreen}
+        options={{ title: "Profile" }}
       />
     </ChallengeStack.Navigator>
   );

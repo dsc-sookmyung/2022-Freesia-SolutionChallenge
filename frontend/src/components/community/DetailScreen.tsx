@@ -49,7 +49,6 @@ export default function DetailScreen({ navigation, route }: any) {
   AsyncStorage.getItem('token').then(response => setToken(response));
   const [profileImg, setProfileImg] = useState<string>(); // 작성자 프로필 사진
   const [index, setIndex] = useState(0);
-  const [fileId, setFileId] = useState([]);
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
   const [modalVisible, setModalVisible] = useState(false); // 수정/삭제 모달창
@@ -68,7 +67,7 @@ export default function DetailScreen({ navigation, route }: any) {
   const getPost = async () => {
     try {
       const response = await axiosInstance.get(`/community?id=${route.params.id}`);
-      setFileId(response.data.fileId);
+      getImage(response.data.fileId);
       setWriter(response.data.email);
     } catch (error) {
       console.log(error);
@@ -76,15 +75,15 @@ export default function DetailScreen({ navigation, route }: any) {
   };
 
   // 게시글 이미지 가져오기
-  const getImage = () => {
-    fileId.map((id) => {
-      axiosInstance.get(`community/image/?id=${id}`)
+  const getImage = (filePathId) => {
+    filePathId.map((file, idx) =>
+      axiosInstance.get(`/community/image?id=${file}`)
         .then(function (response) {
           entries.push(`data:image/png;base64,${response.data};`);
         }).catch(function (error) {
           console.log(error);
-        });
-    })
+        })
+    );
   };
 
   // 좋아요 개수 가져오기
@@ -114,7 +113,6 @@ export default function DetailScreen({ navigation, route }: any) {
 
   useEffect(() => {
     getPost();
-    getImage();
     getLike();
     getComment();
   }, []);
@@ -123,7 +121,6 @@ export default function DetailScreen({ navigation, route }: any) {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getImage();
     getLike();
     getComment();
     setRefreshing(false);
@@ -141,7 +138,7 @@ export default function DetailScreen({ navigation, route }: any) {
     if (profileImg != null) {
       return <Image source={{ uri: profileImg }} style={{ width: 50, height: 50, borderRadius: 25, margin: 5 }} />;
     } else {
-      return <ProfileIcon imagePath={null} />;
+      return <ProfileIcon imagePath={null} size={50} />;
     }
   };
 

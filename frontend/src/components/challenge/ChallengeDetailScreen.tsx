@@ -117,6 +117,12 @@ export default function ChallengeDetail({ route, navigation }: any) {
       .catch(function (error) {
         console.log(error);
       });
+
+    if (profileImg != null) {
+      return <Image source={{ uri: profileImg }} style={{ width: 50, height: 50, borderRadius: 25, margin: 5 }} />;
+    } else {
+      return <ProfileIcon imagePath={null} size={50} />;
+    }
   };
 
   // 현재 유저, 작성자 간 cheering 데이터 가져오기
@@ -371,6 +377,13 @@ export default function ChallengeDetail({ route, navigation }: any) {
     </View>
   );
 
+  // 사용자 프로필
+  const getUserProfile = () => {
+    navigation.navigate("UserProfile", {
+      authorEmail: authorEmail,
+    });
+  };
+
   const renderItem = ({ item, index }, parallaxProps) => {
     return (
       <View style={styles.item}>
@@ -391,15 +404,12 @@ export default function ChallengeDetail({ route, navigation }: any) {
     <ScrollView style={{ ...mainStyle.mainView, paddingHorizontal: 0 }}>
       <View style={styles.topBar}>
         <View style={styles.topProfile}>
-          <ProfileIcon
-            imagePath={
-              profileImg == null ? postInfo.profileImage : { uri: profileImg }
-            }
-            size={50}
-          />
-          <Text style={styles.nicknameText}>
-            {postData.uid == null ? null : postData.uid.nickName}
-          </Text>
+          {getProfileImg()}
+          <TouchableOpacity onPress={getUserProfile}>
+            <Text style={styles.nicknameText}>
+              {postData.uid == null ? null : postData.uid.nickName}
+            </Text>
+          </TouchableOpacity>
           <CheeringAuthor />
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>

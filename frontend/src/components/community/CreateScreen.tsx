@@ -1,23 +1,12 @@
 import React, { useState } from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  TextInput,
-  Image,
-  ScrollView,
-  ToastAndroid,
-  Alert,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, TextInput, Image, ScrollView, ToastAndroid, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axiosInstance from "../../axiosInstance";
 import { StackActions } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { screenWidth } from "../../CommonComponent";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function CreateScreen({ route, navigation }: any) {
   const [email, setEmail] = useState<string>("");
@@ -80,19 +69,18 @@ export default function CreateScreen({ route, navigation }: any) {
             <Picker.Item label="gathering" value="gathering" />
           </Picker>
         </View>
-        <ScrollView horizontal>
-          {images
-            ? images.map((image: any, index: number) => {
+        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ maxHeight: screenWidth }}>
+          {images ? (
+            images.map((image: any, index: number) => {
               return (
-                <View style={{ flexDirection: "column" }} key={index}>
-                  <Image
-                    style={{ height: 100, width: 100 }}
-                    source={{ uri: image.uri }}
-                  />
-                </View>
+                <Image key={index} source={{ uri: image.uri }} style={{ height: screenWidth, width: screenWidth }} />
               );
             })
-            : null}
+          ) : (
+            <View style={styles.noImageView}>
+              <Text>Please add some images</Text>
+            </View>
+          )}
         </ScrollView>
 
         <TextInput
@@ -122,14 +110,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  addImage: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: SCREEN_WIDTH / 2,
-    height: SCREEN_WIDTH / 2,
-    backgroundColor: "lightgrey",
-    marginTop: 10,
-  },
   titleInput: {
     marginVertical: 10,
     paddingVertical: 10,
@@ -147,5 +127,12 @@ const styles = StyleSheet.create({
     bottom: 20,
     right: 20,
     zIndex: 1,
+  },
+  noImageView: {
+    height: screenWidth,
+    width: screenWidth,
+    backgroundColor: "lightgrey",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

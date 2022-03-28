@@ -21,7 +21,7 @@ const numColumns = 3;
 const PostItem = ({ item }) => {
   return (
     <TouchableOpacity activeOpacity={0.8} style={styles.postView}>
-      <Image source={{ uri: item.filePath }} style={styles.image} />
+      <Image source={require("../../../assets/sample/sample2.jpg")} style={styles.image} />
     </TouchableOpacity>
   );
 };
@@ -192,7 +192,7 @@ export default function ProfileScreen({ navigation }: any) {
                 style={{ width: 60, height: 60, borderRadius: 30 }}
               />
             ) : (
-              <ProfileIcon imagePath={null} size={70} />
+              <ProfileIcon imagePath={null} size={60} />
             )}
             <Text style={styles.nickname}>
               {nickname == null ? "내용을 입력하세요" : nickname}
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
   },
   profileArea: {
     flex: 2,

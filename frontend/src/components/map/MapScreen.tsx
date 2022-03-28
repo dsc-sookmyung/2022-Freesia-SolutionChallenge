@@ -216,9 +216,7 @@ const styles = StyleSheet.create({
   },
   linkView: {
     flexDirection: "row",
-    position: "absolute",
-    bottom: 28,
-    left: 28,
+    marginTop: 10,
     padding: 10,
     borderRadius: 10,
     backgroundColor: theme.pointCol,
@@ -229,7 +227,6 @@ const styles = StyleSheet.create({
   },
   centerCard: {
     marginHorizontal: screenPadding,
-    height: screenHeight / 5,
     backgroundColor: "white",
     borderRadius: 15,
     padding: 28,
