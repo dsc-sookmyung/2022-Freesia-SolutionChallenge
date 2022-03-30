@@ -64,27 +64,30 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <h3>💛 Solution1 - Check the center on the map</h3>
 <br>
 
-![map](https://user-images.githubusercontent.com/61882016/160815024-3e2c0b5a-cc85-40a1-8f79-c09ea4ec8a09.png)
+![map](https://user-images.githubusercontent.com/72160826/160877001-9f8689af-21b7-4924-9800-f79001e386c9.png)
+
 <br>
 
 <h3>💛 Solution2 - Recommended Video</h3>
 <br>
 
-![youtube](https://user-images.githubusercontent.com/61882016/160815138-519d6e93-2cfe-418c-9e99-fd5ea4c2c34e.png)
+![youtube](https://user-images.githubusercontent.com/72160826/160876831-2be79adb-6f75-4be0-8c6e-e76f0f43eb68.png)
+
 <br>
 
 <h3>💛 Solution3 - Challenge & Ranking</h3>
 <br>
 
 ![challenge1](https://user-images.githubusercontent.com/87821678/160820878-4783a39b-5fbf-4591-9679-358b53ac41fb.png)
-![challenge2](https://user-images.githubusercontent.com/87821678/160823054-44f85ce5-52e2-4c9d-a427-ed38cee46f4c.png)
+![challenge2](https://user-images.githubusercontent.com/72160826/160876900-c1eea1e2-98dd-49ea-b8d0-29bf71ec6cce.png)
 ![challenge3](https://user-images.githubusercontent.com/87821678/160822981-edf74e71-15d9-4b21-9261-978cc4401c05.png)
 <br>
 
 <h3>💛 Solution4 - Community</h3>
 <br>
 
-![community](https://user-images.githubusercontent.com/61882016/160815691-aac7b1d9-1941-47b1-927f-e4db4bb4bec2.png)
+![community](https://user-images.githubusercontent.com/72160826/160876615-5fba880c-069e-4a92-aa35-975ec8d11c13.png)
+
 <br>
 <br>
 
