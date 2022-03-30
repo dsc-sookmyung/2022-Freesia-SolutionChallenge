@@ -57,6 +57,8 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <br/><br/>
 
 ## ✨ Demo video link
+※ We changed the home icon of the map feature to the map icon through feedback, <br/>&nbsp;&nbsp;&nbsp;&nbsp;so please check the capture of freesia's solutions below.
+<br/><br/>
 [![thumbnaile](https://user-images.githubusercontent.com/61882016/160796943-a08fa3ac-85c1-4353-a8da-96e7dd450bc0.png)](https://youtu.be/yb1HGxQvyp4)
 <br/><br/>
 
@@ -64,7 +66,7 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <h3>💛 Solution1 - Check the center on the map</h3>
 <br>
 
-![map](https://user-images.githubusercontent.com/72160826/160877001-9f8689af-21b7-4924-9800-f79001e386c9.png)
+![map](https://user-images.githubusercontent.com/72160826/160880307-57451338-81ae-4624-8c45-276deda86076.png)
 
 <br>
 
