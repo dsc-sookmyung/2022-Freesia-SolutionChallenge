@@ -1,20 +1,21 @@
 # 2022 Solution Challenge - I’m your freesia
 
 ## ✨ Introduction
-**I'm your freesia** is a reboot platform that uses Google Maps API to introduce nearby re-education institutions and motivates women to re-employment with various features.
+&nbsp; **I'm your freesia** is a reboot platform that uses Google Maps API to introduce nearby re-education institutions and motivates women to re-employment with various features.
 
 Our solution is named after freesia, a flower with the meaning of "cheering for a new start, challenge".
 <br/><br/>
 
 ## ✨ freesia’s Goal
 ### What's the problem?
-One of the still unresolved social problems in Korea, the "women's career disconnection." About 38% of married women aged 15 to 54 suffer career breaks due to pregnancy/birth and child-rearing after marriage. It takes them an average of 8.4 years to get a job again. Even if they succeed in reemployment, it is rare that a "quality" job is guaranteed to continue their existing career. Eventually it is not a success.
+&nbsp; One of the still unresolved social problems in Korea, the "women's career disconnection." About 38% of married women aged 15 to 54 suffer career breaks due to pregnancy/birth and child-rearing after marriage. It takes them an average of 8.4 years to get a job again. Even if they succeed in reemployment, it is rare that a "quality" job is guaranteed to continue their existing career. Eventually it is not a success.
 
-Fear is the main factor that hinders career-broken women from reemployment. Most of them are frustrated with their disconnected careers and afraid of new beginnings. Therefore, for career-broken women to get a real "successful" reemployment, it is important not only to provide quality education but also to provide a mechanism for them to look back and motivate themselves. This will certainly help them grow by awakening their potential while maintaining their existing careers.
+&nbsp; Fear is the main factor that hinders career-broken women from reemployment. Most of them are frustrated with their disconnected careers and afraid of new beginnings. Therefore, for career-broken women to get a real "successful" reemployment, it is important not only to provide quality education but also to provide a mechanism for them to look back and motivate themselves. This will certainly help them grow by awakening their potential while maintaining their existing careers.
 
-### So,
+<h3 align="center"><b>So,</b></h3>
+
 ![goal](https://user-images.githubusercontent.com/61882016/160788790-0843a7f0-eb72-4263-918a-9987ed5ab0b8.png)
-We intend to solve the problem of "gender equality" in Korea by creating a reboot platform that helps career-broken women with get quality jobs again. Through this platform, it is expected that career-broken women will not only receive high-quality educational information, but also share information with each other and grow further. In addition, if this female workforce can be fully utilized, it will help Korea's economic growth.
+&nbsp; We intend to solve the problem of "gender equality" in Korea by creating a reboot platform that helps career-broken women with get quality jobs again. Through this platform, it is expected that career-broken women will not only receive high-quality educational information, but also share information with each other and grow further. In addition, if this female workforce can be fully utilized, it will help Korea's economic growth.
 <br/><br/>
 
 ## ✨ Used technology
@@ -62,7 +63,7 @@ We intend to solve the problem of "gender equality" in Korea by creating a reboo
 <br/><br/>
 
 ## ✨ Getting Started
-※ This app only works on Android OS.  
+※ This app only works on Android OS. <br><br> 
 **Method 1. To run the local app**
 
 ```bash
@@ -81,6 +82,7 @@ npm install
 # Run the app and Scan QR code at Expo Go App
 npm start
 ```
+<br>
 
 **Method 2. To run the Standalone App**  
 [App Discription Page](https://expo.dev/@smjan27/frontend)  
@@ -90,7 +92,7 @@ Download “Expo Go” application and Scan QR code
 <br />
 
 ## ✨ Contributors
-| Name | Kim Minji | Seo Myojin | Kim Ga Gyeong | Choi Ga Hui |
-| -- | -- | -- | -- | -- |
+| Name | Kim Minji | Seo Myojin | Kim GaGyeong | Choi GaHui |
+| :-: | :-: | :-: | :-: | :-: |
 | **Github ID** | @1914386 | @nrj022 | @GaGa-Kim | @cutehumanS2 |
 | **Position** | Frontend Developer | Frontend Developer | Backend Developer | Backend Developer |
