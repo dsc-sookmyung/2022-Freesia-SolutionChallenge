@@ -1,5 +1,4 @@
-# 2022 Solution Challenge - I’m your freesia
-
+![header](https://capsule-render.vercel.app/api?type=waving&color=0:FF8B2A,100:FFEF5E&height=170&section=header&text=2022%20Solution%20Challenge%20-%20I'm%20your%20freesia&fontSize=30&fontAlign=40&fontAlignY=30&fontColor=ffffff&animation=fadeIn) <br>
 ## ✨ Introduction
 &nbsp; **I'm your freesia** is a reboot platform that uses Google Maps API to introduce nearby re-education institutions and motivates women to re-employment with various features.
 
@@ -51,8 +50,7 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <br/><br/>
 
 ## ✨ Demo video link
- [![thumbnail](https://user-images.githubusercontent.com/61882016/160792989-4d8422ae-7f99-41bf-a67f-67971b059e82.png)
-]()
+[![thumbnaile](https://user-images.githubusercontent.com/61882016/160796943-a08fa3ac-85c1-4353-a8da-96e7dd450bc0.png)]()
 <br/><br/>
 
 ## ✨ freesia's solutions
