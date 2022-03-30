@@ -57,7 +57,7 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <br/><br/>
 
 ## ✨ Demo video link
-[![thumbnaile](https://user-images.githubusercontent.com/61882016/160796943-a08fa3ac-85c1-4353-a8da-96e7dd450bc0.png)]()
+[![thumbnaile](https://user-images.githubusercontent.com/61882016/160796943-a08fa3ac-85c1-4353-a8da-96e7dd450bc0.png)](https://youtu.be/yb1HGxQvyp4)
 <br/><br/>
 
 ## ✨ freesia's solutions
