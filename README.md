@@ -45,6 +45,13 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
     </td>
     <td>We used <strong>Map JavaScript API, Google OAuth2.0</strong>, and <strong>Google YouTube API</strong></td>
   </tr>
+    <tr>
+    <td align="center">
+      <img src="https://user-images.githubusercontent.com/87821678/160822322-7b6978e9-139b-4c52-af74-c47ac4d263a7.png" width="120px"><br/>
+      <strong>Google Cloud</strong>
+    </td>
+    <td>We used <strong>Compute Engine, SQL, Load Balancer</strong></td>
+  </tr>
 </table>
 </div>
 <br/><br/>
@@ -54,10 +61,39 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <br/><br/>
 
 ## ✨ freesia's solutions
-![image (1)]()  
-![image (2)]()  
-![image (3)]()  
-![image (4)]()  
+<h3>💛 Solution1 - Check the center on the map</h3>
+<br>
+
+![map](https://user-images.githubusercontent.com/61882016/160815024-3e2c0b5a-cc85-40a1-8f79-c09ea4ec8a09.png)
+<br>
+
+<h3>💛 Solution2 - Recommended Video</h3>
+<br>
+
+![youtube](https://user-images.githubusercontent.com/61882016/160815138-519d6e93-2cfe-418c-9e99-fd5ea4c2c34e.png)
+<br>
+
+<h3>💛 Solution3 - Challenge & Ranking</h3>
+<br>
+
+![challenge1](https://user-images.githubusercontent.com/87821678/160820878-4783a39b-5fbf-4591-9679-358b53ac41fb.png)
+![challenge2](https://user-images.githubusercontent.com/87821678/160823054-44f85ce5-52e2-4c9d-a427-ed38cee46f4c.png)
+![challenge3](https://user-images.githubusercontent.com/87821678/160822981-edf74e71-15d9-4b21-9261-978cc4401c05.png)
+<br>
+
+<h3>💛 Solution4 - Community</h3>
+<br>
+
+![community](https://user-images.githubusercontent.com/61882016/160815691-aac7b1d9-1941-47b1-927f-e4db4bb4bec2.png)
+<br>
+<br>
+
+**<h3 align="center">_As freesia means, we support your new start._</h3>**
+<br>
+
+![I'm your freesia](https://user-images.githubusercontent.com/87821678/160822845-be65bdce-2acd-451d-92b4-bb13707fe9e1.png)
+
+
 <br/><br/>
 
 ## ✨ Getting Started
@@ -90,7 +126,7 @@ Download “Expo Go” application and Scan QR code
 <br />
 
 ## ✨ Contributors
-| Name | Kim Minji | Seo Myojin | Kim GaGyeong | Choi GaHui |
+| Name | Kim Minji | Seo Myojin | Kim Gagyeong | Choi Gahui |
 | :-: | :-: | :-: | :-: | :-: |
 | **Github ID** | @1914386 | @nrj022 | @GaGa-Kim | @cutehumanS2 |
 | **Position** | Frontend Developer | Frontend Developer | Backend Developer | Backend Developer |
