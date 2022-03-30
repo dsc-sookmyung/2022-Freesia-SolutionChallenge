@@ -16,7 +16,8 @@ type TabBarIconProps = { focused: boolean; color: string; size: number };
 const Tab = createBottomTabNavigator();
 
 const icons: Record<string, string[]> = {
-  Map: ["home", "home-outline"],
+  Map: ["map", "map-outline"],
+  //Map: ["home", "home-outline"],
   Profile: ["person", "person-outline"],
   Challenge: ["golf", "golf-outline"],
   //Challenge: ["stats-chart-sharp", "stats-chart-outline"],
