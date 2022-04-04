@@ -216,11 +216,12 @@ export default function ChallengScreen({ navigation }) {
     );
   };
 
-  /*   const getMainImg = (mainImgId) => {
+  /* const getMainImg = (mainImgId) => {
     return new Promise((resolve, reject) => {
       axiosInstance
         .get(`/challenge/image?id=${mainImgId.mainImgId}`)
         .then(function (response) {
+          //console.log(response.data);
           resolve(response.data);
         })
         .catch(function (error) {
@@ -230,9 +231,13 @@ export default function ChallengScreen({ navigation }) {
     });
   };
 
-  const MainImg = (mainImgId) => {
-    getMainImg(mainImgId).then((data) => setMainImg([...mainImg, data]));
-    return <Image style={styles.postView} source={{ uri: mainImg[0] }} />;
+  const mainmainImg = (mainImgId) => {
+    //console.log(mainImgId);
+    var mainImg = null;
+    //getMainImg(mainImgId).then((data) => console.log(data));
+    //setTimeout(() => console.log(mainImg), 3000);
+    //return <Text>hi</Text>;
+    //return <Image style={styles.postView} source={{ uri: null }} />;
   }; */
 
   const ItemPost = ({ item }) => {
