@@ -251,7 +251,10 @@ export default function ChallengScreen({ navigation }) {
           })
         }
       >
-        <Image style={styles.postView} source={require("../../../assets/sample/sample7.jpg")} />
+        <Image
+          style={styles.postView}
+          source={require("../../../assets/sample/sample7.jpg")}
+        />
       </TouchableOpacity>
     );
   };
@@ -286,13 +289,15 @@ export default function ChallengScreen({ navigation }) {
         horizontal
         style={styles.rankingScrollView}
       >
-        <Ranking
-          ranking={-1}
-          data={{ Aaaa: userCheering }}
-          nickname={userNickName}
-          imagePath={{ uri: userProfileImg }}
-          isUser={true}
-        />
+        {userNickName == "" ? null : (
+          <Ranking
+            ranking={-1}
+            data={{ userCheering }}
+            nickname={userNickName}
+            imagePath={{ uri: userProfileImg }}
+            isUser={true}
+          />
+        )}
         {rankingDataSample.map((r, idx) => (
           <Ranking
             data={r}
@@ -380,7 +385,7 @@ const styles = StyleSheet.create({
   },
   crownImg: {
     position: "absolute",
-    top: -6,
+    top: 5,
     width: 30,
     height: 30,
   },

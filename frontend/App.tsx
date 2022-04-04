@@ -69,3 +69,7 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+{
+  /* <Tab.Screen name="Map" component={MapStack} /> */
+}
