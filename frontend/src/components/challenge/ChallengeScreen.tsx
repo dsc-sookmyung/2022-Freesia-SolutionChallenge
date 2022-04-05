@@ -23,6 +23,19 @@ import { useIsFocused } from "@react-navigation/native";
 
 const numColumns = 3;
 
+const ImgDataSample = [
+  require("../../../assets/sample/sample1.jpg"),
+  require("../../../assets/sample/sample2.jpg"),
+  require("../../../assets/sample/sample3.jpg"),
+  require("../../../assets/sample/sample4.jpg"),
+  require("../../../assets/sample/sample5.jpg"),
+  require("../../../assets/sample/sample6.jpg"),
+  require("../../../assets/sample/sample7.jpg"),
+  require("../../../assets/sample/sample8.jpg"),
+  require("../../../assets/sample/sample9.jpg"),
+  require("../../../assets/sample/sample10.jpg"),
+];
+
 const rankingDataSample = [
   {
     cheeringNum: 354,
@@ -216,12 +229,11 @@ export default function ChallengScreen({ navigation }) {
     );
   };
 
-  /* const getMainImg = (mainImgId) => {
+  /*   const getMainImg = (mainImgId) => {
     return new Promise((resolve, reject) => {
       axiosInstance
         .get(`/challenge/image?id=${mainImgId.mainImgId}`)
         .then(function (response) {
-          //console.log(response.data);
           resolve(response.data);
         })
         .catch(function (error) {
@@ -231,19 +243,16 @@ export default function ChallengScreen({ navigation }) {
     });
   };
 
-  const mainmainImg = (mainImgId) => {
-    //console.log(mainImgId);
-    var mainImg = null;
-    //getMainImg(mainImgId).then((data) => console.log(data));
-    //setTimeout(() => console.log(mainImg), 3000);
-    //return <Text>hi</Text>;
-    //return <Image style={styles.postView} source={{ uri: null }} />;
+  const MainImg = (mainImgId) => {
+    getMainImg(mainImgId).then((data) => setMainImg([...mainImg, data]));
+    return <Image style={styles.postView} source={{ uri: mainImg[0] }} />;
   }; */
 
   const ItemPost = ({ item }) => {
     const challengeId = item.id;
     const authorEmail = item.uid.email;
     const mainImgId = item.filePathId;
+    const randomNum = Math.floor(Math.random() * 10);
 
     return (
       <TouchableOpacity
@@ -256,10 +265,7 @@ export default function ChallengScreen({ navigation }) {
           })
         }
       >
-        <Image
-          style={styles.postView}
-          source={require("../../../assets/sample/sample7.jpg")}
-        />
+        <Image style={styles.postView} source={ImgDataSample[randomNum]} />
       </TouchableOpacity>
     );
   };
@@ -297,7 +303,7 @@ export default function ChallengScreen({ navigation }) {
         {userNickName == "" ? null : (
           <Ranking
             ranking={-1}
-            data={{ userCheering }}
+            data={{ cheeringNum: userCheering }}
             nickname={userNickName}
             imagePath={{ uri: userProfileImg }}
             isUser={true}
