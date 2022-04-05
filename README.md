@@ -5,7 +5,7 @@
 Our solution is named after freesia, a flower with the meaning of "cheering for a new start, challenge".
 <br/><br/>
 
-## ✨ freesia’s Goal
+## ✨ Freesia’s Goal
 ### What's the problem?
 &nbsp; One of the still unresolved social problems in Korea, the "women's career disconnection." About 38% of married women aged 15 to 54 suffer career breaks due to pregnancy/birth and child-rearing after marriage. It takes them an average of 8.4 years to get a job again. Even if they succeed in reemployment, it is rare that a "quality" job is guaranteed to continue their existing career. Eventually it is not a success.
 
@@ -24,8 +24,8 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <table>
   <tr>
     <td align="center">
-      <img src="https://media.vlpt.us/images/offdutybyblo/post/55e6994d-1767-4f76-bd5d-58974dc1ed14/react-native.png" width="50px">
-      <img src="https://media.vlpt.us/images/jisoolee11/post/59b75cbb-e395-4dd8-966b-e2b26731fc0c/expo_logo_icon_145293.png" width="50px">
+      <img src="https://user-images.githubusercontent.com/61882016/161264122-d9a65c2d-f6c5-4fad-bdaa-0a09e13ca1ef.png" width="50px">
+      <img src="https://user-images.githubusercontent.com/61882016/161264613-e977ff87-76c3-4e6c-a9f4-6ca74e28cdf9.png" width="50px">
       <br/>
       <strong>React Native (Expo cli)</strong>
     </td>
@@ -33,14 +33,14 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
   </tr>
   <tr>
     <td align="center">
-      <img src="https://media.vlpt.us/images/chs98412/post/06333f8b-07fd-45c3-9fc0-a86ce28759cc/103466606-760a4000-4d14-11eb-9941-2f3d00371471.png" width="100px"><br/>
+      <img src="https://user-images.githubusercontent.com/61882016/161264642-9339ba35-18cf-4597-8346-fb642ba6e25d.png" width="100px"><br/>
       <strong>Spring Boot</strong>
     </td>
     <td>We used <strong>Spring Boot</strong> for server development</td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://www.nicepng.com/png/full/30-300217_new-google-cloud-platform-apps-google-cloud-platform.png" width="50px"><br/>
+      <img src="https://user-images.githubusercontent.com/61882016/161265124-cd6f04df-c064-481f-800a-83e9e4a2ec3d.png" width="50px"><br/>
       <strong>Google Cloud Platform (GCP)</strong>
     </td>
     <td>We used <strong>Map JavaScript API, Google OAuth2.0</strong>, and <strong>Google YouTube API</strong></td>
@@ -57,12 +57,10 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <br/><br/>
 
 ## ✨ Demo video link
-※ We changed the home icon of the map feature to the map icon through feedback, <br/>&nbsp;&nbsp;&nbsp;&nbsp;so please check the capture of freesia's solutions below.
-<br/><br/>
-[![thumbnaile](https://user-images.githubusercontent.com/61882016/160796943-a08fa3ac-85c1-4353-a8da-96e7dd450bc0.png)](https://youtu.be/yb1HGxQvyp4)
+[![thumbnail](https://user-images.githubusercontent.com/61882016/161707162-fec8d667-23b7-4a14-ba0f-7e0fd03ecd28.png)](https://youtu.be/jgnNlpfx0Vc)
 <br/><br/>
 
-## ✨ freesia's solutions
+## ✨ Freesia's solutions
 <h3>💛 Solution1 - Check the center on the map</h3>
 <br>
 
@@ -93,7 +91,7 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <br>
 <br>
 
-**<h3 align="center">_As freesia means, we support your new start._</h3>**
+**<h3 align="center">_As Freesia means, we support your new start._</h3>**
 <br>
 
 ![I'm your freesia](https://user-images.githubusercontent.com/87821678/160822845-be65bdce-2acd-451d-92b4-bb13707fe9e1.png)
@@ -110,7 +108,7 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 npm install --global expo-cli
 
 # Clone this repository
-git clone https://github.com/dsc-sookmyung/2022-freesia-SolutionChallenge.git
+git clone https://github.com/dsc-sookmyung/2022-Freesia-SolutionChallenge.git
 
 # Move to frontend folder
 cd frontend
@@ -123,7 +121,7 @@ npm start
 ```
 <br>
 
-**Method 2. To run the Standalone App**  
+**Method 2. To run the standalone app**  
 [App Discription Page](https://expo.dev/@smjan27/frontend)  
 Download “Expo Go” application and Scan QR code  
 
