@@ -78,7 +78,7 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <h3>💛 Solution3 - Challenge & Ranking</h3>
 <br>
 
-![challenge1](https://user-images.githubusercontent.com/87821678/160820878-4783a39b-5fbf-4591-9679-358b53ac41fb.png)
+![challenge1](https://user-images.githubusercontent.com/72160826/161782961-dedab4d6-4417-44f4-9933-22c208b9be25.png)
 ![challenge2](https://user-images.githubusercontent.com/72160826/160876900-c1eea1e2-98dd-49ea-b8d0-29bf71ec6cce.png)
 ![challenge3](https://user-images.githubusercontent.com/87821678/160822981-edf74e71-15d9-4b21-9261-978cc4401c05.png)
 <br>
