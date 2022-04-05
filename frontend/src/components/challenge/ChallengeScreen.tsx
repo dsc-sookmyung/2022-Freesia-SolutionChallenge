@@ -369,7 +369,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   postView: {
-    backgroundColor: "lightgrey",
     width: (screenWidth * 0.96) / numColumns,
     height: (screenWidth * 0.96) / numColumns,
     margin: (screenWidth * 0.04) / (numColumns * 2),
