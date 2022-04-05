@@ -110,7 +110,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   // 작성자 프로필 가져오기
   const getProfileImg = () => {
     axiosInstance
-      .get(`/api/user/image?email=${userEmail}`)
+      .get(`/api/user/image?email=${authorEmail}`)
       .then(function (response) {
         setProfileImg(`data:image/png;base64,${response.data}`);
       })
@@ -119,7 +119,12 @@ export default function ChallengeDetail({ route, navigation }: any) {
       });
 
     if (profileImg != null) {
-      return <Image source={{ uri: profileImg }} style={{ width: 50, height: 50, borderRadius: 25, margin: 5 }} />;
+      return (
+        <Image
+          source={{ uri: profileImg }}
+          style={{ width: 50, height: 50, borderRadius: 25, margin: 5 }}
+        />
+      );
     } else {
       return <ProfileIcon imagePath={null} size={50} />;
     }
