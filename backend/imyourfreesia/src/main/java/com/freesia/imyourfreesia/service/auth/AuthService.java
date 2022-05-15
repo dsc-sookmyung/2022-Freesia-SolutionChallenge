@@ -5,6 +5,7 @@ import com.freesia.imyourfreesia.domain.user.*;
 import com.freesia.imyourfreesia.dto.auth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -26,6 +27,7 @@ public class AuthService {
     private final KakaoService kakaoService;
     private final NaverService naverService;
     private final CustomUserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     // 구글 로그인
     @Transactional
@@ -131,7 +133,7 @@ public class AuthService {
         User user = User.builder()
                 .username(userSaveRequestDto.getUsername())
                 .loginId(userSaveRequestDto.getLoginId())
-                .password(userSaveRequestDto.getPassword())
+                .password(passwordEncoder.encode(userSaveRequestDto.getPassword()))
                 .email(userSaveRequestDto.getEmail())
                 .nickName(userSaveRequestDto.getNickName())
                 .profileImg(filePath)
@@ -155,9 +157,9 @@ public class AuthService {
 
         String jwt;
 
-        User user = userRepository.findByLoginIdAndPassword(loginId, password);
+        User user = userRepository.findByLoginId(loginId);
 
-        if(userRepository.findByLoginIdAndPassword(loginId, password) == null) {
+        if(user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("로그인에 실패했습니다.");
         }
 

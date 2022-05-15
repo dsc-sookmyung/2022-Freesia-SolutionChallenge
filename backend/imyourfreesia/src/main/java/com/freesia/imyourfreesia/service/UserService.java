@@ -10,6 +10,7 @@ import com.freesia.imyourfreesia.dto.mypage.UserResponseDto;
 import com.freesia.imyourfreesia.dto.mypage.UserUpdateRequestDto;
 import com.freesia.imyourfreesia.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final GoalMsgRepository goalMsgRepository;
     private final AuthService authService;
+    private final PasswordEncoder passwordEncoder;
 
     /* 유저 정보 조회 */
     @Transactional(readOnly = true)
@@ -60,7 +62,7 @@ public class UserService {
     public Long updatePw(String email, UserPasswordUpdateRequestDto requestDto) throws Exception{
         User user = userRepository.findByEmail(email);
 
-        user.pwUpdate(requestDto.getPassword());
+        user.pwUpdate(passwordEncoder.encode(requestDto.getPassword()));
 
         return user.getId();
     }
