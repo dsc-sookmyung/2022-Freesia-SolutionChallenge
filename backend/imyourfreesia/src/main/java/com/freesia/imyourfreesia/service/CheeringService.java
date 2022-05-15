@@ -51,7 +51,8 @@ public class CheeringService {
         Map<String, Long> countList = new HashMap<>();
 
         for(User user: userList) {
-            countList.put(user.getNickName(), countByCreatedDateBetweenAndYourEmail(user.getEmail()));
+            //countList.put(user.getNickName(), countByCreatedDateBetweenAndYourEmail(user.getEmail()));
+            countList.put(user.getEmail(), countByCreatedDateBetweenAndYourEmail(user.getEmail()));
         }
 
         List<Map.Entry<String, Long>> ranking_list = new ArrayList<Map.Entry<String, Long>>(countList.entrySet());
