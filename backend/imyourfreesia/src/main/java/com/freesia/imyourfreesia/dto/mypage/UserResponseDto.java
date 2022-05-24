@@ -17,7 +17,6 @@ public class UserResponseDto {
     private Long id;
     private String username;
     private String loginId;
-    private String password;
     private String email;
     private String nickName;
     private String goalMsg;
@@ -29,7 +28,6 @@ public class UserResponseDto {
         this.id = entity.getId();
         this.username = entity.getUsername();
         this.loginId = entity.getLoginId();
-        this.password = entity.getPassword();
         this.email = entity.getEmail();
         this.nickName = entity.getNickName();
 
