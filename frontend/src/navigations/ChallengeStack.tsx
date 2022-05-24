@@ -8,7 +8,6 @@ import PostChallengeScreen from "../components/challenge/PostChallengeScreen";
 import ChallengeDetailScreen from "../components/challenge/ChallengeDetailScreen";
 import EditChallengeScreen from "../components/challenge/EditChallengeScreen";
 import ImageBrowserScreen from "../components/challenge/ImageBrowserScreen";
-import ProcessData from "../components/challenge/ProcessData";
 import UserProfileScreen from "../components/challenge/UserProfileScreen";
 import { theme } from "../color";
 

@@ -19,4 +19,4 @@ import Carousel, {
   Pagination,
 } from "react-native-snap-carousel";
 
-export default function ProcessData({ route, navigation }: any) {}
+//export default function ProcessData({ route, navigation }: any) {}

@@ -1,20 +1,14 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  Dimensions,
-  Alert,
-} from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { Text, View, StyleSheet, FlatList, Dimensions } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { BASE_URL } from "../../CommonComponent";
 
+const height = Dimensions.get("window").height;
+
 export default function RecommendScreen() {
-  const height = Dimensions.get("window").height;
   const [youtubeData, setYoutubeData] = useState([]);
 
+  // 백에서 유튜브 영상 데이터 받기
   const getYoutubeData = async () => {
     try {
       const response = await fetch(`${BASE_URL}/youtube`, {
@@ -31,22 +25,13 @@ export default function RecommendScreen() {
     getYoutubeData();
   }, []);
 
+  // 유튜브 영상 View
   const YoutubeContent = ({ item }) => (
     <View>
       <YoutubePlayer videoId={item.videoId} play={false} height={200} />
-      <View
-        style={{
-          justifyContent: "space-between",
-          height: height * 0.1,
-          marginBottom: 8,
-        }}
-      >
-        <Text style={{ padding: 6, fontSize: 16, fontWeight: "700" }}>
-          {item.title}
-        </Text>
-        <Text style={{ padding: 6, fontSize: 12, color: "grey" }}>
-          {item.createdDate}
-        </Text>
+      <View style={style.youtubePlayer}>
+        <Text style={style.youtubeTitle}>{item.title}</Text>
+        <Text style={style.youtubeDate}>{item.createdDate}</Text>
       </View>
     </View>
   );
@@ -63,33 +48,14 @@ export default function RecommendScreen() {
       />
     </View>
   );
-
-  {
-    /*
-
-    <Text style={{ padding: 6, fontSize: 12 }}>{youtubeData[0].title}</Text>
-        <Text style={{ padding: 6, fontSize: 12 }}>
-          {youtubeData[0].createDate}
-        </Text>
-
-    <FlatList
-        data={youtubeData}
-        viewabilityConfig={viewConfigRef.current}
-        renderItem={YoutubeContent}
-        keyExtractor={(c) => c.id}
-      />
-    
-    <TouchableOpacity>
-      <Image
-        style={{
-          width: screenFullWidth,
-          height: (screenFullWidth * 720) / 1280,
-        }}
-        source={require("../../../assets/youtube_image.png")}
-      ></Image>
-      <Text style={{ height: height * 0.08, padding: 6, fontSize: 12 }}>
-        {item.title}
-      </Text>
-    </TouchableOpacity> */
-  }
 }
+
+const style = StyleSheet.create({
+  youtubePlayer: {
+    justifyContent: "space-between",
+    height: height * 0.1,
+    marginBottom: 8,
+  },
+  youtubeTitle: { padding: 6, fontSize: 16, fontWeight: "700" },
+  youtubeDate: { padding: 6, fontSize: 12, color: "grey" },
+});

@@ -21,16 +21,6 @@ import Carousel, {
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-// 임시 데이터
-const postInfo = {
-  profileImage: require("../../../assets/profile_default.jpg"),
-  nickname: "nickname",
-  image: require("../../../assets/tori.jpg"),
-  title: "titleeeeeeeeeee",
-  contents: "contentssssssssss",
-  postDate: "2022.2.27",
-};
-
 const emojiCollection = [
   {
     emoji: "😆",
@@ -333,14 +323,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
                   {emoji.emoji}
                 </Text>
                 {myEmojiCount[emoji.name] > 0 ? (
-                  <View
-                    style={{
-                      position: "absolute",
-                      width: 36,
-                      height: 36,
-                      backgroundColor: "rgba(255, 255, 255, 0.7)",
-                    }}
-                  ></View>
+                  <View style={styles.emojiHide}></View>
                 ) : null}
               </TouchableOpacity>
             ))}
@@ -569,6 +552,12 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 20,
     elevation: 2,
+  },
+  emojiHide: {
+    position: "absolute",
+    width: 36,
+    height: 36,
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
   },
   item: {
     width: SCREEN_WIDTH,

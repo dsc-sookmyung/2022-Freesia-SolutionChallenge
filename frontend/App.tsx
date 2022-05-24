@@ -17,10 +17,8 @@ const Tab = createBottomTabNavigator();
 
 const icons: Record<string, string[]> = {
   Map: ["map", "map-outline"],
-  //Map: ["home", "home-outline"],
   Profile: ["person", "person-outline"],
   Challenge: ["golf", "golf-outline"],
-  //Challenge: ["stats-chart-sharp", "stats-chart-outline"],
   Recommend: ["star", "star-outline"],
   Community: ["md-chatbubbles", "md-chatbubbles-outline"],
 };

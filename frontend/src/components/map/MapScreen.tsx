@@ -6,7 +6,6 @@ import {
   Dimensions,
   StyleSheet,
   Linking,
-  Animated,
 } from "react-native";
 
 import Geocoder from "react-native-geocoding";
@@ -16,7 +15,6 @@ import {
   ScrollView,
 } from "react-native-gesture-handler";
 
-import BottomSheet from "reanimated-bottom-sheet";
 import { Feather } from "@expo/vector-icons";
 
 import {

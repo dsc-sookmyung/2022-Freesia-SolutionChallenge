@@ -21,7 +21,10 @@ const numColumns = 3;
 const PostItem = ({ item }) => {
   return (
     <TouchableOpacity activeOpacity={0.8} style={styles.postView}>
-      <Image source={require("../../../assets/sample/sample2.jpg")} style={styles.image} />
+      <Image
+        source={require("../../../assets/sample/sample2.jpg")}
+        style={styles.image}
+      />
     </TouchableOpacity>
   );
 };

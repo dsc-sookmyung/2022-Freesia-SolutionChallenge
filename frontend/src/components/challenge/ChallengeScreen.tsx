@@ -10,84 +10,13 @@ import {
   RefreshControl,
   Alert,
 } from "react-native";
-import {
-  Divider,
-  mainStyle,
-  screenWidth,
-  ipAddress,
-} from "../../CommonComponent";
+import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
 import { Ionicons } from "@expo/vector-icons";
 import axiosInstance from "../../axiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 
 const numColumns = 3;
-
-const ImgDataSample = [
-  require("../../../assets/sample/sample1.jpg"),
-  require("../../../assets/sample/sample2.jpg"),
-  require("../../../assets/sample/sample3.jpg"),
-  require("../../../assets/sample/sample4.jpg"),
-  require("../../../assets/sample/sample5.jpg"),
-  require("../../../assets/sample/sample6.jpg"),
-  require("../../../assets/sample/sample7.jpg"),
-  require("../../../assets/sample/sample8.jpg"),
-  require("../../../assets/sample/sample9.jpg"),
-  require("../../../assets/sample/sample10.jpg"),
-];
-
-const rankingDataSample = [
-  {
-    cheeringNum: 354,
-    nickname: "miae",
-    filePath: require("../../../assets/profileImg/profile1.jpg"),
-  },
-  {
-    cheeringNum: 323,
-    nickname: "hiyun",
-    filePath: require("../../../assets/profileImg/profile2.jpg"),
-  },
-  {
-    cheeringNum: 312,
-    nickname: "heejin",
-    filePath: require("../../../assets/profileImg/profile3.jpg"),
-  },
-  {
-    cheeringNum: 288,
-    nickname: "taeyoon",
-    filePath: require("../../../assets/profileImg/profile4.jpg"),
-  },
-  {
-    cheeringNum: 285,
-    nickname: "haehon",
-    filePath: require("../../../assets/profileImg/profile5.jpg"),
-  },
-  {
-    cheeringNum: 240,
-    nickname: "jin",
-    filePath: require("../../../assets/profileImg/profile6.jpg"),
-  },
-  {
-    cheeringNum: 135,
-    nickname: "jihee",
-    filePath: require("../../../assets/profileImg/profile7.jpg"),
-  },
-  {
-    cheeringNum: 100,
-    nickname: "minjung",
-    filePath: require("../../../assets/profileImg/profile8.jpg"),
-  },
-  {
-    cheeringNum: 80,
-    nickname: "minji",
-    filePath: require("../../../assets/profileImg/profile9.jpg"),
-  },
-  {
-    cheeringNum: 60,
-    nickname: "won",
-    filePath: require("../../../assets/profileImg/profile10.jpg"),
-  },
-];
 
 const rank: string[] = [
   "1st",
@@ -112,37 +41,56 @@ export default function ChallengScreen({ navigation }) {
   const [userNickName, setUserNickName] = useState("");
   const [userProfileImg, setUserProfileImg] = useState<string>();
   const [userCheering, setUserCheering] = useState(0);
-  const [mainImg, setMainImg] = useState([]);
+  const [re, setRe] = useState(false);
 
-  const getRankingList = () => {
-    axiosInstance
+  const getRankingList = async () => {
+    var rankingData: any[] = [];
+    await axiosInstance
       .get(`/cheering/ranking`)
       .then(function (response) {
-        setRankingData(response.data);
+        rankingData = response.data;
       })
       .catch(function (error) {
         console.log(error);
       });
+    await Promise.all(
+      rankingData.map(async (data, id) => {
+        await axiosInstance
+          .get(`/api/user/image?email=${data.email}`)
+          .then(function (response) {
+            data.profileImg = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+    ).then(() => {
+      setRankingData(rankingData);
+    });
   };
 
-  const wait = (timeout) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
-  };
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
-
-  const getPostList = () => {
-    axiosInstance
+  const getPostList = async () => {
+    var data: any[] = [];
+    await axiosInstance
       .get(`/challenge/list`)
       .then(function (response) {
-        setPostData(response.data);
+        data = response.data;
       })
       .catch(function (error) {
         console.log(error);
       });
+    await Promise.all(
+      data.map(async (post, id) => {
+        await axiosInstance
+          .get(`/challenge/image?id=${post.filePathId}`)
+          .then(function (response) {
+            post.mainImg = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+    ).then(() => setPostData(data));
   };
 
   const getUserInfo = async () => {
@@ -162,7 +110,7 @@ export default function ChallengScreen({ navigation }) {
     axiosInstance
       .get(`/api/user/image?email=${email}`)
       .then(function (response) {
-        setUserProfileImg(`data:image/png;base64,${response.data}`);
+        setUserProfileImg(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -181,30 +129,37 @@ export default function ChallengScreen({ navigation }) {
       });
   };
 
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(500).then(() => setRefreshing(false));
+  }, []);
+
   const isFocused = useIsFocused();
+
   useEffect(() => {
     getPostList();
     getRankingList();
     getUserInfo();
     getUserProfileImg();
     getUserCheeringNum();
-    return;
+    return () => {
+      setRe(false);
+    };
   }, [isFocused]);
 
+  // 랭킹에 출력할 프로필 아이콘
   const ProfileIcon = ({ imagePath, isUser, ranking }) => {
-    /* f (imagePath == null)
-      imagePath = require("../../../assets/profile_default.jpg"); */
     return (
       <View
         style={{
-          justifyContent: "center",
-          alignItems: "center",
+          ...styles.profileIcon,
           width: isUser ? 60 : 50,
           height: isUser ? 60 : 50,
           borderRadius: isUser ? 30 : 25,
-          margin: 5,
-          overflow: "hidden",
-          elevation: 2,
           borderWidth: isUser
             ? 3
             : ranking == 0 || ranking == 1 || ranking == 2
@@ -223,36 +178,17 @@ export default function ChallengScreen({ navigation }) {
       >
         <Image
           style={{ width: isUser ? 60 : 50, height: isUser ? 60 : 50 }}
-          source={imagePath}
+          source={{ uri: imagePath }}
         />
       </View>
     );
   };
 
-  /*   const getMainImg = (mainImgId) => {
-    return new Promise((resolve, reject) => {
-      axiosInstance
-        .get(`/challenge/image?id=${mainImgId.mainImgId}`)
-        .then(function (response) {
-          resolve(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-          reject(error);
-        });
-    });
-  };
-
-  const MainImg = (mainImgId) => {
-    getMainImg(mainImgId).then((data) => setMainImg([...mainImg, data]));
-    return <Image style={styles.postView} source={{ uri: mainImg[0] }} />;
-  }; */
-
+  // FlatList로 출력될 post 형식
   const ItemPost = ({ item }) => {
     const challengeId = item.id;
     const authorEmail = item.uid.email;
-    const mainImgId = item.filePathId;
-    const randomNum = Math.floor(Math.random() * 10);
+    const mainImg = "data:image/png;base64," + item.mainImg;
 
     return (
       <TouchableOpacity
@@ -265,15 +201,13 @@ export default function ChallengScreen({ navigation }) {
           })
         }
       >
-        <Image style={styles.postView} source={ImgDataSample[randomNum]} />
+        <Image style={styles.postView} source={{ uri: mainImg }} />
       </TouchableOpacity>
     );
   };
 
-  const Ranking = ({ ranking, data, nickname, isUser, imagePath }) => {
-    //const rankerCheeringInfo = Object.values(data);
-    //const numberOfCheering = rankerCheeringInfo[0];
-    const numberOfCheering = data.cheeringNum;
+  // ScrollView로 출력될 rank 형색
+  const Ranking = ({ ranking, data, nickname, isUser, profileImg }) => {
     return (
       <TouchableOpacity activeOpacity={0.8} style={{ ...styles.ranking }}>
         {ranking == 0 ? (
@@ -282,13 +216,29 @@ export default function ChallengScreen({ navigation }) {
             source={require("../../../assets/crown.png")}
           ></Image>
         ) : null}
-        <ProfileIcon imagePath={imagePath} isUser={isUser} ranking={ranking} />
+        <ProfileIcon
+          imagePath={`data:image/png;base64,${profileImg}`}
+          isUser={isUser}
+          ranking={ranking}
+        />
         <View style={styles.numberOfCheering}>
-          <Text>{numberOfCheering}</Text>
+          <Text>{data}</Text>
         </View>
         <Text>{nickname}</Text>
       </TouchableOpacity>
     );
+  };
+
+  // 로컬 스토리지의 토큰 존재여부 확인
+  const checkToken = () => {
+    if (!token) {
+      Alert.alert("Warning", "You can use it after login.");
+    } else {
+      navigation.navigate("PostChallengeScreen", {
+        isCreate: true,
+        isNew: true,
+      });
+    }
   };
 
   return (
@@ -303,20 +253,20 @@ export default function ChallengScreen({ navigation }) {
         {userNickName == "" ? null : (
           <Ranking
             ranking={-1}
-            data={{ cheeringNum: userCheering }}
+            data={userCheering}
             nickname={userNickName}
-            imagePath={{ uri: userProfileImg }}
+            profileImg={userProfileImg}
             isUser={true}
           />
         )}
-        {rankingDataSample.map((r, idx) => (
+        {rankingData.map((r, idx) => (
           <Ranking
-            data={r}
+            data={r.cnt}
             ranking={idx}
-            nickname={r.nickname}
+            nickname={r.nickName}
             key={idx}
             isUser={false}
-            imagePath={r.filePath}
+            profileImg={r.profileImg}
           />
         ))}
       </ScrollView>
@@ -331,18 +281,8 @@ export default function ChallengScreen({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-
       <TouchableOpacity
-        onPress={() => {
-          if (!token) {
-            Alert.alert("Warning", "You can use it after login.");
-          } else {
-            navigation.navigate("PostChallengeScreen", {
-              isCreate: true,
-              isNew: true,
-            });
-          }
-        }}
+        onPress={checkToken}
         activeOpacity={0.8}
         style={styles.writePost}
       >
@@ -399,15 +339,11 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
+  profileIcon: {
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 5,
+    overflow: "hidden",
+    elevation: 2,
+  },
 });
-
-/* {.map((r, idx) => (
-  <Ranking
-    data={r}
-    ranking={idx}
-    nickname={Object.keys(r)}
-    key={idx}
-    isUser={false}
-    imagePath={require("../../../assets/tori.jpg")}
-  />
-))} */
