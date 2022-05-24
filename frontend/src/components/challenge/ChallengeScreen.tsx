@@ -64,9 +64,7 @@ export default function ChallengScreen({ navigation }) {
             console.log(error);
           });
       })
-    ).then(() => {
-      setRankingData(rankingData);
-    });
+    ).then(() => setRankingData(rankingData));
   };
 
   const getPostList = async () => {

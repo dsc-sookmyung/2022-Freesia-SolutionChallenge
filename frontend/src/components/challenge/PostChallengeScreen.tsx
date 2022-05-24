@@ -11,13 +11,7 @@ import {
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  Divider,
-  mainStyle,
-  screenHeight,
-  screenWidth,
-  screenPadding,
-} from "../../CommonComponent";
+import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";

@@ -79,22 +79,27 @@ export default function ChallengeDetail({ route, navigation }: any) {
   };
 
   // 게시글 이미지 가져오기
-  const getPostImg = (filePathId) => {
-    filePathId.map((file, idx) =>
-      axiosInstance
-        .get(`/challenge/image?id=${file}`)
-        .then(function (response) {
-          idx == 0
+  const getPostImg = async (filePathId) => {
+    var data: any[] = [];
+    await Promise.all(
+      filePathId.map(
+        async (file, idx) =>
+          await axiosInstance
+            .get(`/challenge/image?id=${file}`)
+            .then(function (response) {
+              /*idx == 0
             ? setPostImg([...postImg, `data:image/png;base64,${response.data}`])
             : null;
           postImg.length <= imgCount && imgCount != 0 && idx != 0
             ? setPostImg([...postImg, `data:image/png;base64,${response.data}`])
-            : null;
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-    );
+            : null;*/
+              data = [...data, `data:image/png;base64,${response.data}`];
+            })
+            .catch(function (error) {
+              console.log(error);
+            })
+      )
+    ).then(() => setPostImg(data));
   };
 
   // 작성자 프로필 가져오기
@@ -167,6 +172,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
   };
 
   const isFocused = useIsFocused();
+
   useEffect(() => {
     getPostData();
     getCheeringData();
@@ -185,6 +191,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
       isCreate: false,
       isNew: false,
     });
+
   const handleDelete = () => {
     console.log("delete");
     axiosInstance
