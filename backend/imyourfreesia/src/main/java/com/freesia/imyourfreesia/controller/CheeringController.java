@@ -57,7 +57,10 @@ public class CheeringController {
     /* 응원 랭킹 Top 10 조회 */
     @ApiOperation(value="응원 랭킹 Top 10 조회", notes="응원 랭킹 Top 10 API")
     @GetMapping("/cheering/ranking")
-    public List<Map.Entry<String, Long>> ranking() {
+    /*public List<Map.Entry<String, Long>> ranking() {
+        return cheeringService.ranking();
+    }*/
+    public List<Map<String, Object>> ranking() {
         return cheeringService.ranking();
     }
 

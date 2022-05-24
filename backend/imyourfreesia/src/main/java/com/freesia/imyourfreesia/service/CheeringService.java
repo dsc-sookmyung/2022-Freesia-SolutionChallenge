@@ -44,28 +44,52 @@ public class CheeringService {
 
     /* 응원 랭킹 Top 10 조회 */
     @Transactional
-    public List<Map.Entry<String, Long>> ranking() {
+    //public List<Map.Entry<String, Long>> ranking() {
+    public List<Map<String, Object>> ranking() {
 
         List<User> userList = userRepository.findAll();
 
-        Map<String, Long> countList = new HashMap<>();
+        //Map<String, Long> countList = new HashMap<>();
+        List<Map<String, Object>> countList = new ArrayList<>();
 
         for(User user: userList) {
-            countList.put(user.getNickName(), countByCreatedDateBetweenAndYourEmail(user.getEmail()));
+            //countList.put(user.getNickName(), countByCreatedDateBetweenAndYourEmail(user.getEmail()));
+            //countList.put(user.getEmail(), countByCreatedDateBetweenAndYourEmail(user.getEmail()));
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("email", user.getEmail());
+            map.put("nickName", user.getNickName());
+            map.put("cnt", countByCreatedDateBetweenAndYourEmail(user.getEmail()));
+
+            countList.add(map);
         }
 
-        List<Map.Entry<String, Long>> ranking_list = new ArrayList<Map.Entry<String, Long>>(countList.entrySet());
+        //List<Map.Entry<String, Long>> ranking_list = new ArrayList<Map.Entry<String, Long>>(countList.entrySet());
+        //List<Map.Entry<Object, Long>> ranking_list = new ArrayList<Map.Entry<Object, Long>>(countList.entrySet());
 
-        Collections.sort(ranking_list, new Comparator<Map.Entry<String, Long>>() {
+        /*Collections.sort(ranking_list, new Comparator<Map.Entry<String, Long>>() {
             public int compare(Map.Entry<String, Long> obj1, Map.Entry<String, Long> obj2) {
                 return obj2.getValue().compareTo(obj1.getValue());
             }
+        });*/
+        Collections.sort(countList, new Comparator<Map<String, Object>>() {
+            public int compare(Map<String, Object> obj1, Map<String, Object> obj2) {
+                Long cnt1 = (Long) obj1.get("cnt");
+                Long cnt2 = (Long) obj2.get("cnt");
+                return cnt2.compareTo(cnt1);
+            }
         });
 
-        if(ranking_list.size() < 10){
+
+        /*if(ranking_list.size() < 10){
             return ranking_list.subList(0, ranking_list.size());
         } else {
             return ranking_list.subList(0, 10);
+        }*/
+        if(countList.size() < 10){
+            return countList.subList(0, countList.size());
+        } else {
+            return countList.subList(0, 10);
         }
     }
 
