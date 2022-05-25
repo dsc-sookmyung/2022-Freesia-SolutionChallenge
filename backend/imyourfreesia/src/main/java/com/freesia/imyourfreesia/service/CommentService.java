@@ -12,6 +12,7 @@ import com.freesia.imyourfreesia.dto.comment.CommentListResponseDto;
 import com.freesia.imyourfreesia.dto.comment.CommentSaveRequestDto;
 import com.freesia.imyourfreesia.dto.comment.CommentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +29,7 @@ public class CommentService {
 
     /* 댓글 저장 */
     @Transactional
-    public Long save(CommentSaveRequestDto requestDto){
-        //옵셔널이 아니라서 orElseThrow 처리x
-        //옵셔널로 변경하면 로그인부분 건드려야 해서 일단 냅둠
+    public List<CommentListResponseDto> save(CommentSaveRequestDto requestDto){
         User user = userRepository.findByEmail(requestDto.getUid());
         Community community = communityRepository.findById(requestDto.getPid())
                 .orElseThrow(IllegalArgumentException::new);
@@ -48,7 +47,10 @@ public class CommentService {
             }
         }
 
-        return commentRepository.save(comments).getId();
+        return commentRepository.findAllByPid(community)
+                .stream()
+                .map(CommentListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     /* 댓글 조회 */
@@ -72,11 +74,19 @@ public class CommentService {
 
     /* 댓글 수정 */
     @Transactional
-    public Comment update(Long id, CommentUpdateRequestDto requestDto){
+    public List<CommentListResponseDto> update(Long id, CommentUpdateRequestDto requestDto){
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 
-        return comment.update(requestDto.getContent());
+        comment.update(requestDto.getContent());
+
+        Community community = communityRepository.findById(requestDto.getPid())
+                .orElseThrow(IllegalArgumentException::new);
+
+        return commentRepository.findAllByPid(community)
+                .stream()
+                .map(CommentListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     /* 댓글 삭제 */

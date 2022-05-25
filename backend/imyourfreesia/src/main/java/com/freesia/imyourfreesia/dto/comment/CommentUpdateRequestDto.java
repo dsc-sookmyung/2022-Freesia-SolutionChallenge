@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentUpdateRequestDto {
     private String content;
+    private Long pid; // 게시글 id
 
     @Builder
-    public CommentUpdateRequestDto(String content){
+    public CommentUpdateRequestDto(String content, Long pid){
         this.content = content;
+        this.pid = pid;
     }
 }
