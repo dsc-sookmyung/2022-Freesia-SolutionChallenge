@@ -51,6 +51,9 @@ dependencies {
 
 	// multipartfile upload
 	implementation 'commons-io:commons-io:2.6'
+
+	// mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {

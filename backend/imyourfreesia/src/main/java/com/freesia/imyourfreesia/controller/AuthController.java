@@ -1,11 +1,10 @@
 package com.freesia.imyourfreesia.controller;
 
+import com.freesia.imyourfreesia.domain.user.UserRepository;
 import com.freesia.imyourfreesia.dto.auth.*;
 import com.freesia.imyourfreesia.service.auth.AuthService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import com.freesia.imyourfreesia.service.auth.EmailService;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,8 @@ public class AuthController {
 
     @Autowired
     private final AuthService authService;
+    private final EmailService emailService;
+    private final UserRepository userRepository;
 
     @GetMapping("/health_check")
     public ResponseEntity<?> healthCheck() {
@@ -43,6 +44,21 @@ public class AuthController {
     @PostMapping("/naver")
     public TokenDto naverLogin(@RequestBody NaverLoginReqDto naverLoginReqDto) {
         return authService.naverLoin(naverLoginReqDto.getAccessToken());
+    }
+
+    @PostMapping("/sendAuthEmail")
+    @ApiOperation(value = "회원 가입시 이메일 인증 코드 전송", notes = "이메일을 통해 인증 코드 전송")
+    @ApiImplicitParam(name = "email", value = "이메일")
+    public ResponseEntity<?> sendAuthEmail(@RequestParam String email) throws Exception {
+
+        if (userRepository.findByEmail(email) == null) {
+            String authCode = emailService.sendAuthMail(email);
+            return ResponseEntity.ok(authCode);
+        }
+
+        else {
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
     }
 
     @ApiOperation(value = "일반 회원가입 (사용 X / 포스트맨 이용)", notes = "일반 회원가입 API")
