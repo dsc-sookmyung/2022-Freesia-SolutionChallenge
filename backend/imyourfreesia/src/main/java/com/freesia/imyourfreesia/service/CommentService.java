@@ -28,9 +28,7 @@ public class CommentService {
 
     /* 댓글 저장 */
     @Transactional
-    public Long save(CommentSaveRequestDto requestDto){
-        //옵셔널이 아니라서 orElseThrow 처리x
-        //옵셔널로 변경하면 로그인부분 건드려야 해서 일단 냅둠
+    public List<CommentListResponseDto> save(CommentSaveRequestDto requestDto){
         User user = userRepository.findByEmail(requestDto.getUid());
         Community community = communityRepository.findById(requestDto.getPid())
                 .orElseThrow(IllegalArgumentException::new);
@@ -48,7 +46,10 @@ public class CommentService {
             }
         }
 
-        return commentRepository.save(comments).getId();
+        return commentRepository.findAllByPid(community)
+                .stream()
+                .map(CommentListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     /* 댓글 조회 */

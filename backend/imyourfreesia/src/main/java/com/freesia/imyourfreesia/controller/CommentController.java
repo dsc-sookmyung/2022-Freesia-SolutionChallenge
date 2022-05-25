@@ -26,7 +26,7 @@ public class CommentController {
     @ApiOperation(value="댓글 등록", notes="댓글 등록 API")
     @ApiImplicitParam(name = "CommentSaveRequestDto", value = "댓글 등록 dto")
     @PostMapping("/api/comment")
-    public ResponseEntity<Long> saveCmt(@RequestBody CommentSaveRequestDto requestDto){
+    public ResponseEntity<List<CommentListResponseDto>> saveCmt(@RequestBody CommentSaveRequestDto requestDto){
         return ResponseEntity.ok()
                 .body(commentService.save(requestDto));
     }
