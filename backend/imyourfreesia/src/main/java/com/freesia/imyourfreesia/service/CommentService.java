@@ -12,6 +12,7 @@ import com.freesia.imyourfreesia.dto.comment.CommentListResponseDto;
 import com.freesia.imyourfreesia.dto.comment.CommentSaveRequestDto;
 import com.freesia.imyourfreesia.dto.comment.CommentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,11 +74,19 @@ public class CommentService {
 
     /* 댓글 수정 */
     @Transactional
-    public Comment update(Long id, CommentUpdateRequestDto requestDto){
+    public List<CommentListResponseDto> update(Long id, CommentUpdateRequestDto requestDto){
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 
-        return comment.update(requestDto.getContent());
+        comment.update(requestDto.getContent());
+
+        Community community = communityRepository.findById(requestDto.getPid())
+                .orElseThrow(IllegalArgumentException::new);
+
+        return commentRepository.findAllByPid(community)
+                .stream()
+                .map(CommentListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     /* 댓글 삭제 */

@@ -47,10 +47,10 @@ public class CommentController {
             @ApiImplicitParam(name = "CommentUpdateRequestDto", value = "댓글 수정 Dto")
     })
     @PutMapping("/api/comment")
-    public ResponseEntity<Long> updateCmt(@RequestParam Long id,
-                                             @RequestBody CommentUpdateRequestDto requestDto){
+    public ResponseEntity<List<CommentListResponseDto>> updateCmt(@RequestParam Long id,
+                                          @RequestBody CommentUpdateRequestDto requestDto){
         return ResponseEntity.ok()
-                .body(commentService.update(id, requestDto).getId());
+                .body(commentService.update(id, requestDto));
     }
 
     /* 댓글 삭제 */
