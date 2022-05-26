@@ -230,6 +230,7 @@ export default function DetailScreen({ navigation, route }: any) {
       .then(function (response) {
         ToastAndroid.show("Submitted Successfully!", ToastAndroid.SHORT);
         setComment("");
+        setCommentList(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -240,11 +241,13 @@ export default function DetailScreen({ navigation, route }: any) {
   const editComment = (id: number) => {
     axiosInstance
       .put(`/api/comment?id=${id}`, {
+        pid: route.params.id,
         content: newComment,
       })
       .then(function (response) {
         ToastAndroid.show("Edited Successfully!", ToastAndroid.SHORT);
         setCommentEditorVisible(false);
+        setCommentList(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -371,12 +374,12 @@ export default function DetailScreen({ navigation, route }: any) {
         {commentList.map((comment, index) => (
           <View style={styles.commentArea} key={index}>
             <Text style={{ fontWeight: "bold", flex: 2 }}>
-              {comment.uid.nickName}
+              {comment.nickName}
             </Text>
             <Text style={{ flex: 6, marginHorizontal: 10 }}>
               {comment.content}
             </Text>
-            {comment.uid.email == email ? (
+            {comment.email == email ? (
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <TouchableOpacity onPress={() => setCommentEditorVisible(true)}>
                   <MaterialIcons name="edit" size={20} color="black" />
