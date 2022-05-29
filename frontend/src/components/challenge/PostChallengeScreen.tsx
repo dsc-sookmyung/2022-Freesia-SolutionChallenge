@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider, mainStyle, screenWidth } from "../../CommonComponent";
+import ImageResizer from "react-native-image-resizer";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
@@ -43,7 +44,18 @@ export default function PostChallengeScreen({ route, navigation }) {
     body.append("contents", contents);
     body.append("uid", email);
     isNewImg
-      ? images.map((image: any, index: number) => {
+      ? images.map(async (image: any, index: number) => {
+          /*const resizedImg = await ImageResizer.createResizedImage(
+            image.uri,
+            screenWidth,
+            screenWidth,
+            "PNG",
+            100,
+            undefined,
+            `${index}`,
+            undefined,
+            undefined
+          );*/
           let files: any = {
             uri: image.uri,
             type: "image/png",

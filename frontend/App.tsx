@@ -57,7 +57,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={screenOptions}>
-        <Tab.Screen name="Map" component={MapStack} />
         <Tab.Screen name="Recommend" component={RecommendStack} />
         <Tab.Screen name="Challenge" component={ChallengeStack} />
         <Tab.Screen name="Community" component={CommunityStack} />

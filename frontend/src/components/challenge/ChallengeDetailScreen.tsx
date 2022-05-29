@@ -414,7 +414,7 @@ export default function ChallengeDetail({ route, navigation }: any) {
           animationType="fade"
           transparent={true}
           statusBarTranslucent={true}
-          visible={modalVisible}
+          visible={true}
           onRequestClose={() => setModalVisible(!modalVisible)}
         >
           <TouchableOpacity

@@ -3036,9 +3036,9 @@ expo-modules-core@~0.4.4:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
-expo-notifications@^0.14.1:
+expo-notifications@~0.14.0:
   version "0.14.1"
-  resolved "https://registry.npmjs.org/expo-notifications/-/expo-notifications-0.14.1.tgz"
+  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.14.1.tgz#fe2b122ed79488e754b7f993f9b802eaf60b51a3"
   integrity sha512-0L+DFMQmVfMhonza8MFP4aI/6ADKEx/Mn5NzQlBZpo6PinpsPFpQP7of+pihx2onCkmeN8OIsLFS5O6QqzH3rA==
   dependencies:
     "@expo/config-plugins" "^4.0.2"
@@ -5294,6 +5294,11 @@ react-native-gesture-handler@~2.1.0:
     invariant "^2.2.4"
     lodash "^4.17.21"
     prop-types "^15.7.2"
+
+react-native-image-resizer@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/react-native-image-resizer/-/react-native-image-resizer-1.4.5.tgz#5a520aa8baa07638b1894a1d87d4d9a0945c8d58"
+  integrity sha512-33EgL3C9pyvjKpullAB6fWyD5QhoYEpNNB9rxNvUsrpAnL2mHBW7PTrUCCZudJeB6Weg7nbweKrSw1nnto5aqg==
 
 react-native-maps@0.29.4:
   version "0.29.4"
