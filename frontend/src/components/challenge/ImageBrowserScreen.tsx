@@ -42,10 +42,10 @@ export default function ImageBrowserScreen({ navigation }: any) {
 
   const widgetResize = useMemo(
     () => ({
-      width: 50,
+      width: 1000,
       compress: 0.7,
       base64: false,
-      saveTo: "jpeg",
+      saveTo: "png",
     }),
     []
   );
@@ -107,7 +107,7 @@ export default function ImageBrowserScreen({ navigation }: any) {
         Errors={widgetErrors}
         Styles={widgetStyles}
         Navigator={widgetNavigator}
-        //Resize={widgetResize} //know how to use first , perform slower results.
+        Resize={widgetResize}
       />
     </View>
   );
