@@ -87,12 +87,6 @@ export default function ChallengeDetail({ route, navigation }: any) {
           await axiosInstance
             .get(`/challenge/image?id=${file}`)
             .then(function (response) {
-              /*idx == 0
-            ? setPostImg([...postImg, `data:image/png;base64,${response.data}`])
-            : null;
-          postImg.length <= imgCount && imgCount != 0 && idx != 0
-            ? setPostImg([...postImg, `data:image/png;base64,${response.data}`])
-            : null;*/
               data = [...data, `data:image/png;base64,${response.data}`];
             })
             .catch(function (error) {

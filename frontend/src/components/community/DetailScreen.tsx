@@ -41,12 +41,11 @@ const renderItem = ({ item, index }, parallaxProps) => {
 };
 
 export default function DetailScreen({ navigation, route }: any) {
-
   const [writer, setWriter] = useState<string>(""); // 작성자 이메일
   const [email, setEmail] = useState<string>(""); // 로그인한 유저 이메일
   AsyncStorage.getItem("email").then((response) => setEmail(response));
   const [token, setToken] = useState<string>("");
-  AsyncStorage.getItem('token').then(response => setToken(response));
+  AsyncStorage.getItem("token").then((response) => setToken(response));
   const [profileImg, setProfileImg] = useState<string>(); // 작성자 프로필 사진
   const [index, setIndex] = useState(0);
   const [entries, setEntries] = useState([]);
@@ -66,7 +65,9 @@ export default function DetailScreen({ navigation, route }: any) {
   // 게시글 상세 정보 가져오기
   const getPost = async () => {
     try {
-      const response = await axiosInstance.get(`/community?id=${route.params.id}`);
+      const response = await axiosInstance.get(
+        `/community?id=${route.params.id}`
+      );
       getImage(response.data.fileId);
       setWriter(response.data.email);
     } catch (error) {
@@ -75,15 +76,29 @@ export default function DetailScreen({ navigation, route }: any) {
   };
 
   // 게시글 이미지 가져오기
-  const getImage = (filePathId) => {
-    filePathId.map((file, idx) =>
+  const getImage = async (filePathId) => {
+    /*filePathId.map((file, idx) =>
       axiosInstance.get(`/community/image?id=${file}`)
         .then(function (response) {
           entries.push(`data:image/png;base64,${response.data};`);
         }).catch(function (error) {
           console.log(error);
         })
-    );
+    );*/
+    var data: any[] = [];
+    await Promise.all(
+      filePathId.map(
+        async (file, idx) =>
+          await axiosInstance
+            .get(`/community/image?id=${file}`)
+            .then(function (response) {
+              data = [...data, `data:image/png;base64,${response.data}`];
+            })
+            .catch(function (error) {
+              console.log(error);
+            })
+      )
+    ).then(() => setEntries(data));
   };
 
   // 좋아요 개수 가져오기
@@ -128,15 +143,22 @@ export default function DetailScreen({ navigation, route }: any) {
 
   // 작성자 프로필 사진 가져오기
   const getProfileImg = () => {
-    axiosInstance.get(`/api/user/image?email=${writer}`)
+    axiosInstance
+      .get(`/api/user/image?email=${writer}`)
       .then(function (response) {
         setProfileImg(`data:image/png;base64,${response.data}`);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
 
     if (profileImg != null) {
-      return <Image source={{ uri: profileImg }} style={{ width: 50, height: 50, borderRadius: 25, margin: 5 }} />;
+      return (
+        <Image
+          source={{ uri: profileImg }}
+          style={{ width: 50, height: 50, borderRadius: 25, margin: 5 }}
+        />
+      );
     } else {
       return <ProfileIcon imagePath={null} size={50} />;
     }
@@ -145,7 +167,7 @@ export default function DetailScreen({ navigation, route }: any) {
   // 좋아요 등록/취소
   const likeEvent = () => {
     if (!token) {
-      Alert.alert('Warning', 'You can use it after login.');
+      Alert.alert("Warning", "You can use it after login.");
     } else {
       if (focused == false) {
         axiosInstance
@@ -275,7 +297,11 @@ export default function DetailScreen({ navigation, route }: any) {
   };
 
   return (
-    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Modal
         animationType="fade"
         transparent={true}

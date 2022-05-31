@@ -86,11 +86,12 @@ export default function Login({ navigation }: any) {
     try {
       const response = await axiosInstance.get(`/api/user?email=${email}`);
       setNickname(response.data.nickName);
+      console.log(response.data);
       if (nickname == null) {
-        navigation.navigate('SocialSignup');
+        navigation.navigate("SocialSignup");
       } else {
         navigation.dispatch(StackActions.popToTop());
-      };
+      }
     } catch (error) {
       console.log(error);
     }

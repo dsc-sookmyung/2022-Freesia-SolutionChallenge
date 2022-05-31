@@ -11,7 +11,6 @@ import {
   ToastAndroid,
   ScrollView,
 } from "react-native";
-import { theme } from "../../color";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { StackActions } from "@react-navigation/native";
@@ -42,7 +41,7 @@ export default function SocialSignupScreen({ navigation }: any) {
 
   // localStorage에 저장된 이메일 불러오기
   const [email, setEmail] = useState<string>("");
-  AsyncStorage.getItem('email').then(response => setEmail(response));
+  AsyncStorage.getItem("email").then((response) => setEmail(response));
 
   // form 작성 미완료 시 알림
   const notCompleteAlert = () => {
@@ -58,9 +57,7 @@ export default function SocialSignupScreen({ navigation }: any) {
 
   // form 모두 작성했는지 확인
   const checkFormComplete = () => {
-    nickname == "" ||
-      goal == "" ||
-      profileImage == null
+    nickname == "" || goal == "" || profileImage == null
       ? notCompleteAlert()
       : save();
   };
@@ -70,25 +67,28 @@ export default function SocialSignupScreen({ navigation }: any) {
     let body = new FormData();
     let img: any = {
       uri: profileImage,
-      type: 'image/png',
-      name: 'profile.png'
+      type: "image/png",
+      name: "profile.png",
     };
-    body.append('profileImg', img);
-    body.append('nickName', nickname);
-    body.append('goalMsg', goal);
+    body.append("profileImg", img);
+    body.append("nickName", nickname);
+    body.append("goalMsg", goal);
 
-    axiosInstance.put(`/api/user?email=${email}`, body, {
-      headers: { 'content-type': `multipart/form-data` },
-      transformRequest: (data, headers) => {
-        return body;
-      },
-    }).then(function (response) {
-      ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
-      navigation.dispatch(StackActions.popToTop);
-    }).catch(function (error) {
-      console.log(error);
-      loginFailAlert();
-    });
+    axiosInstance
+      .put(`/api/user?email=${email}`, body, {
+        headers: { "content-type": `multipart/form-data` },
+        transformRequest: (data, headers) => {
+          return body;
+        },
+      })
+      .then(function (response) {
+        ToastAndroid.show("Saved Successfully!", ToastAndroid.SHORT);
+        navigation.dispatch(StackActions.popToTop);
+      })
+      .catch(function (error) {
+        console.log(error);
+        loginFailAlert();
+      });
   };
 
   return (
@@ -120,7 +120,10 @@ export default function SocialSignupScreen({ navigation }: any) {
         />
       </View>
 
-      <TouchableOpacity style={mainStyle.buttonContainer} onPress={() => checkFormComplete()}>
+      <TouchableOpacity
+        style={mainStyle.buttonContainer}
+        onPress={() => checkFormComplete()}
+      >
         <Text style={mainStyle.buttonTitle}>SIGN UP</Text>
       </TouchableOpacity>
     </ScrollView>
