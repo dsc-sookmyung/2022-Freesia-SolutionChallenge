@@ -14,50 +14,73 @@ import { theme } from "../../color";
 import axiosInstance from "../../axiosInstance";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { defaultFont as Text } from "../../CommonComponent";
-
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function CommunityScreen({ navigation }: any) {
   const [token, setToken] = useState<string>("");
-  AsyncStorage.getItem('token').then(response => setToken(response));
+  AsyncStorage.getItem("token").then((response) => setToken(response));
 
   const [posts, setPosts] = useState([]);
   const [category, setCategory] = useState<string>("worries");
-  const [profileImg, setProfileImg] = useState<string>();
+  //const [profileImg, setProfileImg] = useState<string>();
 
   const isFocused = useIsFocused();
-  useEffect(() => {
-    axiosInstance
+
+  // 게시글 정보와 작성자 프로필 이미지 가져오기
+  const getPostInfo = async () => {
+    var postList: any[] = [];
+    await axiosInstance
       .get(`/communities?category=${category}`)
       .then(function (response) {
-        setPosts(response.data);
+        postList = response.data;
       })
       .catch(function (error) {
         console.log(error);
       });
+    await Promise.all(
+      postList.map(async (data) => {
+        await axiosInstance
+          .get(`/api/user/image?email=${data.email}`)
+          .then(function (response) {
+            data.profileImg = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+    ).then(() => setPosts(postList));
+  };
+
+  useEffect(() => {
+    getPostInfo();
   }, [category, isFocused]);
 
-  const getProfileImg = (email: string) => {
-    axiosInstance.get(`/api/user/image?email=${email}`)
+  /*const getProfileImg = (email: string) => {
+    axiosInstance
+      .get(`/api/user/image?email=${email}`)
       .then(function (response) {
         setProfileImg(`data:image/png;base64,${response.data}`);
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
         console.log(error);
       });
     if (profileImg != null) {
-      return <Image source={{ uri: profileImg }} style={{ width: 30, height: 30, borderRadius: 15, marginRight: 5 }} />;
+      return (
+        <Image
+          source={{ uri: profileImg }}
+          style={{ width: 30, height: 30, borderRadius: 15, marginRight: 5 }}
+        />
+      );
     } else {
       return <EvilIcons name="user" size={30} color="black" />;
     }
-  };
+  };*/
 
   const gotoCreate = () => {
     if (!token) {
-      Alert.alert('Warning', 'You can use it after login.');
+      Alert.alert("Warning", "You can use it after login.");
     } else {
       navigation.navigate("Create");
-    };
+    }
   };
 
   const gotoDetail = (item) => {
@@ -124,8 +147,21 @@ export default function CommunityScreen({ navigation }: any) {
                 >
                   <View style={styles.nicknameArea}>
                     {/* {getProfileImg(post.email)} */}
-                    <View style={{ width: 30, height: 30, borderRadius: 25, elevation: 2, marginRight: 5 }}>
-                      <Image source={require("../../../assets/profile_default.jpg")} style={{ width: 30, height: 30, borderRadius: 15 }} />
+                    <View
+                      style={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 25,
+                        elevation: 2,
+                        marginRight: 5,
+                      }}
+                    >
+                      <Image
+                        source={{
+                          uri: `data:image/png;base64,${post.profileImg}`,
+                        }}
+                        style={{ width: 30, height: 30, borderRadius: 15 }}
+                      />
                     </View>
                     <Text style={styles.nickname}>{post.nickName}</Text>
                   </View>

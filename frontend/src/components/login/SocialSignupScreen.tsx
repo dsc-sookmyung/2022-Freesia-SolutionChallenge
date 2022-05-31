@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TextInput,
   Alert,
-  Dimensions,
   Image,
   ToastAndroid,
   ScrollView,
@@ -17,8 +16,6 @@ import { StackActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../../axiosInstance";
 import { mainStyle } from "../../CommonComponent";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function SocialSignupScreen({ navigation }: any) {
   const [profileImage, setProfileImage] = useState<string>("");

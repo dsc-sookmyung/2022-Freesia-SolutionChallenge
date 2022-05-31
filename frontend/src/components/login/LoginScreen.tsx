@@ -14,7 +14,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackActions } from "@react-navigation/native";
 import axios from "axios";
 import axiosInstance from "../../axiosInstance";
-import { theme } from "../../color";
 import { mainStyle, Divider, BASE_URL } from "../../CommonComponent";
 
 WebBrowser.maybeCompleteAuthSession();

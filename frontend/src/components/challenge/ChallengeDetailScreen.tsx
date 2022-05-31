@@ -61,7 +61,6 @@ export default function ChallengeDetail({ route, navigation }: any) {
   const [index, setIndex] = useState(0);
   const [imgCount, setImgCount] = useState(0);
   const [profileImg, setProfileImg] = useState(null);
-  const [refresh, setRefresh] = useState(false);
   AsyncStorage.getItem("token").then((response) => setToken(response));
 
   // 게시글 상세 정보 가져오기
