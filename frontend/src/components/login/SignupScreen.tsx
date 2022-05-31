@@ -152,6 +152,57 @@ export default function SignupScreen({ navigation }: any) {
     }
   };
 
+  const ModalView = () => (
+    <View style={styles.modalView}>
+      <View>
+        <Text
+          style={{
+            fontSize: 16,
+          }}
+        >
+          We send the verification code to
+        </Text>
+        <Text
+          style={{
+            fontWeight: "700",
+            marginBottom: 10,
+          }}
+        >
+          {email}
+        </Text>
+        <Text>Please enter your code.</Text>
+        <Text
+          style={{
+            color: wrongMsg ? "red" : "transparent",
+            marginTop: 10,
+            marginBottom: 5,
+          }}
+        >
+          Verification code does not match.
+        </Text>
+        <TextInput
+          value={code}
+          placeholder="Verification Code"
+          onChangeText={onChangeCode}
+          style={styles.modalInput}
+        />
+      </View>
+      <View style={styles.modalButton}>
+        <TouchableOpacity onPress={checkCode}>
+          <Text style={{ fontWeight: "700" }}>확인</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setModalVisible(!modalVisible);
+            setWrongMsg(false);
+          }}
+        >
+          <Text style={{ fontWeight: "700" }}>취소</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -214,38 +265,7 @@ export default function SignupScreen({ navigation }: any) {
           visible={modalVisible}
           onRequestClose={() => setModalVisible(!modalVisible)}
         >
-          <View
-            style={{
-              backgroundColor: "#ffffff",
-              height: screenHeight / 3,
-              width: screenWidth,
-              top: screenHeight / 3,
-              marginHorizontal: (SCREEN_WIDTH - screenWidth) / 2,
-              elevation: 15,
-              padding: 20,
-            }}
-          >
-            <Text>We send the verification code to {email}.</Text>
-            <Text>Please enter your code.</Text>
-            <Text style={{ color: wrongMsg ? "red" : "transparent" }}>
-              Verification code does not match.
-            </Text>
-            <TextInput
-              value={code}
-              placeholder="Verification Code"
-              onChangeText={onChangeCode}
-              style={{
-                width: screenWidth - 40,
-                height: 50,
-                borderColor: "lightgrey",
-                borderWidth: 1,
-                paddingHorizontal: 20,
-              }}
-            />
-            <TouchableOpacity onPress={checkCode}>
-              <Text>확인</Text>
-            </TouchableOpacity>
-          </View>
+          <ModalView />
         </Modal>
         <TextInput
           value={username}
@@ -319,4 +339,27 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
   buttonView: { width: "100%", alignItems: "center" },
+  modalView: {
+    justifyContent: "space-between",
+    backgroundColor: "#ffffff",
+    height: screenHeight / 3,
+    width: screenWidth,
+    top: screenHeight / 3,
+    marginHorizontal: (SCREEN_WIDTH - screenWidth) / 2,
+    elevation: 15,
+    padding: 20,
+  },
+  modalInput: {
+    width: screenWidth - 40,
+    height: 50,
+    borderColor: "lightgrey",
+    borderWidth: 1,
+    paddingHorizontal: 20,
+  },
+  modalButton: {
+    width: screenWidth / 5,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });
