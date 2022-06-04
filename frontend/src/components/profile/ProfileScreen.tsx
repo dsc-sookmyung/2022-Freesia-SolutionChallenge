@@ -198,7 +198,7 @@ export default function ProfileScreen({ navigation }: any) {
               <ProfileIcon imagePath={null} size={60} />
             )}
             <Text style={styles.nickname}>
-              {nickname == null ? "내용을 입력하세요" : nickname}
+              {nickname == null ? "Please Login" : nickname}
             </Text>
           </View>
           <TouchableOpacity onPress={gotoSetting}>
@@ -206,7 +206,7 @@ export default function ProfileScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
         <View style={styles.goalArea}>
-          <Text>{goalMsg == null ? "내용을 입력하세요" : goalMsg}</Text>
+          <Text>{goalMsg == null ? "Please Login" : goalMsg}</Text>
           <Text style={styles.dday}>
             <Text style={{ color: "#FF4588" }}>+{days}</Text> days
           </Text>

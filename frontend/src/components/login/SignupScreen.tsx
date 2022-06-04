@@ -255,7 +255,7 @@ export default function SignupScreen({ navigation }: any) {
             style={styles.textInputEmail}
           />
           <TouchableOpacity onPress={checkEmail}>
-            <Text style={styles.checkEmail}>인증</Text>
+            <Text style={styles.checkEmail}>Verify</Text>
           </TouchableOpacity>
         </View>
         <Modal

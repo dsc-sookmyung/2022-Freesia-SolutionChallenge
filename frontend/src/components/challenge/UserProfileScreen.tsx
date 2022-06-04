@@ -236,13 +236,13 @@ export default function UserProfileScreen({ route }: any) {
               <EvilIcons name="user" size={70} color="black" />
             )}
             <Text style={styles.nickname}>
-              {nickname == null ? "내용을 입력하세요" : nickname}
+              {nickname == null ? "Loading" : nickname}
             </Text>
           </View>
           <CheeringAuthor />
         </View>
         <View style={styles.goalArea}>
-          <Text>{goalMsg == null ? "내용을 입력하세요" : goalMsg}</Text>
+          <Text>{goalMsg == null ? "Loading" : goalMsg}</Text>
           <Text style={styles.dday}>
             <Text style={{ color: "#FF4588" }}>+{days}</Text> days
           </Text>
