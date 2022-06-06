@@ -61,7 +61,7 @@ We established a road map for the continuous growth of our service.
 <br/><br/>
 
 ## ✨ Demo video link
-[![thumbnail](https://user-images.githubusercontent.com/61882016/171997705-6deb3679-94ce-4c9d-9512-d271896a6dc7.png)](https://youtu.be/jgnNlpfx0Vc)
+[![thumbnail](https://user-images.githubusercontent.com/61882016/172127582-946c76b4-52f2-40a0-b56a-41e1e91769e1.png)](https://youtu.be/qFK9kNcLUgM)
 <br/><br/>
 
 ## ✨ Freesia's solutions
