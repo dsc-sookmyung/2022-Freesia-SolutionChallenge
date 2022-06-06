@@ -17,6 +17,10 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 &nbsp; We intend to solve the problem of "gender equality" in Korea by creating a reboot platform that helps career-broken women with get quality jobs again. Through this platform, it is expected that career-broken women will not only receive high-quality educational information, but also share information with each other and grow further. In addition, if this female workforce can be fully utilized, it will help Korea's economic growth.
 <br/><br/>
 
+![roadmap](https://user-images.githubusercontent.com/61882016/171909418-a13835e1-09f9-44ed-994a-51b8a29ac5de.jpg)
+We established a road map for the continuous growth of our service.
+<br/><br/>
+
 ## ✨ Used technology
 ![freesia_tech](https://user-images.githubusercontent.com/87821678/160786178-f78336e5-7afe-4555-a2ca-29daadf1c36f.PNG)
 
@@ -57,36 +61,36 @@ Our solution is named after freesia, a flower with the meaning of "cheering for 
 <br/><br/>
 
 ## ✨ Demo video link
-[![thumbnail](https://user-images.githubusercontent.com/61882016/161707162-fec8d667-23b7-4a14-ba0f-7e0fd03ecd28.png)](https://youtu.be/jgnNlpfx0Vc)
+[![thumbnail](https://user-images.githubusercontent.com/61882016/171997705-6deb3679-94ce-4c9d-9512-d271896a6dc7.png)](https://youtu.be/jgnNlpfx0Vc)
 <br/><br/>
 
 ## ✨ Freesia's solutions
-<h3>💛 Solution1 - Check the center on the map</h3>
+<h3>💛 Solution1 - Challenge & Ranking</h3>
 <br>
 
-![map](https://user-images.githubusercontent.com/72160826/160880307-57451338-81ae-4624-8c45-276deda86076.png)
+![challenge1](https://user-images.githubusercontent.com/61882016/171996657-2a249468-5507-4a58-b582-12203cfe03b4.png)
+![challenge2](https://user-images.githubusercontent.com/61882016/171996669-891a7f53-9477-4454-83d9-d4ab99d3e333.png)
+![challenge3](https://user-images.githubusercontent.com/61882016/171996675-725283a4-7a1d-4efe-9446-bc89f6343d5c.png)
+<br>
+
+<h3>💛 Solution2 - Community</h3>
+<br>
+
+![community](https://user-images.githubusercontent.com/61882016/171425929-8caec788-1f90-4d81-9aa2-d871d2a75a06.png)
 
 <br>
 
-<h3>💛 Solution2 - Recommended Video</h3>
+<h3>💛 Solution3 - Check the center on the map</h3>
 <br>
 
-![youtube](https://user-images.githubusercontent.com/72160826/160876831-2be79adb-6f75-4be0-8c6e-e76f0f43eb68.png)
+![map](https://user-images.githubusercontent.com/61882016/171428010-14cbfd33-869c-4c4c-94e4-ad4c6b740d5e.png)
 
 <br>
 
-<h3>💛 Solution3 - Challenge & Ranking</h3>
+<h3>💛 Solution4 - Recommended Video</h3>
 <br>
 
-![challenge1](https://user-images.githubusercontent.com/72160826/161782961-dedab4d6-4417-44f4-9933-22c208b9be25.png)
-![challenge2](https://user-images.githubusercontent.com/72160826/160876900-c1eea1e2-98dd-49ea-b8d0-29bf71ec6cce.png)
-![challenge3](https://user-images.githubusercontent.com/87821678/160822981-edf74e71-15d9-4b21-9261-978cc4401c05.png)
-<br>
-
-<h3>💛 Solution4 - Community</h3>
-<br>
-
-![community](https://user-images.githubusercontent.com/72160826/160876615-5fba880c-069e-4a92-aa35-975ec8d11c13.png)
+![youtube](https://user-images.githubusercontent.com/61882016/171428686-baf19acc-c0ad-46ab-8ca4-d587ea339abf.png)
 
 <br>
 <br>
@@ -123,9 +127,8 @@ npm start
 
 **Method 2. To run the standalone app**  
 [App Discription Page](https://expo.dev/@smjan27/frontend)  
-Download “Expo Go” application and Scan QR code  
+[Download APK File](https://github.com/dsc-sookmyung/2022-Freesia-SolutionChallenge/releases/download/v1.0.0/Im_your_freesia.apk)  
 
-<img src="https://qr.expo.dev/expo-go?owner=smjan27&slug=frontend&releaseChannel=default&host=exp.host" width="200px">
 <br />
 
 ## ✨ Contributors
